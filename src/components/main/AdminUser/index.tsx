@@ -56,19 +56,16 @@ function AdminUsers() {
     state => state.adminUser.adminUsers
   );
   const adminUsers = _.values(_adminUsers);
-  // const authId = useSelector(state => state.auth.user.id);
+  const authId = useSelector<RootState, number>(state => state.auth.user.id);
 
   const fetch = React.useCallback(async () => {
-    console.log(0);
     setLoading(true);
-    console.log(1);
     const [err, res] = await goPromise<IUserGetAction>(getAdminUsers());
-    console.log(2);
     if (err) {
-      console.log(err);
+      console.log({ err });
       setError("error");
     } else {
-      console.log(res);
+      console.log({ res });
       dispatch(res);
     }
     setLoading(false);
@@ -117,7 +114,7 @@ function AdminUsers() {
       Header: "Actions",
       accessor: "",
       Cell: ({ row: { original } }) => {
-        // if (String(authId) === String(original.id)) return null;
+        if (String(authId) === String(original.id)) return null;
         return (
           <div>
             <IconButton

@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { createAdminUser, getAdminUsers } from "src/store/adminUser";
 import { RenderFieldFn } from "src/util/types";
 import { goPromise } from "src/util/helper";
+import BasicDialog from "src/components/generic/BasicDialog";
 
 const required = (value: any): any =>
   value || typeof value === "number" ? undefined : "Required";
@@ -68,7 +69,7 @@ function CreateDialog(
 
   const handleSave = async (formValues: Record<string, any>) => {
     setLoading(true);
-    console.log(formValues);
+    return console.log({ formValues });
     const [err, res] = await goPromise(
       createAdminUser({
         username: "",
@@ -91,24 +92,17 @@ function CreateDialog(
 
   return (
     <div>
-      <Dialog
-        open={open}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        maxWidth="xs"
-        fullWidth
-      >
-        <form onSubmit={handleSubmit(handleSave)}>
-          <DialogTitle id="alert-dialog-title">
-            Create New Admin User
-          </DialogTitle>
-          <DialogContent>
+      <BasicDialog open={open} dismiss={() => {}} maxWidth="xs" fullWidth>
+        <title>Create New Admin User</title>
+        <section>
+          <form onSubmit={handleSubmit(handleSave)}>
             <Field
               name="username"
               type="text"
               component={renderField}
               label="Username"
               validate={[required]}
+              disabled={loading}
             />
             <Field
               name="password"
@@ -116,19 +110,19 @@ function CreateDialog(
               component={renderField}
               label="Password"
               validate={[required]}
+              disabled={loading}
             />
-          </DialogContent>
-
-          <DialogActions>
-            <Button onClick={handleClose} disabled={loading}>
-              Cancel
-            </Button>
-            <Button type="submit" color="primary" disabled={loading}>
-              {loading ? <CircularProgress size={24} /> : "Save"}
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
+            <div style={{ textAlign: "right" }}>
+              <Button onClick={handleClose} disabled={loading}>
+                Cancel
+              </Button>
+              <Button type="submit" color="primary" disabled={loading}>
+                {loading ? <CircularProgress size={24} /> : "Submit"}
+              </Button>
+            </div>
+          </form>
+        </section>
+      </BasicDialog>
     </div>
   );
 }

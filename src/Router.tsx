@@ -5,7 +5,7 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
-import { Typography } from "@material-ui/core";
+import { Typography, CircularProgress } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
@@ -14,14 +14,22 @@ import Login from "./components/main/Auth/Login";
 import Logout from "./components/main/Auth/Logout";
 import AdminUser from "./components/main/AdminUser";
 
-import { getAdminUsers } from "./store/adminUser";
 import { RootState } from "./store";
-import { IUser } from "./store/auth";
-import BasicDialog from "./components/generic/BasicDialog";
+import { IUser, getMe, IGetMeAction } from "./store/auth";
 import JwtTimer from "./components/misc/JwtTimer";
+import { goPromise } from "./util/helper";
 
 const HeadlineText = styled(Typography)`
   padding: 1.5rem 4.75rem;
+`;
+
+const CenterItAll = styled("div")`
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
 `;
 
 const AdminRoutes = () => {
@@ -32,40 +40,61 @@ const AdminRoutes = () => {
 
   const fetch = React.useCallback(async () => {
     setLoading(true);
-    try {
-      dispatch(await getAdminUsers());
-    } catch (error) {
-      console.log({ error });
+    const [err, res] = await goPromise<IGetMeAction>(getMe());
+    if (err) {
+      console.log({ err });
       setError("error");
-    } finally {
-      setLoading(false);
+    } else {
+      dispatch(res);
     }
+    setLoading(false);
   }, [dispatch]);
 
   React.useEffect(() => {
-    // fetch();
+    fetch();
   }, [fetch]);
 
-  // if (!user) return "Please wait..";
+  if (error) {
+    return (
+      <CenterItAll>
+        <Typography variant="subtitle1">
+          Can't get your profile. Please{" "}
+          <a href="/" style={{ color: "lightblue" }}>
+            refresh
+          </a>{" "}
+          the page.
+        </Typography>
+      </CenterItAll>
+    );
+  } else if (loading) {
+    return (
+      <CenterItAll>
+        <CircularProgress size={24} /> &nbsp;{" "}
+        <Typography variant="subtitle1">Please wait...</Typography>
+      </CenterItAll>
+    );
+  } else {
+    return (
+      <>
+        <Nav />
 
-  return (
-    <>
-      <Nav />
+        <JwtTimer />
 
-      <Switch>
-        <Route path="/dashboard">
-          <HeadlineText variant="h6">Dashboard</HeadlineText>
-        </Route>
-        <Route path="/admin_user">
-          <AdminUser />
-        </Route>
-        <Route path="/logout">
-          <Logout />
-        </Route>
-        <Route path="*">{() => <Redirect to="/dashboard" />}</Route>
-      </Switch>
-    </>
-  );
+        <Switch>
+          <Route path="/dashboard">
+            <HeadlineText variant="h6">Dashboard</HeadlineText>
+          </Route>
+          <Route path="/admin_user">
+            <AdminUser />
+          </Route>
+          <Route path="/logout">
+            <Logout />
+          </Route>
+          <Route path="*">{() => <Redirect to="/dashboard" />}</Route>
+        </Switch>
+      </>
+    );
+  }
 };
 
 const App = () => {
@@ -81,24 +110,7 @@ const App = () => {
           <Route path="*">{() => <Redirect to="/login" />}</Route>
         </Switch>
       ) : (
-        <>
-          <Nav />
-
-          <JwtTimer />
-
-          <Switch>
-            <Route path="/dashboard">
-              <HeadlineText variant="h6">Dashboard</HeadlineText>
-            </Route>
-            <Route path="/admin_user">
-              <AdminUser />
-            </Route>
-            <Route path="/logout">
-              <Logout />
-            </Route>
-            <Route path="*">{() => <Redirect to="/dashboard" />}</Route>
-          </Switch>
-        </>
+        <AdminRoutes />
       )}
     </Router>
   );

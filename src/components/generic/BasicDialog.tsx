@@ -62,16 +62,12 @@ const BasicDialog = (props: IProps) => {
         {...restProps}
       >
         <DialogTitle id="alert-dialog-title">
-          {childProps.title ? <div {...childProps.title} /> : "<title>"}
+          {childProps.title && <div {...childProps.title} />}
         </DialogTitle>
 
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {childProps.details ? (
-              <span {...childProps.details} />
-            ) : (
-              "<details>"
-            )}
+            {childProps.details && <span {...childProps.details} />}
           </DialogContentText>
           {childProps.section && <div {...childProps.section} />}
         </DialogContent>
