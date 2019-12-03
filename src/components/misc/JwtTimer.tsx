@@ -1,19 +1,12 @@
 import React from "react";
+import moment from "moment";
 import jwtDecode from "jwt-decode";
 import { useSelector } from "react-redux";
-import moment from "moment";
 import { Button } from "@material-ui/core";
 import { RootState } from "src/store";
 import BasicDialog from "src/components/generic/BasicDialog";
 import Link from "src/components/generic/Link";
-
-interface JWToken {
-  exp: number;
-  iat: number;
-  id: number;
-  username: string;
-  role: string;
-}
+import { JWToken } from "src/util/types";
 
 const JwtTimer = () => {
   const token = useSelector<RootState, string>(state => state.auth.token);

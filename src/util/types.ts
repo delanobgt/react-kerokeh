@@ -10,3 +10,11 @@ export interface IRenderFieldProps {
 export type RenderFieldFn = (
   renderFieldProps: IRenderFieldProps
 ) => ReactElement;
+
+export interface JWToken {
+  exp: number;
+  iat: number;
+  id: number;
+  username: string;
+  role: string;
+}

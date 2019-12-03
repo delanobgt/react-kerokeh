@@ -20,6 +20,7 @@ interface IMenu {
 }
 
 const menuList: IMenu[] = [
+  { title: "Dashboard", Icon: PeopleAltIcon, link: "/dashboard" },
   { title: "Identifications", Icon: PeopleAltIcon, link: "/user" },
   { title: "Users", Icon: PeopleAltIcon, link: "/user" },
   { title: "Admin Users", Icon: VpnKeyIcon, link: "/admin_user" },

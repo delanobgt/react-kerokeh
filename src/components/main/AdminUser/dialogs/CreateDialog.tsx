@@ -1,21 +1,15 @@
+import _ from "lodash";
 import React from "react";
+import { Button, CircularProgress, TextField } from "@material-ui/core";
 import {
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  TextField
-} from "@material-ui/core";
-import { Field, reduxForm, InjectedFormProps } from "redux-form";
+  Field,
+  reduxForm,
+  InjectedFormProps,
+  SubmissionError
+} from "redux-form";
 import { useDispatch } from "react-redux";
 
-import { createAdminUser, getAdminUsers } from "src/store/adminUser";
+import { createAdminUser } from "src/store/adminUser";
 import { RenderFieldFn } from "src/util/types";
 import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/BasicDialog";
@@ -50,7 +44,8 @@ const renderField: RenderFieldFn = ({
 
 interface IComponentProps {
   open: boolean;
-  dismiss: () => any;
+  dismiss: () => void;
+  restartIntervalRun: () => void;
 }
 
 interface IFormProps {
@@ -61,29 +56,32 @@ interface IFormProps {
 function CreateDialog(
   props: IComponentProps & InjectedFormProps<IFormProps, IComponentProps>
 ) {
-  const { open, dismiss, handleSubmit } = props;
+  const { open, dismiss, handleSubmit, restartIntervalRun } = props;
 
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
-  const dispatch = useDispatch();
 
   const handleSave = async (formValues: Record<string, any>) => {
     setLoading(true);
-    return console.log({ formValues });
-    const [err, res] = await goPromise(
+    const { username, password } = formValues;
+    const [err] = await goPromise(
       createAdminUser({
-        username: "",
-        password: "",
-        role_id: 0
+        username,
+        password,
+        role_id: 1
       })
     );
+    setLoading(false);
     if (err) {
+      if (_.has(err, "response.data.errors")) {
+        throw new SubmissionError(err.response.data.errors);
+      } else {
+        setError("error");
+      }
     } else {
-      const [err, res] = await goPromise(getAdminUsers());
-      dispatch(res);
+      restartIntervalRun();
       dismiss();
     }
-    setLoading(false);
   };
 
   const handleClose = () => {
@@ -92,7 +90,13 @@ function CreateDialog(
 
   return (
     <div>
-      <BasicDialog open={open} dismiss={() => {}} maxWidth="xs" fullWidth>
+      <BasicDialog
+        open={open}
+        dismiss={dismiss}
+        maxWidth="xs"
+        fullWidth
+        bgClose
+      >
         <title>Create New Admin User</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>

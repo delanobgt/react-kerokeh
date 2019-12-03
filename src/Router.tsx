@@ -1,4 +1,6 @@
 import React from "react";
+import moment from "moment";
+import jwtDecode from "jwt-decode";
 import {
   BrowserRouter as Router,
   Switch,
@@ -13,11 +15,16 @@ import Nav from "./components/main/Nav";
 import Login from "./components/main/Auth/Login";
 import Logout from "./components/main/Auth/Logout";
 import AdminUser from "./components/main/AdminUser";
-
-import { RootState } from "./store";
-import { IUser, getMe, IGetMeAction } from "./store/auth";
 import JwtTimer from "./components/misc/JwtTimer";
+import { RootState } from "./store";
+import { getMe, IGetMeAction } from "./store/auth";
 import { goPromise } from "./util/helper";
+import { JWToken } from "./util/types";
+
+enum EErrorType {
+  FETCH_FAIL,
+  SESSION_EXPIRED
+}
 
 const HeadlineText = styled(Typography)`
   padding: 1.5rem 4.75rem;
@@ -33,28 +40,34 @@ const CenterItAll = styled("div")`
 `;
 
 const AdminRoutes = () => {
-  const user = useSelector<RootState, null | IUser>(state => state.auth.user);
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string>("");
+  const [error, setError] = React.useState<EErrorType | null>(null);
+  const token = useSelector<RootState, string>(state => state.auth.token);
   const dispatch = useDispatch();
 
   const fetch = React.useCallback(async () => {
     setLoading(true);
+
     const [err, res] = await goPromise<IGetMeAction>(getMe());
-    if (err) {
-      console.log({ err });
-      setError("error");
-    } else {
-      dispatch(res);
-    }
+    if (err) setError(EErrorType.FETCH_FAIL);
+    else dispatch(res);
+
     setLoading(false);
   }, [dispatch]);
 
+  // check if JWT is expired or not
   React.useEffect(() => {
-    fetch();
+    const decoded: JWToken = jwtDecode(token);
+    if (decoded.exp * 1000 < moment().valueOf()) {
+      localStorage.removeItem("auth_token");
+      setError(EErrorType.SESSION_EXPIRED);
+    } else {
+      fetch();
+    }
   }, [fetch]);
 
-  if (error) {
+  if (error === EErrorType.FETCH_FAIL) {
+    // fail to fetch
     return (
       <CenterItAll>
         <Typography variant="subtitle1">
@@ -66,7 +79,21 @@ const AdminRoutes = () => {
         </Typography>
       </CenterItAll>
     );
+  } else if (error === EErrorType.SESSION_EXPIRED) {
+    // session expired
+    return (
+      <CenterItAll>
+        <Typography variant="subtitle1">
+          Your session has expired. Please{" "}
+          <a href="/" style={{ color: "lightblue" }}>
+            login
+          </a>{" "}
+          again.
+        </Typography>
+      </CenterItAll>
+    );
   } else if (loading) {
+    // still loading
     return (
       <CenterItAll>
         <CircularProgress size={24} /> &nbsp;{" "}
@@ -74,6 +101,7 @@ const AdminRoutes = () => {
       </CenterItAll>
     );
   } else {
+    // success
     return (
       <>
         <Nav />
@@ -92,6 +120,7 @@ const AdminRoutes = () => {
           </Route>
           <Route path="*">{() => <Redirect to="/dashboard" />}</Route>
         </Switch>
+        <br />
       </>
     );
   }

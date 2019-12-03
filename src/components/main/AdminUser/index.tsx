@@ -20,14 +20,11 @@ import { makeDefaultFilterUI } from "src/components/generic/table-filters/Defaul
 import Table from "src/components/generic/ReactTable";
 import CreateDialog from "./dialogs/CreateDialog";
 import ConfirmDialog from "src/components/generic/ConfirmDialog";
-import {
-  getAdminUsers,
-  deleteAdminUser,
-  IAdminUser,
-  IUserGetAction
-} from "src/store/adminUser";
+import { getAdminUsers, IAdminUser, IUserGetAction } from "src/store/adminUser";
 import { RootState } from "src/store";
 import { goPromise } from "src/util/helper";
+import DeleteDialog from "./dialogs/DeleteDialog";
+import useIntervalRun from "src/hooks/useIntervalRun";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,7 +32,10 @@ const useStyles = makeStyles(theme => ({
     paddingRight: theme.spacing(1),
     display: "block"
   },
-  subtitle: {
+  topAction: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingLeft: theme.spacing(2)
   }
 }));
@@ -45,10 +45,11 @@ const MyPaper = styled(Paper)`
 `;
 
 function AdminUsers() {
+  const refreshDelay = 5000;
   const classes = useStyles({});
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
-  // const [userDetailsDialogId, setUserDetailsDialog] = React.useState(null);
+  // const [createDialogUserId, setCreateDialogUserId] = React.useState(null);
   const [createDialogOpen, setCreateDialogOpen] = React.useState(false);
   const [deleteDialogUserId, setDeleteDialogUserId] = React.useState(null);
   const dispatch = useDispatch();
@@ -56,43 +57,36 @@ function AdminUsers() {
     state => state.adminUser.adminUsers
   );
   const adminUsers = _.values(_adminUsers);
-  const authId = useSelector<RootState, number>(state => state.auth.user.id);
+  const authId = useSelector<RootState, null | IAdminUser>(state =>
+    _.get(state.auth, "user.id", null)
+  );
+
+  const autoFetch = React.useCallback(async () => {
+    const [err, res] = await goPromise<IUserGetAction>(getAdminUsers());
+    if (err) {
+      console.log({ err });
+    } else {
+      dispatch(res);
+    }
+  }, [dispatch]);
+
+  const intervalRun = useIntervalRun(() => autoFetch(), refreshDelay);
 
   const fetch = React.useCallback(async () => {
     setLoading(true);
     const [err, res] = await goPromise<IUserGetAction>(getAdminUsers());
+    setLoading(false);
     if (err) {
       console.log({ err });
       setError("error");
     } else {
-      console.log({ res });
       dispatch(res);
     }
-    setLoading(false);
   }, [dispatch]);
 
   React.useEffect(() => {
     fetch();
   }, [fetch]);
-
-  const handleDelete = (id: number) => () => {
-    const deleteDialogCallback = async (dismiss: () => void) => {
-      dismiss();
-      try {
-        setLoading(true);
-        dispatch(await deleteAdminUser(id));
-      } catch (error) {
-        console.log({ error });
-        setError("error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    // setDeleteDialog({
-    //   deleteDialogObject: _adminUsers[id],
-    //   deleteDialogCallback
-    // });
-  };
 
   const columns: Column<IAdminUser>[] = [
     {
@@ -114,6 +108,7 @@ function AdminUsers() {
       Header: "Actions",
       accessor: "",
       Cell: ({ row: { original } }) => {
+        // actions not available on the user account itself
         if (String(authId) === String(original.id)) return null;
         return (
           <div>
@@ -123,7 +118,7 @@ function AdminUsers() {
             >
               <EditIcon />
             </IconButton>
-            <IconButton onClick={handleDelete(original.id)}>
+            <IconButton onClick={() => setDeleteDialogUserId(original.id)}>
               <DeleteIcon />
             </IconButton>
           </div>
@@ -155,7 +150,7 @@ function AdminUsers() {
               </div>
             ) : !error ? (
               <>
-                <div className={classes.subtitle}>
+                <div className={classes.topAction}>
                   <Button
                     color="primary"
                     variant="contained"
@@ -163,15 +158,28 @@ function AdminUsers() {
                   >
                     Add User
                   </Button>
+                  <div>
+                    {intervalRun.running ? (
+                      <span>
+                        <CircularProgress size={18} /> Updating
+                      </span>
+                    ) : intervalRun.error ? (
+                      <span>
+                        Retrying in{" "}
+                        {(refreshDelay - intervalRun.lastTime) / 1000}{" "}
+                        second(s).
+                      </span>
+                    ) : (
+                      <span>
+                        Updated {intervalRun.lastTime / 1000} second(s) ago
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <Table columns={columns} data={adminUsers} />
               </>
             ) : (
-              <Typography
-                variant="subtitle1"
-                color="secondary"
-                className={classes.subtitle}
-              >
+              <Typography variant="subtitle1" color="secondary">
                 An error occured, please{" "}
                 <span onClick={fetch} style={{ color: "lightblue" }}>
                   retry
@@ -185,6 +193,7 @@ function AdminUsers() {
       {createDialogOpen && (
         <CreateDialog
           open={createDialogOpen}
+          restartIntervalRun={intervalRun.restart}
           dismiss={() => setCreateDialogOpen(false)}
         />
       )}
@@ -198,20 +207,13 @@ function AdminUsers() {
           updateUser={updateUserById(userDetailsDialogId)}
         />
       )} */}
-      {/* {deleteDialogObject && (
-        <ConfirmDialog
-          title={`Delete User "${deleteDialogObject.username}"?`}
-          message="Are you sure?"
-          visible={Boolean(deleteDialogObject)}
-          yesCallback={deleteDialogCallback}
-          dismiss={() =>
-            setDeleteDialog({
-              deleteDialogObject: null,
-              deleteDialogCallback: null
-            })
-          }
+      {deleteDialogUserId && (
+        <DeleteDialog
+          userId={deleteDialogUserId}
+          restartIntervalRun={intervalRun.restart}
+          dismiss={() => setDeleteDialogUserId(null)}
         />
-      )} */}
+      )}
     </>
   );
 }
