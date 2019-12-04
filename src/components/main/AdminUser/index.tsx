@@ -18,11 +18,16 @@ import { Edit as EditIcon, Delete as DeleteIcon } from "@material-ui/icons";
 
 import { makeDefaultFilterUI } from "src/components/generic/table-filters/DefaultFilter";
 import Table from "src/components/generic/ReactTable";
-import CreateDialog from "./dialogs/CreateDialog";
-import ConfirmDialog from "src/components/generic/ConfirmDialog";
-import { getAdminUsers, IAdminUser, IUserGetAction } from "src/store/adminUser";
+import {
+  getAdminUsers,
+  IAdminUser,
+  IUserGetAction,
+  INewAdminUser
+} from "src/store/adminUser";
 import { RootState } from "src/store";
 import { goPromise } from "src/util/helper";
+import CreateDialog from "./dialogs/CreateDialog";
+import UpdateDialog from "./dialogs/UpdateDialog";
 import DeleteDialog from "./dialogs/DeleteDialog";
 import useIntervalRun from "src/hooks/useIntervalRun";
 
@@ -49,9 +54,15 @@ function AdminUsers() {
   const classes = useStyles({});
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
-  // const [createDialogUserId, setCreateDialogUserId] = React.useState(null);
-  const [createDialogOpen, setCreateDialogOpen] = React.useState(false);
-  const [deleteDialogUserId, setDeleteDialogUserId] = React.useState(null);
+  const [createDialogOpen, setCreateDialogOpen] = React.useState<boolean>(
+    false
+  );
+  const [updateDialogUserId, setUpdateDialogUserId] = React.useState<number>(
+    null
+  );
+  const [deleteDialogUserId, setDeleteDialogUserId] = React.useState<number>(
+    null
+  );
   const dispatch = useDispatch();
   const _adminUsers = useSelector<RootState, Record<string, IAdminUser>>(
     state => state.adminUser.adminUsers
@@ -88,6 +99,16 @@ function AdminUsers() {
     fetch();
   }, [fetch]);
 
+  const updateInitialValues = React.useMemo((): INewAdminUser => {
+    if (!updateDialogUserId) return { username: "", password: "", role_id: 1 };
+    const _adminUser: IAdminUser = _adminUsers[updateDialogUserId];
+    return {
+      username: _adminUser.username,
+      password: "",
+      role_id: _adminUser.role.id
+    };
+  }, [_adminUsers, updateDialogUserId]);
+
   const columns: Column<IAdminUser>[] = [
     {
       Header: "User ID",
@@ -113,7 +134,7 @@ function AdminUsers() {
         return (
           <div>
             <IconButton
-              // onClick={handleSeeDetails(original.id)}
+              onClick={() => setUpdateDialogUserId(original.id)}
               className="mr-3"
             >
               <EditIcon />
@@ -197,16 +218,14 @@ function AdminUsers() {
           dismiss={() => setCreateDialogOpen(false)}
         />
       )}
-      {/* {userDetailsDialogId && (
-        <DetailsDialog
-          payload={_.find(users, u => u.id == userDetailsDialogId)}
-          visible={Boolean(userDetailsDialogId)}
-          dismiss={() => setUserDetailsDialog(null)}
-          rolesDict={rolesDict}
-          majorsDict={majorsDict}
-          updateUser={updateUserById(userDetailsDialogId)}
+      {updateDialogUserId && (
+        <UpdateDialog
+          userId={updateDialogUserId}
+          restartIntervalRun={intervalRun.restart}
+          dismiss={() => setUpdateDialogUserId(null)}
+          initialValues={updateInitialValues}
         />
-      )} */}
+      )}
       {deleteDialogUserId && (
         <DeleteDialog
           userId={deleteDialogUserId}

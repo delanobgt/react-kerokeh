@@ -1,8 +1,6 @@
 import {
   EAdminUserActionTypes,
-  IAdminUser,
   INewAdminUser,
-  AdminUserActionType,
   IUserDeleteAction,
   IUserGetAction
 } from "./types";

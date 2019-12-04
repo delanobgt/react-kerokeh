@@ -32,7 +32,6 @@ function useIntervalRun(
     let id: number;
     function tick() {
       setError(false);
-      console.log("timeout", Date.now());
       let ret;
       try {
         ret = savedCallback.current();
@@ -67,7 +66,6 @@ function useIntervalRun(
     }
 
     function tick() {
-      console.log("last time", Date.now());
       lastTimeRef.current += 1000;
       setLastTime(lastTimeRef.current);
     }

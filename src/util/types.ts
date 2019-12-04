@@ -1,10 +1,11 @@
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 
 export interface IRenderFieldProps {
   input: any;
   label: string;
   type: string;
-  meta: { touched: boolean; error: string };
+  meta: { touched: boolean; error: boolean | string };
+  children: ReactNode;
 }
 
 export type RenderFieldFn = (

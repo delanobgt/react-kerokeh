@@ -14,15 +14,19 @@ import {
 } from "redux-form";
 
 import { goPromise } from "src/util/helper";
-import { createAdminUser } from "src/store/adminUser";
+import { updateAdminUser } from "src/store/adminUser";
 import BasicDialog from "src/components/generic/BasicDialog";
 import { requiredValidator } from "src/redux-form/validators";
 import { renderTextField, renderSelectField } from "src/redux-form/renderers";
 
 interface IComponentProps {
-  open: boolean;
+  userId: number;
   dismiss: () => void;
   restartIntervalRun: () => void;
+  initialValues: {
+    username: string;
+    role_id: number;
+  };
 }
 
 interface IFormProps {
@@ -31,20 +35,19 @@ interface IFormProps {
   role_id: number;
 }
 
-function CreateDialog(
+function UpdateDialog(
   props: IComponentProps & InjectedFormProps<IFormProps, IComponentProps>
 ) {
-  const { open, dismiss, handleSubmit, restartIntervalRun } = props;
+  const { userId, dismiss, handleSubmit, restartIntervalRun } = props;
 
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
 
   const handleSave = async (formValues: IFormProps) => {
     setLoading(true);
-    console.log({ formValues });
     const { username, password, role_id } = formValues;
     const [err] = await goPromise(
-      createAdminUser({
+      updateAdminUser(userId, {
         username,
         password,
         role_id
@@ -70,13 +73,13 @@ function CreateDialog(
   return (
     <div>
       <BasicDialog
-        open={open}
+        open={Boolean(userId)}
         dismiss={dismiss}
         maxWidth="xs"
         fullWidth
         bgClose
       >
-        <title>Create New Admin User</title>
+        <title>Update Admin User</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>
             <Field
@@ -126,5 +129,6 @@ function CreateDialog(
 }
 
 export default reduxForm<IFormProps, IComponentProps>({
-  form: "createUserDialogForm"
-})(CreateDialog);
+  form: "updateUserDialogForm",
+  enableReinitialize: true
+})(UpdateDialog);
