@@ -8,7 +8,8 @@ import {
   TableHead,
   TableRow,
   TablePagination,
-  TableSortLabel
+  TableSortLabel,
+  Typography
 } from "@material-ui/core";
 
 import { makeDefaultFilterUI } from "./table-filters/DefaultFilter";
@@ -108,13 +109,12 @@ function ReactTable({ columns, data }: any) {
           {headerGroups.map((headerGroup: any) => (
             <TableRow {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column: any) => (
-                <TableCell
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                >
+                <TableCell>
                   {/* Add a sort direction indicator */}
                   <TableSortLabel
                     active={column.isSorted}
                     direction={column.isSortedDesc ? "desc" : "asc"}
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
                   >
                     {column.render("Header")}
                   </TableSortLabel>
@@ -159,6 +159,10 @@ function ReactTable({ columns, data }: any) {
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
+      <br />
+      <Typography variant="subtitle1" align="center">
+        <em>Tips</em>: Hold <strong>Shift</strong> to do multi-sort
+      </Typography>
     </>
   );
 }

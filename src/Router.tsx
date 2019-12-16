@@ -15,6 +15,7 @@ import Nav from "./components/main/Nav";
 import Login from "./components/main/Auth/Login";
 import Logout from "./components/main/Auth/Logout";
 import AdminUser from "./components/main/AdminUser";
+import User from "./components/main/User";
 import JwtTimer from "./components/misc/JwtTimer";
 import { RootState } from "./store";
 import { getMe, IGetMeAction } from "./store/auth";
@@ -64,7 +65,7 @@ const AdminRoutes = () => {
     } else {
       fetch();
     }
-  }, [fetch]);
+  }, [fetch, token]);
 
   if (error === EErrorType.FETCH_FAIL) {
     // fail to fetch
@@ -111,6 +112,9 @@ const AdminRoutes = () => {
         <Switch>
           <Route path="/dashboard">
             <HeadlineText variant="h6">Dashboard</HeadlineText>
+          </Route>
+          <Route path="/user">
+            <User />
           </Route>
           <Route path="/admin_user">
             <AdminUser />

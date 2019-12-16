@@ -9,7 +9,7 @@ function useIntervalRun(
   const [running, setRunning] = React.useState<boolean>(false);
   const lastTimeRef = React.useRef(0);
   const [lastTime, setLastTime] = React.useState<number>(0);
-  const [alive, setAlive] = React.useState<boolean>(true);
+  const [alive, setAlive] = React.useState<boolean>(false);
   const [identity, setIdentity] = React.useState({});
   const [error, setError] = React.useState<boolean>(false);
 
@@ -77,7 +77,10 @@ function useIntervalRun(
     setIdentity({});
   }, []);
 
-  return { running, lastTime, restart, error };
+  return React.useMemo(
+    () => ({ running, lastTime, restart, error, setAlive, alive }),
+    [running, lastTime, restart, error, setAlive, alive]
+  );
 }
 
 export default useIntervalRun;

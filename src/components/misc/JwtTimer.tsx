@@ -21,7 +21,7 @@ const JwtTimer = () => {
     return () => {
       clearTimeout(expTimeout);
     };
-  }, []);
+  }, [token]);
 
   return (
     <BasicDialog

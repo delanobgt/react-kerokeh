@@ -1,6 +1,14 @@
 import React from "react";
 
-export const makeRangeFilterUI = () => ({ column }: { column: any }) => {
+interface IComponentProps {
+  placeholder?: string;
+  onChange?: (e: string) => void;
+}
+
+export const makeRangeFilterUI = ({
+  placeholder,
+  onChange
+}: IComponentProps) => ({ column }: { column: any }) => {
   const { filterValue = [], preFilteredRows, setFilter, id } = column;
   const [min, max] = React.useMemo(() => {
     let min = preFilteredRows.length ? preFilteredRows[0].values[id] : 0;
@@ -27,6 +35,7 @@ export const makeRangeFilterUI = () => ({ column }: { column: any }) => {
             val ? parseInt(val, 10) : undefined,
             old[1]
           ]);
+          onChange(e.target.value);
         }}
         placeholder={`Min (${min})`}
         style={{
@@ -44,6 +53,7 @@ export const makeRangeFilterUI = () => ({ column }: { column: any }) => {
             old[0],
             val ? parseInt(val, 10) : undefined
           ]);
+          onChange(e.target.value || undefined);
         }}
         placeholder={`Max (${max})`}
         style={{

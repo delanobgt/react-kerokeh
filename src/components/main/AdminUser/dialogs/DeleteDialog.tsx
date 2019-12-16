@@ -8,9 +8,6 @@ import { goPromise } from "src/util/helper";
 import { RootState } from "src/store";
 import BasicDialog from "src/components/generic/BasicDialog";
 
-const required = (value: any): any =>
-  value || typeof value === "number" ? undefined : "Required";
-
 interface IComponentProps {
   userId: number;
   dismiss: () => void;

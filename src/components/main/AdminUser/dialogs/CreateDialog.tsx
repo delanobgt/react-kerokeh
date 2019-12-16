@@ -41,7 +41,6 @@ function CreateDialog(
 
   const handleSave = async (formValues: IFormProps) => {
     setLoading(true);
-    console.log({ formValues });
     const { username, password, role_id } = formValues;
     const [err] = await goPromise(
       createAdminUser({

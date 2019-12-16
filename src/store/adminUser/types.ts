@@ -1,8 +1,10 @@
+// enums
 export enum EAdminUserActionTypes {
   USER_GET = "@@adminUser/USER_GET",
   USER_DELETE = "@@adminUser/USER_DELETE"
 }
 
+// entity types
 export interface IAdminUser {
   id: number;
   role: {
@@ -12,24 +14,26 @@ export interface IAdminUser {
   username: string;
 }
 
-export interface IAdminUserState {
-  adminUsers: { [key: string]: IAdminUser };
-}
-
 export interface INewAdminUser {
   username: string;
   password: string;
   role_id: number;
 }
 
-export interface IUserGetAction {
+// redux state type
+export interface IAdminUserState {
+  adminUsers: { [key: string]: IAdminUser };
+}
+
+// action types
+export interface IAdminUserGetAction {
   type: EAdminUserActionTypes.USER_GET;
   adminUsers: IAdminUser[];
 }
 
-export interface IUserDeleteAction {
+export interface IAdminUserDeleteAction {
   type: EAdminUserActionTypes.USER_DELETE;
   adminUserId: number;
 }
 
-export type AdminUserActionType = IUserGetAction | IUserDeleteAction;
+export type AdminUserActionType = IAdminUserGetAction | IAdminUserDeleteAction;

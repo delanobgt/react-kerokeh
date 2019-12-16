@@ -1,6 +1,14 @@
 import React from "react";
 
-export const makeSelectFilterUI = () => ({ column }: { column: any }) => {
+interface IComponentProps {
+  placeholder?: string;
+  onChange?: (e: string) => void;
+}
+
+export const makeSelectFilterUI = ({
+  placeholder,
+  onChange
+}: IComponentProps) => ({ column }: { column: any }) => {
   // Calculate the options for filtering
   // using the preFilteredRows
   const { filterValue, setFilter, preFilteredRows, id } = column;
@@ -18,6 +26,7 @@ export const makeSelectFilterUI = () => ({ column }: { column: any }) => {
       value={filterValue}
       onChange={e => {
         setFilter(e.target.value || undefined);
+        onChange(e.target.value);
       }}
     >
       <option value="">All</option>

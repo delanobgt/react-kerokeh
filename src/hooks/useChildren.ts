@@ -12,7 +12,7 @@ const useChildProps = (children: ReactNode = [], whitelist: string[]) => {
 
         return childProps;
       }, {}),
-    [children]
+    [children, whitelist]
   );
 };
 

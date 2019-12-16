@@ -32,7 +32,7 @@ export default function TemporaryDrawer(props: IProps) {
       onKeyDown={() => setDrawerOpen(false)}
     >
       <BigText variant="h6" className="m-4">
-        Wardite Admin Panel
+        Depatu Buy &amp; Sell Admin Panel
       </BigText>
       <Divider />
       <MenuList setDrawerOpen={setDrawerOpen} />

@@ -1,20 +1,19 @@
+import _ from "lodash";
 import React from "react";
 import { Field, reduxForm, InjectedFormProps } from "redux-form";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import _ from "lodash";
 import {
   CircularProgress,
   Grid,
   Paper,
-  TextField,
   Button,
   Typography
 } from "@material-ui/core";
 
 import { signIn, ISignInAction } from "src/store/auth";
-import { RenderFieldFn } from "src/util/types";
 import { goPromise } from "src/util/helper";
+import { renderTextField } from "src/redux-form/renderers";
 
 const required = (value: any): any =>
   value || typeof value === "number" ? undefined : "Required";
@@ -25,32 +24,6 @@ interface IFormProps {
 }
 
 interface IComponentProps {}
-
-const renderField: RenderFieldFn = ({
-  input,
-  label,
-  type,
-  meta: { touched, error },
-  ...custom
-}) => (
-  <div>
-    <div>
-      <TextField
-        variant="outlined"
-        label={label}
-        placeholder={label}
-        error={touched && error}
-        helperText={touched && error}
-        {...input}
-        {...custom}
-        type={type}
-        fullWidth
-      />
-      <br />
-      <br />
-    </div>
-  </div>
-);
 
 const MyPaper = styled(Paper)`
   padding: 1.5em;
@@ -71,7 +44,7 @@ const Login = (
     setLoading(true);
     const [err, res] = await goPromise<ISignInAction>(signIn(credentials));
     if (err) {
-      setError(err.response.data.errors);
+      setError(_.get(err, "response.data.errors", "Check your connection."));
     } else {
       dispatch(res);
     }
@@ -89,17 +62,17 @@ const Login = (
         <MyPaper elevation={3}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Typography align="center" variant="h4">
-              WARDITE
+              BUY & SELL
             </Typography>
             <Typography align="center" variant="subtitle1">
-              ADMIN PANEL
+              Admin Panel
             </Typography>
             <br />
             <br />
             <Field
               name="username"
               type="text"
-              component={renderField}
+              component={renderTextField}
               label="Username"
               validate={[required]}
               disabled={loading}
@@ -107,7 +80,7 @@ const Login = (
             <Field
               name="password"
               type="password"
-              component={renderField}
+              component={renderTextField}
               label="Password"
               validate={[required]}
               disabled={loading}

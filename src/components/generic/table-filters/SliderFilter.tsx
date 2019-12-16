@@ -1,6 +1,14 @@
 import React from "react";
 
-export const makeSliderFilterUI = () => ({ column }: { column: any }) => {
+interface IComponentProps {
+  placeholder?: string;
+  onChange?: (e: string) => void;
+}
+
+export const makeSliderFilterUI = ({
+  placeholder,
+  onChange
+}: IComponentProps) => ({ column }: { column: any }) => {
   // Calculate the min and max
   // using the preFilteredRows
 
@@ -24,6 +32,7 @@ export const makeSliderFilterUI = () => ({ column }: { column: any }) => {
         value={filterValue || min}
         onChange={e => {
           setFilter(parseInt(e.target.value, 10));
+          onChange(e.target.value);
         }}
       />
       <button onClick={() => setFilter(undefined)}>Off</button>

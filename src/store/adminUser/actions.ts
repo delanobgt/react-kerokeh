@@ -1,8 +1,8 @@
 import {
   EAdminUserActionTypes,
   INewAdminUser,
-  IUserDeleteAction,
-  IUserGetAction
+  IAdminUserDeleteAction,
+  IAdminUserGetAction
 } from "./types";
 import celestineApi from "src/apis/celestine";
 
@@ -14,7 +14,7 @@ export const createAdminUser = async (
 
 export const getAdminUsers = async (
   limit = 100
-): Promise<IUserGetAction> => {
+): Promise<IAdminUserGetAction> => {
   const response = await celestineApi().get(`/admin/admin_user`, {
     query: {
       limit
@@ -36,7 +36,7 @@ export const updateAdminUser = async (
 
 export const deleteAdminUser = async (
   adminUserId: number
-): Promise<IUserDeleteAction> => {
+): Promise<IAdminUserDeleteAction> => {
   await celestineApi().delete(`/admin/admin_user/${adminUserId}`);
   return {
     type: EAdminUserActionTypes.USER_DELETE,
