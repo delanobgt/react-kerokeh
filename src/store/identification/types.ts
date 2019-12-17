@@ -10,14 +10,17 @@ export enum EIdentificationActionTypes {
 
 // entity types
 export interface IIdentification {
+  id: number;
   identification_image_url: string;
   identification_with_user_url: string;
   number: string;
   rejected_reason: string | null;
   type: string;
+  user_id: number;
   verification_attempted: boolean;
   verification_rejected: boolean;
   verified: boolean;
+  verified_by: string | null;
 }
 
 interface IIdentificationFilter {

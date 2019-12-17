@@ -21,8 +21,8 @@ export const getIdentifications = async (
     .map(sort => `${sort.field}%20${sort.dir}`)
     .join(",")
     .value();
-  const params = _.pickBy({ ...pagination, ...filter }, val => val);
-  const response = await celestineApi().get(`/admin/user?sort=${sort}`, {
+  const params = _.pickBy({ ...pagination, ...filter, sort }, val => val);
+  const response = await celestineApi().get(`/admin/identification`, {
     params
   });
   const identifications = response.data.data;
@@ -34,7 +34,7 @@ export const getIdentifications = async (
   };
 };
 
-export const updateUserFilter = (
+export const updateIdentificationFilter = (
   filter: PIdentificationFilter
 ): IIdentificationFilterUpdateAction => {
   return {
@@ -43,7 +43,7 @@ export const updateUserFilter = (
   };
 };
 
-export const updateUserPagination = (
+export const updateIdentificationPagination = (
   pagination: PIdentificationPagination
 ): IIdentificationPaginationUpdateAction => {
   return {
@@ -52,7 +52,7 @@ export const updateUserPagination = (
   };
 };
 
-export const updateUserSorts = (
+export const updateIdentificationSorts = (
   sorts: ISort<IdentificationSortField>[]
 ): IIdentificationSortsUpdateAction => {
   return {

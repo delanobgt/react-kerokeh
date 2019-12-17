@@ -1,16 +1,9 @@
 import {
   EAdminUserActionTypes,
-  INewAdminUser,
   IAdminUserDeleteAction,
   IAdminUserGetAction
 } from "./types";
 import celestineApi from "src/apis/celestine";
-
-export const createAdminUser = async (
-  adminUser: INewAdminUser
-): Promise<void> => {
-  await celestineApi().post(`/admin/admin_user`, adminUser);
-};
 
 export const getAdminUsers = async (
   limit = 100
@@ -25,13 +18,6 @@ export const getAdminUsers = async (
     type: EAdminUserActionTypes.USER_GET,
     adminUsers
   };
-};
-
-export const updateAdminUser = async (
-  id: number,
-  adminUser: INewAdminUser
-): Promise<void> => {
-  await celestineApi().patch(`/admin/admin_user/${id}`, adminUser);
 };
 
 export const deleteAdminUser = async (

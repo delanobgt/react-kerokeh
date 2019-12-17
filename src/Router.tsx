@@ -15,6 +15,7 @@ import Nav from "./components/main/Nav";
 import Login from "./components/main/Auth/Login";
 import Logout from "./components/main/Auth/Logout";
 import AdminUser from "./components/main/AdminUser";
+import Identification from "./components/main/Identification";
 import User from "./components/main/User";
 import JwtTimer from "./components/misc/JwtTimer";
 import { RootState } from "./store";
@@ -112,6 +113,9 @@ const AdminRoutes = () => {
         <Switch>
           <Route path="/dashboard">
             <HeadlineText variant="h6">Dashboard</HeadlineText>
+          </Route>
+          <Route path="/identification">
+            <Identification />
           </Route>
           <Route path="/user">
             <User />

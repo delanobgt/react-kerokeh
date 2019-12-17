@@ -56,4 +56,4 @@ const reducer: Reducer<IIdentificationState, UserActionType> = (
   }
 };
 
-export { reducer as userReducer };
+export { reducer as identificationReducer };
