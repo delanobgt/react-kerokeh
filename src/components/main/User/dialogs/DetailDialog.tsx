@@ -6,7 +6,8 @@ import {
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails,
-  CircularProgress
+  CircularProgress,
+  Chip
 } from "@material-ui/core";
 import styled from "styled-components";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
@@ -20,6 +21,12 @@ import {
 import BasicDialog from "src/components/generic/BasicDialog";
 import moment from "moment";
 import { goPromise } from "src/util/helper";
+import {
+  IIdentification,
+  getIdentificationByUserId
+} from "src/store/identification";
+import { MyDesc } from "../../Identification/components";
+import { statusLabelDict } from "../../Identification/constants";
 
 const SingleEntry = styled.div`
   display: flex;
@@ -58,6 +65,10 @@ function DetailDialog(props: IComponentProps) {
     activeRefundShippingAddress,
     setActiveRefundShippingAddress
   ] = React.useState<IShippingAddress | null>(null);
+  const [
+    identification,
+    setIdentification
+  ] = React.useState<IIdentification | null>(null);
 
   // initial fetch
   const fetch = React.useCallback(async () => {
@@ -70,14 +81,18 @@ function DetailDialog(props: IComponentProps) {
     const [errShippingAddresses, shippingAddresses] = await goPromise<
       IShippingAddress
     >(getShippingAddressesByUserId(user.id));
+    const [errIdentification, identification] = await goPromise<
+      IIdentification
+    >(getIdentificationByUserId(user.id));
     setLoading(false);
 
-    if (errUser || errReferral || errShippingAddresses) {
+    if (errUser || errReferral || errShippingAddresses || errIdentification) {
       console.log(errUser, errReferral, errShippingAddresses);
       setError("error");
     } else {
       setUser(user);
       setReferral(referral);
+      setIdentification(identification);
       if (user.active_shipping_address_id) {
         setActiveShippingAddress(
           (_.find(
@@ -305,6 +320,45 @@ function DetailDialog(props: IComponentProps) {
     ];
   }, [activeRefundShippingAddress]);
 
+  const identificationEntries = React.useMemo(() => {
+    if (!identification) return [];
+    const key =
+      Number(identification.verification_attempted) * 2 ** 2 +
+      Number(identification.verification_rejected) * 2 ** 1 +
+      Number(identification.verified) * 2 ** 0;
+    return [
+      { label: "Id", value: identification.id || "-" },
+      { label: "Number", value: identification.number || "-" },
+      { label: "Type", value: identification.type || "-" },
+      {
+        label: "Status",
+        value: (
+          <div>
+            <Chip
+              style={{ background: statusLabelDict[key].color }}
+              label={statusLabelDict[key].label}
+            />
+            {identification.verification_rejected ? (
+              <MyDesc
+                variant="subtitle2"
+                style={{ color: statusLabelDict[key].color }}
+              >
+                {identification.rejected_reason}
+              </MyDesc>
+            ) : identification.verified ? (
+              <MyDesc
+                variant="subtitle2"
+                style={{ color: statusLabelDict[key].color }}
+              >
+                Verified by {identification.verified_by}
+              </MyDesc>
+            ) : null}
+          </div>
+        )
+      }
+    ];
+  }, [identification]);
+
   return (
     <div>
       <BasicDialog
@@ -351,6 +405,10 @@ function DetailDialog(props: IComponentProps) {
                   entries: activeRefundShippingAddressEntries
                 })}
                 {makeExpansion({ title: "Referral", entries: referralEntries })}
+                {makeExpansion({
+                  title: "Identification",
+                  entries: identificationEntries
+                })}
               </div>
             </>
           ) : null}

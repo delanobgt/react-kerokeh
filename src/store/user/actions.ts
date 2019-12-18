@@ -25,10 +25,14 @@ export const getUsers = async (
     ? `${filter.created_at_start},${filter.created_at_end}`
     : undefined;
   const params = _.pickBy(
-    { ...pagination, ...filter, sort, created_at },
+    {
+      ...pagination,
+      ..._.omit(filter, ["created_at_start", "created_at_end"]),
+      created_at
+    },
     val => val
   );
-  const response = await celestineApi().get(`/admin/user`, {
+  const response = await celestineApi().get(`/admin/user?sort=${sort}`, {
     params
   });
   const users = response.data.data;

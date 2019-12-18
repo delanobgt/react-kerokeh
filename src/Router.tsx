@@ -68,6 +68,7 @@ const AdminRoutes = () => {
     }
   }, [fetch, token]);
 
+  // render component based on condition
   if (error === EErrorType.FETCH_FAIL) {
     // fail to fetch
     return (

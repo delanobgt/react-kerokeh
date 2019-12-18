@@ -270,6 +270,7 @@ function DetailDialog(props: IComponentProps) {
                       <TransformWrapper style={{ width: "100%" }}>
                         <TransformComponent>
                           <img
+                            alt=""
                             style={{ width: "100%" }}
                             src={identification.identification_image_url}
                           />
@@ -290,6 +291,7 @@ function DetailDialog(props: IComponentProps) {
                       <TransformWrapper style={{ width: "100%" }}>
                         <TransformComponent>
                           <img
+                            alt=""
                             style={{ width: "100%" }}
                             src={identification.identification_with_user_url}
                           />

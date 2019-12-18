@@ -21,10 +21,13 @@ export const getIdentifications = async (
     .map(sort => `${sort.field}%20${sort.dir}`)
     .join(",")
     .value();
-  const params = _.pickBy({ ...pagination, ...filter, sort }, val => val);
-  const response = await celestineApi().get(`/admin/identification`, {
-    params
-  });
+  const params = _.pickBy({ ...pagination, ...filter }, val => val);
+  const response = await celestineApi().get(
+    `/admin/identification?sort=${sort}`,
+    {
+      params
+    }
+  );
   const identifications = response.data.data;
   const meta = response.data.meta;
   return {
