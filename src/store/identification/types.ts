@@ -2,10 +2,7 @@ import { ISort } from "src/util/types";
 
 // enums
 export enum EIdentificationActionTypes {
-  IDENTIFICATION_GET = "@@identification/IDENTIFICATION_GET",
-  IDENTIFICATION_FILTER_UPDATE = "@@identification/IDENTIFICATION_FILTER_UPDATE",
-  IDENTIFICATION_PAGINATION_UPDATE = "@@identification/IDENTIFICATION_PAGINATION_UPDATE",
-  IDENTIFICATION_SORTS_UPDATE = "@@identification/IDENTIFICATION_SORTS_UPDATE"
+  IDENTIFICATION_GET = "@@identification/IDENTIFICATION_GET"
 }
 
 // entity types
@@ -64,23 +61,4 @@ export interface IIdentificationGetAction {
   realTotal: number;
 }
 
-export interface IIdentificationFilterUpdateAction {
-  type: EIdentificationActionTypes.IDENTIFICATION_FILTER_UPDATE;
-  filter: PIdentificationFilter;
-}
-
-export interface IIdentificationPaginationUpdateAction {
-  type: EIdentificationActionTypes.IDENTIFICATION_PAGINATION_UPDATE;
-  pagination: PIdentificationPagination;
-}
-
-export interface IIdentificationSortsUpdateAction {
-  type: EIdentificationActionTypes.IDENTIFICATION_SORTS_UPDATE;
-  sorts: ISort<IdentificationSortField>[];
-}
-
-export type UserActionType =
-  | IIdentificationGetAction
-  | IIdentificationFilterUpdateAction
-  | IIdentificationPaginationUpdateAction
-  | IIdentificationSortsUpdateAction;
+export type UserActionType = IIdentificationGetAction;

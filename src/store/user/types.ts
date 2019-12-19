@@ -2,10 +2,7 @@ import { ISort } from "src/util/types";
 
 // enums
 export enum EUserActionTypes {
-  USER_GET = "@@user/USER_GET",
-  USER_FILTER_UPDATE = "@@user/USER_FILTER_UPDATE",
-  USER_PAGINATION_UPDATE = "@@user/USER_PAGINATION_UPDATE",
-  USER_SORTS_UPDATE = "@@user/USER_SORTS_UPDATE"
+  USER_GET = "@@user/USER_GET"
 }
 
 // entity types

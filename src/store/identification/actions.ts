@@ -4,10 +4,7 @@ import {
   PIdentificationPagination,
   IdentificationSortField,
   IIdentificationGetAction,
-  EIdentificationActionTypes,
-  IIdentificationFilterUpdateAction,
-  IIdentificationPaginationUpdateAction,
-  IIdentificationSortsUpdateAction
+  EIdentificationActionTypes
 } from "./types";
 import celestineApi from "src/apis/celestine";
 import { ISort } from "src/util/types";
@@ -34,32 +31,5 @@ export const getIdentifications = async (
     type: EIdentificationActionTypes.IDENTIFICATION_GET,
     identifications,
     realTotal: meta.total
-  };
-};
-
-export const updateIdentificationFilter = (
-  filter: PIdentificationFilter
-): IIdentificationFilterUpdateAction => {
-  return {
-    type: EIdentificationActionTypes.IDENTIFICATION_FILTER_UPDATE,
-    filter
-  };
-};
-
-export const updateIdentificationPagination = (
-  pagination: PIdentificationPagination
-): IIdentificationPaginationUpdateAction => {
-  return {
-    type: EIdentificationActionTypes.IDENTIFICATION_PAGINATION_UPDATE,
-    pagination
-  };
-};
-
-export const updateIdentificationSorts = (
-  sorts: ISort<IdentificationSortField>[]
-): IIdentificationSortsUpdateAction => {
-  return {
-    type: EIdentificationActionTypes.IDENTIFICATION_SORTS_UPDATE,
-    sorts
   };
 };
