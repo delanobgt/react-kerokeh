@@ -14,6 +14,8 @@ import styled from "styled-components";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
+import useReactRouter from "use-react-router";
+import queryString from "query-string";
 
 import Table, {
   OnPaginationChangeFn
@@ -24,7 +26,6 @@ import useIntervalRun from "src/hooks/useIntervalRun";
 import TopAction from "./TopAction";
 import FilterForm from "./FilterForm";
 import SortForm from "../../generic/SortForm";
-import { ISort } from "src/util/types";
 import DetailDialog from "./dialogs/DetailDialog";
 import {
   IIdentification,
@@ -32,12 +33,11 @@ import {
   PIdentificationFilter,
   IdentificationSortField,
   IIdentificationGetAction,
-  getIdentifications,
-  updateIdentificationPagination,
-  updateIdentificationSorts
+  getIdentifications
 } from "src/store/identification";
 import { statusLabelDict } from "./constants";
 import { MyDesc } from "./components";
+import useTableUrlState from "src/hooks/useTableUrlState";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -76,17 +76,30 @@ function Identifications() {
   ] = React.useState<number | null>(null);
   const dispatch = useDispatch();
 
-  const identificationPagination = useSelector<
-    RootState,
-    PIdentificationPagination
-  >(state => state.identification.pagination);
-  const identificationFilter = useSelector<RootState, PIdentificationFilter>(
-    state => state.identification.filter
+  const { location } = useReactRouter();
+  const isSearchEmpty = React.useMemo(() => {
+    const parsed = queryString.parse(location.search);
+    return _.size(parsed) === 0;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const {
+    filter,
+    pagination,
+    sorts,
+    updateFilter,
+    updatePagination,
+    updateSorts
+  } = useTableUrlState<
+    PIdentificationFilter,
+    PIdentificationPagination,
+    IdentificationSortField
+  >(
+    {},
+    { limit: 5, offset: 0 },
+    isSearchEmpty ? [{ field: "verification_attempted", dir: "desc" }] : []
   );
-  const identificationSorts = useSelector<
-    RootState,
-    ISort<IdentificationSortField>[]
-  >(state => state.identification.sorts);
+
   const identificationRealTotal = useSelector<RootState, number>(
     state => state.identification.realTotal
   );
@@ -107,23 +120,14 @@ function Identifications() {
   // interval fetch
   const autoFetch = React.useCallback(async () => {
     const [err, res] = await goPromise<IIdentificationGetAction>(
-      getIdentifications(
-        identificationPagination,
-        identificationFilter,
-        identificationSorts
-      )
+      getIdentifications(pagination, filter, sorts)
     );
     if (err) {
       throw err;
     } else {
       dispatch(res);
     }
-  }, [
-    dispatch,
-    identificationPagination,
-    identificationFilter,
-    identificationSorts
-  ]);
+  }, [dispatch, pagination, filter, sorts]);
   const intervalRun = useIntervalRun(() => autoFetch(), refreshDelay);
   const {
     setAlive: setIntervalRunAlive,
@@ -135,7 +139,7 @@ function Identifications() {
     setError("");
     setLoading(true);
     const [err, res] = await goPromise<IIdentificationGetAction>(
-      getIdentifications({ limit: 5 }, {}, [])
+      getIdentifications({ offset: 0, limit: 5 }, {}, [])
     );
     setLoading(false);
     if (err) {
@@ -158,23 +162,16 @@ function Identifications() {
   // on table change (pagination, filter, sorts)
   React.useEffect(() => {
     dRestartIntervalRun();
-  }, [
-    dRestartIntervalRun,
-    identificationPagination,
-    identificationFilter,
-    identificationSorts
-  ]);
+  }, [dRestartIntervalRun, pagination, filter, sorts]);
 
   const onPaginationChange: OnPaginationChangeFn = React.useCallback(
     (pageIndex, pageSize) => {
-      dispatch(
-        updateIdentificationPagination({
-          offset: pageIndex * pageSize,
-          limit: pageSize
-        })
-      );
+      updatePagination({
+        offset: pageIndex * pageSize,
+        limit: pageSize
+      });
     },
-    [dispatch]
+    [updatePagination]
   );
 
   const columns: Column<IIdentification>[] = React.useMemo(
@@ -279,12 +276,12 @@ function Identifications() {
               <>
                 {/* Filter Form */}
                 <div className={classes.filterAndSortForm}>
-                  <FilterForm />
+                  <FilterForm filter={filter} updateFilter={updateFilter} />
                   <div style={{ marginLeft: "2rem" }}>
                     <SortForm
-                      sorts={identificationSorts}
+                      sorts={sorts}
                       sortFields={identificationSortFields}
-                      updateSorts={updateIdentificationSorts}
+                      updateSorts={updateSorts}
                     />
                   </div>
                 </div>
@@ -294,6 +291,8 @@ function Identifications() {
                   refreshDelay={refreshDelay}
                 />
                 <Table
+                  pageIndex={pagination.offset / pagination.limit}
+                  pageSize={pagination.limit}
                   columns={columns}
                   data={identifications}
                   rowCount={identificationRealTotal}

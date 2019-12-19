@@ -27,14 +27,13 @@ import {
   PUserPagination,
   PUserFilter,
   getUsers,
-  updateUserPagination,
-  UserSortField,
-  updateUserSorts
+  UserSortField
 } from "src/store/user";
 import FilterForm from "./FilterForm";
 import SortForm from "../../generic/SortForm";
-import { ISort } from "src/util/types";
 import DetailDialog from "./dialogs/DetailDialog";
+import useTableUrlState from "src/hooks/useTableUrlState";
+import moment from "moment";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -62,6 +61,21 @@ const MyPaper = styled(Paper)`
 function Users() {
   const refreshDelay = 5000;
   const classes = useStyles({});
+  const {
+    filter,
+    pagination,
+    sorts,
+    updateFilter,
+    updatePagination,
+    updateSorts
+  } = useTableUrlState<PUserFilter, PUserPagination, UserSortField>(
+    {
+      created_at_start: moment.utc(0).format("YYYY-MM-DD"),
+      created_at_end: moment().format("YYYY-MM-DD")
+    },
+    { limit: 5, offset: 0 },
+    []
+  );
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
   const users = useSelector<RootState, IUser[]>(state => state.user.users);
@@ -70,15 +84,6 @@ function Users() {
   >(null);
   const dispatch = useDispatch();
 
-  const userPagination = useSelector<RootState, PUserPagination>(
-    state => state.user.pagination
-  );
-  const userFilter = useSelector<RootState, PUserFilter>(
-    state => state.user.filter
-  );
-  const userSorts = useSelector<RootState, ISort<UserSortField>[]>(
-    state => state.user.sorts
-  );
   const userRealTotal = useSelector<RootState, number>(
     state => state.user.realTotal
   );
@@ -90,14 +95,14 @@ function Users() {
   // interval fetch
   const autoFetch = React.useCallback(async () => {
     const [err, res] = await goPromise<IUserGetAction>(
-      getUsers(userPagination, userFilter, userSorts)
+      getUsers(pagination, filter, sorts)
     );
     if (err) {
       throw err;
     } else {
       dispatch(res);
     }
-  }, [dispatch, userPagination, userFilter, userSorts]);
+  }, [dispatch, pagination, filter, sorts]);
   const intervalRun = useIntervalRun(() => autoFetch(), refreshDelay);
   const {
     setAlive: setIntervalRunAlive,
@@ -109,7 +114,7 @@ function Users() {
     setError("");
     setLoading(true);
     const [err, res] = await goPromise<IUserGetAction>(
-      getUsers({ limit: 5 }, {}, [])
+      getUsers({ offset: 0, limit: 5 }, {}, [])
     );
     setLoading(false);
     if (err) {
@@ -132,15 +137,16 @@ function Users() {
   // on table change (pagination, filter, sorts)
   React.useEffect(() => {
     dRestartIntervalRun();
-  }, [dRestartIntervalRun, userPagination, userFilter, userSorts]);
+  }, [dRestartIntervalRun, pagination, filter, sorts]);
 
   const onPaginationChange: OnPaginationChangeFn = React.useCallback(
     (pageIndex, pageSize) => {
-      dispatch(
-        updateUserPagination({ offset: pageIndex * pageSize, limit: pageSize })
-      );
+      updatePagination({
+        offset: pageIndex * pageSize,
+        limit: pageSize
+      });
     },
-    [dispatch]
+    [updatePagination]
   );
 
   const columns: Column<IUser>[] = React.useMemo(
@@ -216,12 +222,12 @@ function Users() {
               <>
                 {/* Filter Form */}
                 <div className={classes.filterAndSortForm}>
-                  <FilterForm />
+                  <FilterForm filter={filter} updateFilter={updateFilter} />
                   <div style={{ marginLeft: "2rem" }}>
-                    <SortForm
-                      sorts={userSorts}
+                    <SortForm<UserSortField>
+                      sorts={sorts}
                       sortFields={userSortFields}
-                      updateSorts={updateUserSorts}
+                      updateSorts={updateSorts}
                     />
                   </div>
                 </div>
@@ -231,6 +237,8 @@ function Users() {
                   refreshDelay={refreshDelay}
                 />
                 <Table
+                  pageIndex={pagination.offset / pagination.limit}
+                  pageSize={pagination.limit}
                   columns={columns}
                   data={users}
                   rowCount={userRealTotal}

@@ -17,6 +17,8 @@ interface IComponentProps {
   rowCount: number;
   onPaginationChange: OnPaginationChangeFn;
   disableSorting?: boolean;
+  pageIndex: number;
+  pageSize: number;
 }
 
 export type OnPaginationChangeFn = (
@@ -30,7 +32,9 @@ function ReactTableSSR({
   data,
   rowCount,
   onPaginationChange,
-  disableSorting
+  disableSorting,
+  pageIndex,
+  pageSize
 }: IComponentProps) {
   const defaultColumn = React.useMemo(
     () => ({
@@ -38,6 +42,8 @@ function ReactTableSSR({
     }),
     []
   );
+
+  const onPaginationChangeRef = React.useRef(null);
 
   const {
     getTableProps,
@@ -48,8 +54,7 @@ function ReactTableSSR({
     // pagination shits
     page,
     gotoPage,
-    setPageSize,
-    state: { pageIndex, pageSize }
+    setPageSize
   } = useTable(
     {
       columns,
@@ -65,22 +70,36 @@ function ReactTableSSR({
     usePagination
   );
 
-  const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    newPage: number
-  ): void => {
-    gotoPage(newPage);
-  };
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    setPageSize(parseInt(event.target.value, 10));
-  };
+  // call pagination listener on pagination change
+  const handleChangePage = React.useCallback(
+    (
+      event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+      newPage: number
+    ): void => {
+      onPaginationChangeRef.current(newPage, pageSize);
+    },
+    [pageSize]
+  );
+  const handleChangeRowsPerPage = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>): void => {
+      const newPageSize = parseInt(event.target.value, 10);
+      onPaginationChangeRef.current(pageIndex, newPageSize);
+    },
+    [pageIndex]
+  );
 
-  // Listen for changes in pagination and use the state to fetch our new data
+  // update pagination state based on props
   React.useEffect(() => {
-    if (onPaginationChange) onPaginationChange(pageIndex, pageSize);
-  }, [onPaginationChange, pageIndex, pageSize]);
+    gotoPage(pageIndex);
+  }, [gotoPage, pageIndex]);
+  React.useEffect(() => {
+    setPageSize(pageSize);
+  }, [setPageSize, pageSize]);
+
+  // Listen for changes in pagination handler
+  React.useEffect(() => {
+    onPaginationChangeRef.current = onPaginationChange;
+  }, [onPaginationChange]);
 
   return (
     <>
@@ -128,8 +147,8 @@ function ReactTableSSR({
         rowsPerPageOptions={[5, 10, 25, 50, 100]}
         component="div"
         count={rowCount}
-        rowsPerPage={pageSize}
         page={pageIndex}
+        rowsPerPage={pageSize}
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />

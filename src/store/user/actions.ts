@@ -2,11 +2,8 @@ import _ from "lodash";
 import {
   EUserActionTypes,
   IUserGetAction,
-  IUserFilterUpdateAction,
   PUserFilter,
   PUserPagination,
-  IUserPaginationUpdateAction,
-  IUserSortsUpdateAction,
   UserSortField
 } from "./types";
 import celestineApi from "src/apis/celestine";
@@ -41,32 +38,5 @@ export const getUsers = async (
     type: EUserActionTypes.USER_GET,
     users,
     realTotal: meta.total
-  };
-};
-
-export const updateUserFilter = (
-  filter: PUserFilter
-): IUserFilterUpdateAction => {
-  return {
-    type: EUserActionTypes.USER_FILTER_UPDATE,
-    filter
-  };
-};
-
-export const updateUserPagination = (
-  pagination: PUserPagination
-): IUserPaginationUpdateAction => {
-  return {
-    type: EUserActionTypes.USER_PAGINATION_UPDATE,
-    pagination
-  };
-};
-
-export const updateUserSorts = (
-  sorts: ISort<UserSortField>[]
-): IUserSortsUpdateAction => {
-  return {
-    type: EUserActionTypes.USER_SORTS_UPDATE,
-    sorts
   };
 };
