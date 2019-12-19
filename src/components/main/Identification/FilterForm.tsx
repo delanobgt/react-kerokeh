@@ -1,26 +1,20 @@
 import React from "react";
 import { TextField, Typography, MenuItem } from "@material-ui/core";
 import styled from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "src/store";
 import BasicSelect from "src/components/generic/BasicSelect";
-import {
-  PIdentificationFilter,
-  updateIdentificationFilter
-} from "src/store/identification";
+import { PIdentificationFilter } from "src/store/identification";
 
-interface IComponentProps {}
+interface IComponentProps {
+  filter: PIdentificationFilter;
+  updateFilter: (_filter: PIdentificationFilter) => void;
+}
 
 const Div = styled.div`
   margin-bottom: 0.5rem;
 `;
 
 function FilterForm(props: IComponentProps) {
-  const filterState = useSelector<RootState, PIdentificationFilter>(
-    state => state.identification.filter
-  );
-
-  const dispatch = useDispatch();
+  const { filter, updateFilter } = props;
 
   return (
     <div>
@@ -29,10 +23,8 @@ function FilterForm(props: IComponentProps) {
       <Div>
         <TextField
           label="Id"
-          value={filterState.id || ""}
-          onChange={e =>
-            dispatch(updateIdentificationFilter({ id: e.target.value }))
-          }
+          value={filter.id || ""}
+          onChange={e => updateFilter({ id: e.target.value })}
         />
       </Div>
 
@@ -40,10 +32,8 @@ function FilterForm(props: IComponentProps) {
         <BasicSelect
           style={{ width: "8em" }}
           label="Type"
-          value={filterState.type || ""}
-          onChange={(value: string) =>
-            dispatch(updateIdentificationFilter({ type: value }))
-          }
+          value={filter.type || ""}
+          onChange={(value: string) => updateFilter({ type: value })}
         >
           <MenuItem value="">No Filter</MenuItem>
           <MenuItem value="ktp">KTP</MenuItem>
@@ -55,10 +45,8 @@ function FilterForm(props: IComponentProps) {
         <BasicSelect
           style={{ width: "8em" }}
           label="Verified"
-          value={filterState.verified || ""}
-          onChange={(value: string) =>
-            dispatch(updateIdentificationFilter({ verified: value }))
-          }
+          value={filter.verified || ""}
+          onChange={(value: string) => updateFilter({ verified: value })}
         >
           <MenuItem value="">No Filter</MenuItem>
           <MenuItem value="true">True</MenuItem>
@@ -70,11 +58,9 @@ function FilterForm(props: IComponentProps) {
         <BasicSelect
           style={{ width: "12em" }}
           label="Verification Attempted"
-          value={filterState.verification_attempted || ""}
+          value={filter.verification_attempted || ""}
           onChange={(value: string) =>
-            dispatch(
-              updateIdentificationFilter({ verification_attempted: value })
-            )
+            updateFilter({ verification_attempted: value })
           }
         >
           <MenuItem value="">No Filter</MenuItem>

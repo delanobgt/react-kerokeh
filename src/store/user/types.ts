@@ -52,6 +52,21 @@ export interface IUser {
   };
 }
 
+export interface IShippingAddress {
+  additional_info: string | null;
+  address: string;
+  city: string;
+  country: string;
+  id: number;
+  name: string;
+  phone: string;
+  province: string;
+  recipient: string;
+  used_for_transaction: boolean;
+  user_id: number;
+  zip_code: string;
+}
+
 interface IUserFilter {
   id: string;
   username: string;
@@ -90,38 +105,4 @@ export interface IUserGetAction {
   realTotal: number;
 }
 
-export interface IUserFilterUpdateAction {
-  type: EUserActionTypes.USER_FILTER_UPDATE;
-  filter: PUserFilter;
-}
-
-export interface IUserPaginationUpdateAction {
-  type: EUserActionTypes.USER_PAGINATION_UPDATE;
-  pagination: PUserPagination;
-}
-
-export interface IUserSortsUpdateAction {
-  type: EUserActionTypes.USER_SORTS_UPDATE;
-  sorts: ISort<UserSortField>[];
-}
-
-export interface IShippingAddress {
-  additional_info: string | null;
-  address: string;
-  city: string;
-  country: string;
-  id: number;
-  name: string;
-  phone: string;
-  province: string;
-  recipient: string;
-  used_for_transaction: boolean;
-  user_id: number;
-  zip_code: string;
-}
-
-export type UserActionType =
-  | IUserGetAction
-  | IUserFilterUpdateAction
-  | IUserPaginationUpdateAction
-  | IUserSortsUpdateAction;
+export type UserActionType = IUserGetAction;

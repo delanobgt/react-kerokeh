@@ -9,7 +9,6 @@ import {
 } from "@material-ui/core";
 import { Close as CloseIcon } from "@material-ui/icons";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
 import BasicSelect from "src/components/generic/BasicSelect";
 import { ISort } from "src/util/types";
 
@@ -29,17 +28,15 @@ function SortForm<T>({ sorts, sortFields, updateSorts }: IComponentProps<T>) {
     [sorts]
   );
 
-  const dispatch = useDispatch();
-
   const handleAdd = React.useCallback(
     (value: T) => {
       const newSorts: ISort<T>[] = [
         ...sorts,
         { field: value, dir: "asc" } as ISort<T>
       ];
-      dispatch(updateSorts(newSorts));
+      updateSorts(newSorts);
     },
-    [dispatch, sorts, updateSorts]
+    [sorts, updateSorts]
   );
 
   const handleReplace = React.useCallback(
@@ -49,9 +46,9 @@ function SortForm<T>({ sorts, sortFields, updateSorts }: IComponentProps<T>) {
         field: value,
         dir: newSorts[index].dir
       };
-      dispatch(updateSorts(newSorts));
+      updateSorts(newSorts);
     },
-    [dispatch, sorts, updateSorts]
+    [sorts, updateSorts]
   );
 
   const handleToggleSort = React.useCallback(
@@ -61,9 +58,9 @@ function SortForm<T>({ sorts, sortFields, updateSorts }: IComponentProps<T>) {
         ...newSorts[index],
         dir: newSorts[index].dir === "asc" ? "desc" : "asc"
       };
-      dispatch(updateSorts(newSorts));
+      updateSorts(newSorts);
     },
-    [dispatch, sorts, updateSorts]
+    [sorts, updateSorts]
   );
 
   const handleDelete = React.useCallback(
@@ -72,9 +69,9 @@ function SortForm<T>({ sorts, sortFields, updateSorts }: IComponentProps<T>) {
         ...sorts.slice(0, index),
         ...sorts.slice(index + 1)
       ];
-      dispatch(updateSorts(newSorts));
+      updateSorts(newSorts);
     },
-    [dispatch, sorts, updateSorts]
+    [sorts, updateSorts]
   );
 
   return (

@@ -1,25 +1,22 @@
 import React from "react";
 import { TextField, Typography, MenuItem } from "@material-ui/core";
 import styled from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "src/store";
-import { PUserFilter, updateUserFilter } from "src/store/user";
+import { PUserFilter } from "src/store/user";
 import BasicSelect from "src/components/generic/BasicSelect";
 import DatePicker from "src/components/generic/DatePicker";
 import moment from "moment";
 
-interface IComponentProps {}
+interface IComponentProps {
+  filter: PUserFilter;
+  updateFilter: (_filter: PUserFilter) => void;
+}
 
 const Div = styled.div`
   margin-bottom: 0.5rem;
 `;
 
 function FilterForm(props: IComponentProps) {
-  const filterState = useSelector<RootState, PUserFilter>(
-    state => state.user.filter
-  );
-
-  const dispatch = useDispatch();
+  const { filter, updateFilter } = props;
 
   return (
     <div>
@@ -28,36 +25,32 @@ function FilterForm(props: IComponentProps) {
       <Div>
         <TextField
           label="Id"
-          value={filterState.id || ""}
-          onChange={e => dispatch(updateUserFilter({ id: e.target.value }))}
+          value={filter.id || ""}
+          onChange={e => updateFilter({ id: e.target.value })}
         />
       </Div>
 
       <Div>
         <TextField
           label="Username"
-          value={filterState.username || ""}
-          onChange={e =>
-            dispatch(updateUserFilter({ username: e.target.value }))
-          }
+          value={filter.username || ""}
+          onChange={e => updateFilter({ username: e.target.value })}
         />
       </Div>
 
       <Div>
         <TextField
           label="Full Name"
-          value={filterState.full_name || ""}
-          onChange={e =>
-            dispatch(updateUserFilter({ full_name: e.target.value }))
-          }
+          value={filter.full_name || ""}
+          onChange={e => updateFilter({ full_name: e.target.value })}
         />
       </Div>
 
       <Div>
         <TextField
           label="Email"
-          value={filterState.email || ""}
-          onChange={e => dispatch(updateUserFilter({ email: e.target.value }))}
+          value={filter.email || ""}
+          onChange={e => updateFilter({ email: e.target.value })}
         />
       </Div>
 
@@ -65,10 +58,8 @@ function FilterForm(props: IComponentProps) {
         <BasicSelect
           style={{ width: "8em" }}
           label="Store Closed"
-          value={filterState.store_closed || ""}
-          onChange={(value: string) =>
-            dispatch(updateUserFilter({ store_closed: value }))
-          }
+          value={filter.store_closed || ""}
+          onChange={(value: string) => updateFilter({ store_closed: value })}
         >
           <MenuItem value="">No Filter</MenuItem>
           <MenuItem value="true">True</MenuItem>
@@ -80,10 +71,8 @@ function FilterForm(props: IComponentProps) {
         <BasicSelect
           style={{ width: "8em" }}
           label="Banned"
-          value={filterState.banned || ""}
-          onChange={(value: string) =>
-            dispatch(updateUserFilter({ banned: value }))
-          }
+          value={filter.banned || ""}
+          onChange={(value: string) => updateFilter({ banned: value })}
         >
           <MenuItem value="">No Filter</MenuItem>
           <MenuItem value="true">Banned</MenuItem>
@@ -95,10 +84,8 @@ function FilterForm(props: IComponentProps) {
         <BasicSelect
           style={{ width: "8em" }}
           label="Froze"
-          value={filterState.froze || ""}
-          onChange={(value: string) =>
-            dispatch(updateUserFilter({ froze: value }))
-          }
+          value={filter.froze || ""}
+          onChange={(value: string) => updateFilter({ froze: value })}
         >
           <MenuItem value="">No Filter</MenuItem>
           <MenuItem value="true">Froze</MenuItem>
@@ -110,10 +97,8 @@ function FilterForm(props: IComponentProps) {
         <BasicSelect
           style={{ width: "8em" }}
           label="Is Seller"
-          value={filterState.is_seller || ""}
-          onChange={(value: string) =>
-            dispatch(updateUserFilter({ is_seller: value }))
-          }
+          value={filter.is_seller || ""}
+          onChange={(value: string) => updateFilter({ is_seller: value })}
         >
           <MenuItem value="">No Filter</MenuItem>
           <MenuItem value="true">Is Seller</MenuItem>
@@ -125,25 +110,21 @@ function FilterForm(props: IComponentProps) {
         <DatePicker
           label="Join At (Start)"
           onChange={date =>
-            dispatch(
-              updateUserFilter({
-                created_at_start: moment(date).format("YYYY-MM-DD")
-              })
-            )
+            updateFilter({
+              created_at_start: moment(date).format("YYYY-MM-DD")
+            })
           }
-          value={moment(filterState.created_at_start, "YYYY-MM-DD").toDate()}
+          value={moment(filter.created_at_start, "YYYY-MM-DD").toDate()}
         />
         &nbsp;&nbsp;
         <DatePicker
           label="Join At (End)"
           onChange={date =>
-            dispatch(
-              updateUserFilter({
-                created_at_end: moment(date).format("YYYY-MM-DD")
-              })
-            )
+            updateFilter({
+              created_at_end: moment(date).format("YYYY-MM-DD")
+            })
           }
-          value={moment(filterState.created_at_end, "YYYY-MM-DD").toDate()}
+          value={moment(filter.created_at_end, "YYYY-MM-DD").toDate()}
         />
       </Div>
     </div>

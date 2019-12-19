@@ -127,7 +127,7 @@ const AdminRoutes = () => {
           <Route path="/logout">
             <Logout />
           </Route>
-          <Route path="*">{() => <Redirect to="/dashboard" />}</Route>
+          {/* <Route path="*">{() => <Redirect to="/dashboard" />}</Route> */}
         </Switch>
         <br />
       </>

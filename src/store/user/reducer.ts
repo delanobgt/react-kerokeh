@@ -26,30 +26,6 @@ const reducer: Reducer<IUserState, UserActionType> = (
         realTotal: action.realTotal
       };
     }
-    case EUserActionTypes.USER_FILTER_UPDATE: {
-      return {
-        ...state,
-        filter: {
-          ...state.filter,
-          ...action.filter
-        }
-      };
-    }
-    case EUserActionTypes.USER_PAGINATION_UPDATE: {
-      return {
-        ...state,
-        pagination: {
-          ...state.pagination,
-          ...action.pagination
-        }
-      };
-    }
-    case EUserActionTypes.USER_SORTS_UPDATE: {
-      return {
-        ...state,
-        sorts: action.sorts
-      };
-    }
     default: {
       return state;
     }

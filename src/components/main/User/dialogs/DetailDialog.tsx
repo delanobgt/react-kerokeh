@@ -81,12 +81,12 @@ function DetailDialog(props: IComponentProps) {
     const [errShippingAddresses, shippingAddresses] = await goPromise<
       IShippingAddress
     >(getShippingAddressesByUserId(user.id));
-    const [errIdentification, identification] = await goPromise<
-      IIdentification
-    >(getIdentificationByUserId(user.id));
+    const [, identification] = await goPromise<IIdentification>(
+      getIdentificationByUserId(user.id)
+    );
     setLoading(false);
 
-    if (errUser || errReferral || errShippingAddresses || errIdentification) {
+    if (errUser || errReferral || errShippingAddresses) {
       console.log(errUser, errReferral, errShippingAddresses);
       setError("error");
     } else {
