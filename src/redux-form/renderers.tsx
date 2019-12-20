@@ -17,22 +17,19 @@ export const renderTextField: RenderFieldFn = ({
   ...custom
 }) => {
   return (
-    <div>
-      <div>
-        <TextField
-          label={label}
-          placeholder={label}
-          type={type}
-          error={touched && Boolean(error)}
-          helperText={touched && error}
-          fullWidth
-          {...input}
-          {...custom}
-        />
-        <br />
-        <br />
-      </div>
-    </div>
+    <>
+      <TextField
+        label={label}
+        placeholder={label}
+        type={type}
+        error={touched && Boolean(error)}
+        helperText={touched && error}
+        fullWidth
+        {...input}
+        {...custom}
+        style={{ marginBottom: "1rem" }}
+      />
+    </>
   );
 };
 

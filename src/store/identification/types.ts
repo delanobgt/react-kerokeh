@@ -1,5 +1,3 @@
-import { ISort } from "src/util/types";
-
 // enums
 export enum EIdentificationActionTypes {
   IDENTIFICATION_GET = "@@identification/IDENTIFICATION_GET"
@@ -48,9 +46,6 @@ export type IdentificationSortField =
 // redux state type
 export interface IIdentificationState {
   identifications: IIdentification[];
-  filter: PIdentificationFilter;
-  pagination: PIdentificationPagination;
-  sorts: ISort<IdentificationSortField>[];
   realTotal: number;
 }
 

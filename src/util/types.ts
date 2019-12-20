@@ -1,4 +1,6 @@
 import { ReactElement, ReactNode } from "react";
+import { WrappedFieldArrayProps } from "redux-form";
+import { IProductSize } from "src/store/product-categories";
 
 // redux form render
 export interface IRenderFieldProps {
@@ -8,10 +10,18 @@ export interface IRenderFieldProps {
   meta: { touched: boolean; error: boolean | string };
   children: ReactNode;
 }
-
 export type RenderFieldFn = (
   renderFieldProps: IRenderFieldProps
 ) => ReactElement;
+
+export interface IRenderFieldArrayProps {
+  fields: any;
+  meta: { touched: boolean; error: boolean | string };
+}
+export type RenderFieldArrayFn<T> = (
+  renderFieldArrayProps: WrappedFieldArrayProps<T>
+) => ReactElement;
+
 
 // misc
 export interface JWToken {

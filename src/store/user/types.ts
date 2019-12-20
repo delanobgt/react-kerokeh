@@ -1,5 +1,3 @@
-import { ISort } from "src/util/types";
-
 // enums
 export enum EUserActionTypes {
   USER_GET = "@@user/USER_GET"
@@ -89,9 +87,6 @@ export type UserSortField = "id" | "username" | "full_name" | "email";
 // redux state type
 export interface IUserState {
   users: IUser[];
-  filter: PUserFilter;
-  pagination: PUserPagination;
-  sorts: ISort<UserSortField>[];
   realTotal: number;
 }
 

@@ -15,6 +15,7 @@ import Nav from "./components/main/Nav";
 import Login from "./components/main/Auth/Login";
 import Logout from "./components/main/Auth/Logout";
 import AdminUser from "./components/main/AdminUser";
+import ProductCategory from "./components/main/ProductCategory";
 import Identification from "./components/main/Identification";
 import User from "./components/main/User";
 import JwtTimer from "./components/misc/JwtTimer";
@@ -115,6 +116,9 @@ const AdminRoutes = () => {
           <Route path="/dashboard">
             <HeadlineText variant="h6">Dashboard</HeadlineText>
           </Route>
+          <Route path="/product_category">
+            <ProductCategory />
+          </Route>
           <Route path="/identification">
             <Identification />
           </Route>
@@ -127,7 +131,7 @@ const AdminRoutes = () => {
           <Route path="/logout">
             <Logout />
           </Route>
-          {/* <Route path="*">{() => <Redirect to="/dashboard" />}</Route> */}
+          <Route path="*">{() => <Redirect to="/dashboard" />}</Route>
         </Switch>
         <br />
       </>

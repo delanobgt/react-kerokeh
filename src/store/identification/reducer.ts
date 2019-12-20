@@ -7,9 +7,6 @@ import {
 
 const initialState: IIdentificationState = {
   identifications: [],
-  filter: {},
-  pagination: { limit: 5, offset: 0 },
-  sorts: [],
   realTotal: 0
 };
 

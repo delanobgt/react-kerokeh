@@ -21,19 +21,21 @@ import { RootState } from "src/store";
 import { goPromise } from "src/util/helper";
 import useIntervalRun from "src/hooks/useIntervalRun";
 import TopAction from "./TopAction";
-import {
-  IUser,
-  IUserGetAction,
-  PUserPagination,
-  PUserFilter,
-  getUsers,
-  UserSortField
-} from "src/store/user";
 import FilterForm from "./FilterForm";
 import SortForm from "../../generic/SortForm";
-import DetailDialog from "./dialogs/DetailDialog";
+import CreateDialog from "./dialogs/CreateDialog";
 import useTableUrlState from "src/hooks/useTableUrlState";
-import moment from "moment";
+import {
+  PProductCategoryFilter,
+  PProductCategoryPagination,
+  ProductCategorySortField,
+  IProductCategory,
+  IProductCategoryGetAction,
+  getProductCategories,
+  TProductCategory,
+  getProductSizesByPCId
+} from "src/store/product-categories";
+import UpdateDialog from "./dialogs/UpdateDialog";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -48,6 +50,7 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: theme.spacing(2)
   },
   filterAndSortForm: {
+    marginBottom: "1rem",
     display: "flex",
     paddingLeft: theme.spacing(2)
     // justifyContent: "space-between"
@@ -68,34 +71,34 @@ function Users() {
     updateFilter,
     updatePagination,
     updateSorts
-  } = useTableUrlState<PUserFilter, PUserPagination, UserSortField>(
-    {
-      created_at_start: moment.utc(0).format("YYYY-MM-DD"),
-      created_at_end: moment().format("YYYY-MM-DD")
-    },
-    { limit: 5, offset: 0 },
-    []
-  );
+  } = useTableUrlState<
+    PProductCategoryFilter,
+    PProductCategoryPagination,
+    ProductCategorySortField
+  >({}, { limit: 5, offset: 0 }, []);
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
-  const users = useSelector<RootState, IUser[]>(state => state.user.users);
-  const [detailDialogUserId, setDetailDialogUserId] = React.useState<
-    number | null
-  >(null);
+  const productCategories = useSelector<RootState, IProductCategory[]>(
+    state => state.productCategory.productCategories
+  );
+  const [createDialogOpen, setCreateDialogOpen] = React.useState<boolean>(
+    false
+  );
+  const [updateDialogPCId, setUpdateDialogPCId] = React.useState<number>(null);
   const dispatch = useDispatch();
 
   const userRealTotal = useSelector<RootState, number>(
     state => state.user.realTotal
   );
-  const userSortFields: UserSortField[] = React.useMemo(
-    () => ["id", "username", "full_name", "email"],
+  const productCategorySortFields: ProductCategorySortField[] = React.useMemo(
+    () => ["id", "name", "slug"],
     []
   );
 
   // interval fetch
   const autoFetch = React.useCallback(async () => {
-    const [err, res] = await goPromise<IUserGetAction>(
-      getUsers(pagination, filter, sorts)
+    const [err, res] = await goPromise<IProductCategoryGetAction>(
+      getProductCategories(pagination, filter, sorts)
     );
     if (err) {
       throw err;
@@ -113,8 +116,8 @@ function Users() {
   const fetch = React.useCallback(async () => {
     setError("");
     setLoading(true);
-    const [err, res] = await goPromise<IUserGetAction>(
-      getUsers({ offset: 0, limit: 5 }, {}, [])
+    const [err, res] = await goPromise<IProductCategoryGetAction>(
+      getProductCategories({ offset: 0, limit: 5 }, {}, [])
     );
     setLoading(false);
     if (err) {
@@ -149,27 +152,19 @@ function Users() {
     [updatePagination]
   );
 
-  const columns: Column<IUser>[] = React.useMemo(
+  const columns: Column<IProductCategory>[] = React.useMemo(
     () => [
       {
-        Header: "User ID",
+        Header: "ID",
         accessor: "id"
       },
       {
-        Header: "Username",
-        accessor: "username"
+        Header: "Name",
+        accessor: "name"
       },
       {
-        Header: "Full Name",
-        accessor: "full_name"
-      },
-      {
-        Header: "Gender",
-        accessor: "gender"
-      },
-      {
-        Header: "Email",
-        accessor: "email"
+        Header: "Slug",
+        accessor: "slug"
       },
       {
         Header: "Actions",
@@ -178,11 +173,11 @@ function Users() {
           return (
             <div>
               <Button
-                onClick={() => setDetailDialogUserId(original.id)}
+                onClick={() => setUpdateDialogPCId(original.id)}
                 color="primary"
                 variant="outlined"
               >
-                Details
+                Update
               </Button>
             </div>
           );
@@ -192,6 +187,26 @@ function Users() {
     []
   );
 
+  // set updateInitialValues
+  const [updateInitialValues, setUpdateInitialValues] = React.useState<
+    TProductCategory
+  >({ name: "", slug: "", productSizes: [] });
+  React.useEffect(() => {
+    (async () => {
+      if (!updateDialogPCId)
+        return setUpdateInitialValues({ name: "", slug: "", productSizes: [] });
+      const productCategory: IProductCategory = (_.find(
+        productCategories,
+        pc => ((pc as unknown) as IProductCategory).id === updateDialogPCId
+      ) as unknown) as IProductCategory;
+      const productSizes = await getProductSizesByPCId(updateDialogPCId);
+      setUpdateInitialValues({
+        ...productCategory,
+        productSizes
+      });
+    })();
+  }, [productCategories, updateDialogPCId, setUpdateInitialValues]);
+
   return (
     <>
       <br />
@@ -200,8 +215,10 @@ function Users() {
         <Grid item xs={11} sm={11} md={11} lg={10}>
           <MyPaper elevation={3}>
             <Toolbar className={clsx(classes.root)}>
-              <Typography variant="h6">Users</Typography>
-              <Typography variant="subtitle1">List of all users</Typography>
+              <Typography variant="h6">Product Categories</Typography>
+              <Typography variant="subtitle1">
+                List of all product categories
+              </Typography>
             </Toolbar>
             <br />
             <br />
@@ -218,15 +235,15 @@ function Users() {
                 </span>
                 .
               </Typography>
-            ) : users && _.isArray(users) ? (
+            ) : productCategories && _.isArray(productCategories) ? (
               <>
                 {/* Filter Form */}
                 <div className={classes.filterAndSortForm}>
                   <FilterForm filter={filter} updateFilter={updateFilter} />
                   <div style={{ marginLeft: "2rem" }}>
-                    <SortForm<UserSortField>
+                    <SortForm<ProductCategorySortField>
                       sorts={sorts}
-                      sortFields={userSortFields}
+                      sortFields={productCategorySortFields}
                       updateSorts={updateSorts}
                     />
                   </div>
@@ -235,12 +252,13 @@ function Users() {
                 <TopAction
                   intervalRun={intervalRun}
                   refreshDelay={refreshDelay}
+                  setCreateDialogOpen={setCreateDialogOpen}
                 />
                 <Table
                   pageIndex={pagination.offset / pagination.limit}
                   pageSize={Number(pagination.limit)}
                   columns={columns}
-                  data={users}
+                  data={productCategories}
                   rowCount={userRealTotal}
                   onPaginationChange={onPaginationChange}
                   disableSorting={true}
@@ -250,10 +268,19 @@ function Users() {
           </MyPaper>
         </Grid>
       </Grid>
-      {Boolean(detailDialogUserId) && (
-        <DetailDialog
-          userId={detailDialogUserId}
-          dismiss={() => setDetailDialogUserId(null)}
+      {Boolean(createDialogOpen) && (
+        <CreateDialog
+          open={createDialogOpen}
+          restartIntervalRun={restartIntervalRun}
+          dismiss={() => setCreateDialogOpen(null)}
+        />
+      )}
+      {Boolean(updateDialogPCId) && (
+        <UpdateDialog
+          productCategoryId={updateDialogPCId}
+          restartIntervalRun={intervalRun.restart}
+          dismiss={() => setUpdateDialogPCId(null)}
+          initialValues={updateInitialValues}
         />
       )}
     </>

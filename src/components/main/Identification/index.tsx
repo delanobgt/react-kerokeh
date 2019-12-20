@@ -292,7 +292,7 @@ function Identifications() {
                 />
                 <Table
                   pageIndex={pagination.offset / pagination.limit}
-                  pageSize={pagination.limit}
+                  pageSize={Number(pagination.limit)}
                   columns={columns}
                   data={identifications}
                   rowCount={identificationRealTotal}
