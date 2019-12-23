@@ -87,8 +87,8 @@ function Users() {
   const [updateDialogPCId, setUpdateDialogPCId] = React.useState<number>(null);
   const dispatch = useDispatch();
 
-  const userRealTotal = useSelector<RootState, number>(
-    state => state.user.realTotal
+  const productCategoryRealTotal = useSelector<RootState, number>(
+    state => state.productCategory.realTotal
   );
   const productCategorySortFields: ProductCategorySortField[] = React.useMemo(
     () => ["id", "name", "slug"],
@@ -259,7 +259,7 @@ function Users() {
                   pageSize={Number(pagination.limit)}
                   columns={columns}
                   data={productCategories}
-                  rowCount={userRealTotal}
+                  rowCount={productCategoryRealTotal}
                   onPaginationChange={onPaginationChange}
                   disableSorting={true}
                 />

@@ -14,6 +14,7 @@ import {
   FieldArray
 } from "redux-form";
 import { Close as CloseIcon } from "@material-ui/icons";
+import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/BasicDialog";
@@ -52,32 +53,43 @@ function UpdateDialog(
     initialValues
   } = props;
 
+  const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
 
   const renderProductSizes: RenderFieldArrayFn<IProductSize> = React.useCallback(
     ({ fields }) => (
       <div>
-        {fields.map((member: any, index: number) => {
-          const field = fields.get(index);
-          return (
-            <div key={index}>
-              <Field
-                name={`${member}.size`}
-                type="text"
-                label="Size"
-                component={renderTextField}
-                validate={[requiredValidator]}
-                fullWidth={false}
-              />
-              {Boolean(!field.id) && (
-                <IconButton onClick={() => fields.remove(index)}>
-                  <CloseIcon />
-                </IconButton>
-              )}
-            </div>
-          );
-        })}
+        {!Boolean(fields.length) ? (
+          <Typography variant="subtitle1">- no product size yet -</Typography>
+        ) : (
+          fields
+            .map((member: any, index: number) => {
+              const field = fields.get(index);
+              return {
+                key: field.size,
+                component: (
+                  <div key={index}>
+                    <Field
+                      name={`${member}.size`}
+                      type="text"
+                      label="Size"
+                      component={renderTextField}
+                      validate={[requiredValidator]}
+                      fullWidth={false}
+                    />
+                    {Boolean(!field.id) && (
+                      <IconButton onClick={() => fields.remove(index)}>
+                        <CloseIcon />
+                      </IconButton>
+                    )}
+                  </div>
+                )
+              };
+            })
+            .sort((a, b) => (a.key || "!").localeCompare(b.key || "!"))
+            .map(e => e.component)
+        )}
         <Button
           variant="outlined"
           color="primary"
@@ -106,10 +118,8 @@ function UpdateDialog(
       const productSizePromises: Promise<IProductSize>[] = [];
       for (let productSize of formValues.productSizes) {
         if (!productSize.id) {
-          console.log("createProductSize");
           productSizePromises.push(createProductSize(productSize));
         } else {
-          console.log("updateProductSize");
           productSizePromises.push(updateProductSize(productSize));
         }
       }
@@ -126,9 +136,10 @@ function UpdateDialog(
       } else {
         restartIntervalRun();
         dismiss();
+        snackbar.showMessage("Product Category updated.");
       }
     },
-    [productCategoryId, dismiss, restartIntervalRun]
+    [productCategoryId, dismiss, restartIntervalRun, initialValues, snackbar]
   );
 
   const handleClose = () => {
@@ -176,6 +187,11 @@ function UpdateDialog(
               validate={[requiredValidator]}
               disabled={loading}
             />
+
+            <br />
+            <br />
+            <Typography variant="subtitle2">Product Sizes</Typography>
+            <br />
             {fieldArray}
             {error && (
               <Typography variant="subtitle1">

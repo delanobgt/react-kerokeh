@@ -6,6 +6,7 @@ import {
   CircularProgress
 } from "@material-ui/core";
 import styled from "styled-components";
+import { useSnackbar } from "material-ui-snackbar-provider";
 
 import BasicDialog from "src/components/generic/BasicDialog";
 import { goPromise } from "src/util/helper";
@@ -31,6 +32,7 @@ const TERM = "accept";
 
 function AcceptDialog(props: IComponentProps) {
   const { identificationId, fetch, restartIntervalRun, dismiss } = props;
+  const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
   const [term, setTerm] = React.useState<string>("");
@@ -54,8 +56,9 @@ function AcceptDialog(props: IComponentProps) {
       fetch();
       restartIntervalRun();
       dismiss();
+      snackbar.showMessage("Identification accepted.");
     }
-  }, [identificationId, fetch, dismiss, restartIntervalRun]);
+  }, [identificationId, fetch, dismiss, restartIntervalRun, snackbar]);
 
   return (
     <div>

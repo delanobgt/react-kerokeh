@@ -12,6 +12,7 @@ import {
   InjectedFormProps,
   SubmissionError
 } from "redux-form";
+import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
 import { createAdminUser } from "src/store/adminUser";
@@ -36,35 +37,40 @@ function CreateDialog(
 ) {
   const { open, dismiss, handleSubmit, restartIntervalRun } = props;
 
+  const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
 
-  const handleSave = async (formValues: IFormProps) => {
-    setLoading(true);
-    const { username, password, role_id } = formValues;
-    const [err] = await goPromise(
-      createAdminUser({
-        username,
-        password,
-        role_id
-      })
-    );
-    setLoading(false);
-    if (err) {
-      if (_.has(err, "response.data.errors")) {
-        throw new SubmissionError(err.response.data.errors);
+  const handleSave = React.useCallback(
+    async (formValues: IFormProps) => {
+      setLoading(true);
+      const { username, password, role_id } = formValues;
+      const [err] = await goPromise(
+        createAdminUser({
+          username,
+          password,
+          role_id
+        })
+      );
+      setLoading(false);
+      if (err) {
+        if (_.has(err, "response.data.errors")) {
+          throw new SubmissionError(err.response.data.errors);
+        } else {
+          setError("error");
+        }
       } else {
-        setError("error");
+        restartIntervalRun();
+        dismiss();
+        snackbar.showMessage("Admin User created.");
       }
-    } else {
-      restartIntervalRun();
-      dismiss();
-    }
-  };
+    },
+    [restartIntervalRun, dismiss, snackbar]
+  );
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   return (
     <div>
