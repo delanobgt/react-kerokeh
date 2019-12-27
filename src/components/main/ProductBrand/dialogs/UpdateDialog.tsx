@@ -79,7 +79,6 @@ function UpdateDialog(
   const fetch = React.useCallback(async () => {
     setError("");
     setLoading(true);
-    console.log("fetching updat dialog now!");
     const [errParent, resParent] = await goPromise<IProductBrandGetAction>(
       getProductBrands({ offset: 0, limit: 100 }, { parent_id: "0" }, [
         { field: "full_name", dir: "asc" }

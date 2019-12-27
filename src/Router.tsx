@@ -16,6 +16,7 @@ import Nav from "./components/main/Nav";
 import Login from "./components/main/Auth/Login";
 import Logout from "./components/main/Auth/Logout";
 import AdminUser from "./components/main/AdminUser";
+import DepositFee from "./components/main/DepositFee";
 import ProductBrand from "./components/main/ProductBrand";
 import ProductCategory from "./components/main/ProductCategory";
 import Identification from "./components/main/Identification";
@@ -117,6 +118,9 @@ const AdminRoutes = () => {
         <Switch>
           <Route path="/dashboard">
             <HeadlineText variant="h6">Dashboard</HeadlineText>
+          </Route>
+          <Route path="/deposit_fee">
+            <DepositFee />
           </Route>
           <Route path="/product_category">
             <ProductCategory />

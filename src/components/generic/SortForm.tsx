@@ -79,7 +79,7 @@ function SortForm<T>({ sorts, sortFields, updateSorts }: IComponentProps<T>) {
       <Typography variant="subtitle2">Sort</Typography>
 
       {sorts.map((sort, index) => (
-        <Div>
+        <Div key={index}>
           <Typography
             variant="subtitle1"
             display="inline"

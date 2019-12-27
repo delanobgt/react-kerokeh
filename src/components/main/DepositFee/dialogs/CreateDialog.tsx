@@ -12,16 +12,8 @@ import { useSnackbar } from "material-ui-snackbar-provider";
 import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/BasicDialog";
 import { requiredValidator } from "src/redux-form/validators";
-import {
-  createProductBrand,
-  IProductBrand,
-  getProductBrands,
-  IProductBrandGetAction
-} from "src/store/product-brand";
-import {
-  renderTextField,
-  renderAutoSuggestField
-} from "src/redux-form/renderers";
+import { renderTextField } from "src/redux-form/renderers";
+import { createDepositFee } from "src/store/deposit-fee";
 
 interface IComponentProps {
   open: boolean;
@@ -30,12 +22,8 @@ interface IComponentProps {
 }
 
 interface IFormProps {
-  name: string;
-  slug: string;
-  parent: {
-    label: string;
-    value: number;
-  };
+  fee: number;
+  starting_price: number;
 }
 
 function CreateDialog(
@@ -46,44 +34,15 @@ function CreateDialog(
   const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
-  const [rootProductBrands, setRootProductBrands] = React.useState<
-    IProductBrand[]
-  >([]);
-
-  const fetch = React.useCallback(async () => {
-    setError("");
-    setLoading(true);
-    const [err, res] = await goPromise<IProductBrandGetAction>(
-      getProductBrands({ offset: 0, limit: 100 }, { parent_id: "0" }, [
-        { field: "full_name", dir: "asc" }
-      ])
-    );
-    setLoading(false);
-    if (err) {
-      console.log({ err });
-      setError("error");
-    } else {
-      setRootProductBrands(res.productBrands);
-    }
-  }, []);
-
-  React.useEffect(() => {
-    fetch();
-  }, [fetch]);
 
   const handleSave = React.useCallback(
     async (formValues: IFormProps) => {
       setLoading(true);
-      const {
-        name,
-        slug,
-        parent: { value }
-      } = formValues;
+      const { fee, starting_price } = formValues;
       const [err] = await goPromise(
-        createProductBrand({
-          name,
-          slug,
-          parent_id: value
+        createDepositFee({
+          fee: Number(fee),
+          starting_price: Number(starting_price)
         })
       );
       setLoading(false);
@@ -96,7 +55,7 @@ function CreateDialog(
       } else {
         restartIntervalRun();
         dismiss();
-        snackbar.showMessage("Product Category created.");
+        snackbar.showMessage("Deposit Fee created.");
       }
     },
     [dismiss, restartIntervalRun, snackbar]
@@ -105,14 +64,6 @@ function CreateDialog(
   const handleClose = () => {
     dismiss();
   };
-
-  const parentProductBrandOptions = React.useMemo(
-    () => [
-      { value: 0, label: "No Parent" },
-      ...rootProductBrands.map(pb => ({ value: pb.id, label: pb.full_name }))
-    ],
-    [rootProductBrands]
-  );
 
   return (
     <div>
@@ -123,31 +74,23 @@ function CreateDialog(
         fullWidth
         bgClose
       >
-        <title>Create New Product Brand</title>
+        <title>Create New Deposit Fee</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>
             <>
               <Field
-                name="name"
-                type="text"
-                label="Name"
+                name="fee"
+                type="number"
+                label="Fee"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
               />
               <Field
-                name="slug"
-                type="text"
-                label="Slug"
+                name="starting_price"
+                type="number"
+                label="Starting Price"
                 component={renderTextField}
-                validate={[requiredValidator]}
-                disabled={loading}
-              />
-              <Field
-                name="parent"
-                label="Parent Brand"
-                options={parentProductBrandOptions}
-                component={renderAutoSuggestField}
                 validate={[requiredValidator]}
                 disabled={loading}
               />
@@ -173,5 +116,5 @@ function CreateDialog(
 }
 
 export default reduxForm<IFormProps, IComponentProps>({
-  form: "createProductBrandDialogForm"
+  form: "createDepositFeeDialogForm"
 })(CreateDialog);
