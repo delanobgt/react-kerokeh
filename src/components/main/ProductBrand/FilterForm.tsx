@@ -1,11 +1,11 @@
 import React from "react";
 import { TextField, Typography } from "@material-ui/core";
 import styled from "styled-components";
-import { PProductCategoryFilter } from "src/store/product-category";
+import { PProductBrandFilter } from "src/store/product-brand";
 
 interface IComponentProps {
-  filter: PProductCategoryFilter;
-  updateFilter: (_filter: PProductCategoryFilter) => void;
+  filter: PProductBrandFilter;
+  updateFilter: (_filter: PProductBrandFilter) => void;
 }
 
 const Div = styled.div`

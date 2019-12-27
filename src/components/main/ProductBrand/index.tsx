@@ -24,18 +24,24 @@ import TopAction from "./TopAction";
 import FilterForm from "./FilterForm";
 import SortForm from "../../generic/SortForm";
 import CreateDialog from "./dialogs/CreateDialog";
+import UpdateDialog from "./dialogs/UpdateDialog";
 import useTableUrlState from "src/hooks/useTableUrlState";
 import {
-  PProductCategoryFilter,
-  PProductCategoryPagination,
-  ProductCategorySortField,
-  IProductCategory,
-  IProductCategoryGetAction,
-  getProductCategories,
-  TProductCategory,
-  getProductSizesByPCId
-} from "src/store/product-category";
-import UpdateDialog from "./dialogs/UpdateDialog";
+  ProductBrandSortField,
+  PProductBrandPagination,
+  PProductBrandFilter,
+  IProductBrand,
+  getProductBrands,
+  IProductBrandGetAction,
+  PProductBrand
+} from "src/store/product-brand";
+
+type TInitialValues = PProductBrand & {
+  parent: {
+    label: string;
+    value: number;
+  };
+};
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -61,7 +67,7 @@ const MyPaper = styled(Paper)`
   padding: 1.5em;
 `;
 
-function ProductCategory() {
+function ProductBrand() {
   const refreshDelay = 5000;
   const classes = useStyles({});
   const {
@@ -72,33 +78,37 @@ function ProductCategory() {
     updatePagination,
     updateSorts
   } = useTableUrlState<
-    PProductCategoryFilter,
-    PProductCategoryPagination,
-    ProductCategorySortField
+    PProductBrandFilter,
+    PProductBrandPagination,
+    ProductBrandSortField
   >({}, { limit: 5, offset: 0 }, []);
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
-  const productCategories = useSelector<RootState, IProductCategory[]>(
-    state => state.productCategory.productCategories
+  const productBrands = useSelector<RootState, IProductBrand[]>(
+    state => state.productBrand.productBrands
   );
   const [createDialogOpen, setCreateDialogOpen] = React.useState<boolean>(
     false
   );
-  const [updateDialogPCId, setUpdateDialogPCId] = React.useState<number>(null);
+  const [updateDialogPBId, setUpdateDialogPBId] = React.useState<number>(null);
   const dispatch = useDispatch();
 
-  const productCategoryRealTotal = useSelector<RootState, number>(
-    state => state.productCategory.realTotal
+  const productBrandRealTotal = useSelector<RootState, number>(
+    state => state.productBrand.realTotal
   );
-  const productCategorySortFields: ProductCategorySortField[] = React.useMemo(
-    () => ["id", "name", "slug"],
+  const productBrandSortFields: ProductBrandSortField[] = React.useMemo(
+    () => ["id", "name", "full_name", "slug"],
     []
   );
 
+  const [productBrandsDictId, setProductBrandsDictId] = React.useState<
+    Record<string, IProductBrand>
+  >({});
+
   // interval fetch
   const autoFetch = React.useCallback(async () => {
-    const [err, res] = await goPromise<IProductCategoryGetAction>(
-      getProductCategories(pagination, filter, sorts)
+    const [err, res] = await goPromise<IProductBrandGetAction>(
+      getProductBrands(pagination, filter, sorts)
     );
     if (err) {
       throw err;
@@ -116,15 +126,22 @@ function ProductCategory() {
   const fetch = React.useCallback(async () => {
     setError("");
     setLoading(true);
-    const [err, res] = await goPromise<IProductCategoryGetAction>(
-      getProductCategories({ offset: 0, limit: 5 }, {}, [])
+    const [errPB, resPB] = await goPromise<IProductBrandGetAction>(
+      getProductBrands({ offset: 0, limit: 5 }, {}, [])
+    );
+    const [errParent, resParent] = await goPromise<IProductBrandGetAction>(
+      getProductBrands({ offset: 0, limit: 100 }, { parent_id: "0" }, [
+        { field: "full_name", dir: "asc" }
+      ])
     );
     setLoading(false);
-    if (err) {
-      console.log({ err });
+
+    if (errPB || errParent) {
+      console.log({ errPB, errParent });
       setError("error");
     } else {
-      dispatch(res);
+      dispatch(resPB);
+      setProductBrandsDictId(_.mapKeys(resParent.productBrands, "id"));
       setIntervalRunAlive(true);
     }
   }, [dispatch, setIntervalRunAlive]);
@@ -151,8 +168,7 @@ function ProductCategory() {
     },
     [updatePagination]
   );
-
-  const columns: Column<IProductCategory>[] = React.useMemo(
+  const columns: Column<IProductBrand>[] = React.useMemo(
     () => [
       {
         Header: "ID",
@@ -163,8 +179,17 @@ function ProductCategory() {
         accessor: "name"
       },
       {
+        Header: "Full Name",
+        accessor: "full_name"
+      },
+      {
         Header: "Slug",
         accessor: "slug"
+      },
+      {
+        Header: "Parent Brand",
+        accessor: row =>
+          _.get(productBrandsDictId, `${row.parent_id}.full_name`, "-")
       },
       {
         Header: "Actions",
@@ -173,7 +198,7 @@ function ProductCategory() {
           return (
             <div>
               <Button
-                onClick={() => setUpdateDialogPCId(original.id)}
+                onClick={() => setUpdateDialogPBId(original.id)}
                 color="primary"
                 variant="outlined"
               >
@@ -184,28 +209,46 @@ function ProductCategory() {
         }
       }
     ],
-    []
+    [productBrandsDictId]
   );
 
   // set updateInitialValues
   const [updateInitialValues, setUpdateInitialValues] = React.useState<
-    TProductCategory
-  >({ name: "", slug: "", productSizes: [] });
+    TInitialValues
+  >({ name: "", slug: "", parent: { label: "No Parent", value: 0 } });
   React.useEffect(() => {
-    (async () => {
-      if (!updateDialogPCId)
-        return setUpdateInitialValues({ name: "", slug: "", productSizes: [] });
-      const productCategory: IProductCategory = (_.find(
-        productCategories,
-        pc => ((pc as unknown) as IProductCategory).id === updateDialogPCId
-      ) as unknown) as IProductCategory;
-      const productSizes = await getProductSizesByPCId(updateDialogPCId);
-      setUpdateInitialValues({
-        ...productCategory,
-        productSizes
+    if (!updateDialogPBId)
+      return setUpdateInitialValues({
+        name: "",
+        slug: "",
+        parent: {
+          label: "No Parent",
+          value: 0
+        }
       });
-    })();
-  }, [productCategories, updateDialogPCId, setUpdateInitialValues]);
+    const productBrand: IProductBrand = (_.find(
+      productBrands,
+      pc => ((pc as unknown) as IProductBrand).id === updateDialogPBId
+    ) as unknown) as IProductBrand;
+    setUpdateInitialValues({
+      ...productBrand,
+      parent: {
+        label: String(
+          _.get(
+            productBrandsDictId,
+            `${productBrand.parent_id}.full_name`,
+            "No Parent"
+          )
+        ),
+        value: productBrand.parent_id
+      }
+    });
+  }, [
+    productBrands,
+    updateDialogPBId,
+    productBrandsDictId,
+    setUpdateInitialValues
+  ]);
 
   return (
     <>
@@ -215,9 +258,9 @@ function ProductCategory() {
         <Grid item xs={11} sm={11} md={11} lg={10}>
           <MyPaper elevation={3}>
             <Toolbar className={clsx(classes.root)}>
-              <Typography variant="h6">Product Categories</Typography>
+              <Typography variant="h6">Product Brands</Typography>
               <Typography variant="subtitle1">
-                List of all product categories
+                List of all product brands
               </Typography>
             </Toolbar>
             <br />
@@ -235,15 +278,15 @@ function ProductCategory() {
                 </span>
                 .
               </Typography>
-            ) : productCategories && _.isArray(productCategories) ? (
+            ) : productBrands && _.isArray(productBrands) ? (
               <>
                 {/* Filter Form */}
                 <div className={classes.filterAndSortForm}>
                   <FilterForm filter={filter} updateFilter={updateFilter} />
                   <div style={{ marginLeft: "2rem" }}>
-                    <SortForm<ProductCategorySortField>
+                    <SortForm<ProductBrandSortField>
                       sorts={sorts}
-                      sortFields={productCategorySortFields}
+                      sortFields={productBrandSortFields}
                       updateSorts={updateSorts}
                     />
                   </div>
@@ -258,8 +301,8 @@ function ProductCategory() {
                   pageIndex={pagination.offset / pagination.limit}
                   pageSize={Number(pagination.limit)}
                   columns={columns}
-                  data={productCategories}
-                  rowCount={productCategoryRealTotal}
+                  data={productBrands}
+                  rowCount={productBrandRealTotal}
                   onPaginationChange={onPaginationChange}
                   disableSorting={true}
                 />
@@ -275,11 +318,11 @@ function ProductCategory() {
           dismiss={() => setCreateDialogOpen(null)}
         />
       )}
-      {Boolean(updateDialogPCId) && (
+      {Boolean(updateDialogPBId) && (
         <UpdateDialog
-          productCategoryId={updateDialogPCId}
+          productBrandId={updateDialogPBId}
           restartIntervalRun={intervalRun.restart}
-          dismiss={() => setUpdateDialogPCId(null)}
+          dismiss={() => setUpdateDialogPBId(null)}
           initialValues={updateInitialValues}
         />
       )}
@@ -287,4 +330,4 @@ function ProductCategory() {
   );
 }
 
-export default ProductCategory;
+export default ProductBrand;

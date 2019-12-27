@@ -26,7 +26,7 @@ import {
   updateProductCategory,
   createProductSize,
   updateProductSize
-} from "src/store/product-categories";
+} from "src/store/product-category";
 import { RenderFieldArrayFn } from "src/util/types";
 
 interface IComponentProps {

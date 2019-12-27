@@ -16,6 +16,7 @@ import Nav from "./components/main/Nav";
 import Login from "./components/main/Auth/Login";
 import Logout from "./components/main/Auth/Logout";
 import AdminUser from "./components/main/AdminUser";
+import ProductBrand from "./components/main/ProductBrand";
 import ProductCategory from "./components/main/ProductCategory";
 import Identification from "./components/main/Identification";
 import User from "./components/main/User";
@@ -119,6 +120,9 @@ const AdminRoutes = () => {
           </Route>
           <Route path="/product_category">
             <ProductCategory />
+          </Route>
+          <Route path="/product_brand">
+            <ProductBrand />
           </Route>
           <Route path="/identification">
             <Identification />

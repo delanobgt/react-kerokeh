@@ -3,7 +3,8 @@ import { reducer as formReducer } from "redux-form";
 import { adminUserReducer } from "./adminUser";
 import { authReducer } from "./auth";
 import { identificationReducer } from "./identification";
-import { productCategoryReducer } from "./product-categories";
+import { productBrandReducer } from "./product-brand";
+import { productCategoryReducer } from "./product-category";
 import { userReducer } from "./user";
 
 // Whenever an action is dispatched, Redux will update each top-level application state property
@@ -14,6 +15,7 @@ export const rootReducer = combineReducers({
   auth: authReducer,
   form: formReducer,
   identification: identificationReducer,
+  productBrand: productBrandReducer,
   productCategory: productCategoryReducer,
   user: userReducer
 });

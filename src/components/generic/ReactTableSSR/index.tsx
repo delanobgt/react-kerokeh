@@ -52,9 +52,9 @@ function ReactTableSSR({
     prepareRow,
 
     // pagination shits
-    page,
-    gotoPage,
-    setPageSize
+    page
+    // gotoPage,
+    // setPageSize
   } = useTable(
     {
       columns,
@@ -89,12 +89,12 @@ function ReactTableSSR({
   );
 
   // update pagination state based on props
-  React.useEffect(() => {
-    gotoPage(pageIndex);
-  }, [gotoPage, pageIndex]);
-  React.useEffect(() => {
-    setPageSize(pageSize);
-  }, [setPageSize, pageSize]);
+  // React.useEffect(() => {
+  //   gotoPage(pageIndex || 0);
+  // }, [gotoPage, pageIndex]);
+  // React.useEffect(() => {
+  //   setPageSize(pageSize || 5);
+  // }, [setPageSize, pageSize]);
 
   // Listen for changes in pagination handler
   React.useEffect(() => {
@@ -147,8 +147,8 @@ function ReactTableSSR({
         rowsPerPageOptions={[5, 10, 25, 50, 100]}
         component="div"
         count={rowCount}
-        page={pageIndex}
-        rowsPerPage={pageSize}
+        page={pageIndex || 0}
+        rowsPerPage={pageSize || 5}
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />

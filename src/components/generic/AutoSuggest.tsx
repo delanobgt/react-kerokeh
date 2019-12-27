@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Select from "react-select";
+import Select, { ActionMeta } from "react-select";
 import { emphasize, makeStyles, useTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import NoSsr from "@material-ui/core/NoSsr";
@@ -292,7 +292,20 @@ const components: any = {
   ValueContainer
 };
 
-export default function IntegrationReactSelect(props: any) {
+interface ComponentProps {
+  label: string;
+  value: any;
+  onChange: (value: any, actionMeta?: ActionMeta) => void;
+  disabled?: boolean;
+  suggestions: {
+    label: string | number;
+    value: string;
+  }[];
+  placeholder: string;
+  variant?: "outlined" | "filled" | null;
+}
+
+export default function IntegrationReactSelect(props: ComponentProps) {
   const classes = useStyles({});
   const theme = useTheme();
 
@@ -325,7 +338,7 @@ export default function IntegrationReactSelect(props: any) {
           inputId="react-select-single"
           TextFieldProps={{
             label,
-            disabled,
+            disabled: disabled || false,
             variant,
             InputLabelProps: {
               variant: "outlined",

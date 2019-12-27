@@ -12,7 +12,7 @@ import { useSnackbar } from "material-ui-snackbar-provider";
 import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/BasicDialog";
 import { requiredValidator } from "src/redux-form/validators";
-import { createProductCategory } from "src/store/product-categories";
+import { createProductCategory } from "src/store/product-category";
 import { renderTextField } from "src/redux-form/renderers";
 
 interface IComponentProps {
