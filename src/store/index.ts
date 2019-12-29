@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import { reducer as formReducer } from "redux-form";
 import { adminUserReducer } from "./adminUser";
 import { authReducer } from "./auth";
+import { configReducer } from "./config";
 import { depositFeeReducer } from "./deposit-fee";
 import { identificationReducer } from "./identification";
 import { productBrandReducer } from "./product-brand";
@@ -14,6 +15,7 @@ import { userReducer } from "./user";
 export const rootReducer = combineReducers({
   adminUser: adminUserReducer,
   auth: authReducer,
+  config: configReducer,
   depositFee: depositFeeReducer,
   form: formReducer,
   identification: identificationReducer,
