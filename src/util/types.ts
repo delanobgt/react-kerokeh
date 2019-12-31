@@ -9,13 +9,15 @@ export interface IRenderFieldProps {
   meta: { touched: boolean; error: boolean | string };
   children: ReactNode;
   value: any;
+  accept?: string;
+  extensions?: string[];
 }
 export type RenderFieldFn = (
   renderFieldProps: IRenderFieldProps
 ) => ReactElement;
 
 export interface IRenderAutoSuggestFieldProps {
-  options: {label:any; value:any}[];
+  options: { label: any; value: any }[];
   input: any;
   label: string;
   type: string;

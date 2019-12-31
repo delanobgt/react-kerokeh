@@ -20,6 +20,7 @@ import Config from "./components/main/Config";
 import DepositFee from "./components/main/DepositFee";
 import ProductBrand from "./components/main/ProductBrand";
 import ProductCategory from "./components/main/ProductCategory";
+import PromoCode from "./components/main/PromoCode";
 import Identification from "./components/main/Identification";
 import User from "./components/main/User";
 import JwtTimer from "./components/misc/JwtTimer";
@@ -131,6 +132,9 @@ const AdminRoutes = () => {
           </Route>
           <Route path="/product_brand">
             <ProductBrand />
+          </Route>
+          <Route path="/promo_code">
+            <PromoCode />
           </Route>
           <Route path="/identification">
             <Identification />

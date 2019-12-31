@@ -8,6 +8,7 @@ import { identificationReducer } from "./identification";
 import { productBrandReducer } from "./product-brand";
 import { productCategoryReducer } from "./product-category";
 import { userReducer } from "./user";
+import { promoCodeReducer } from "./promo-code";
 
 // Whenever an action is dispatched, Redux will update each top-level application state property
 // using the reducer with the matching name. It's important that the names match exactly, and that
@@ -21,6 +22,7 @@ export const rootReducer = combineReducers({
   identification: identificationReducer,
   productBrand: productBrandReducer,
   productCategory: productCategoryReducer,
+  promoCode: promoCodeReducer,
   user: userReducer
 });
 

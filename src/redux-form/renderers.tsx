@@ -9,6 +9,9 @@ import {
 
 import { RenderFieldFn, RenderAutoSuggestFieldFn } from "src/util/types";
 import ReactSelect from "react-select";
+import moment from "moment";
+import DatePicker from "src/components/generic/DatePicker";
+import ImageInput from "src/components/generic/ImageInput";
 
 export const renderTextField: RenderFieldFn = ({
   input,
@@ -56,6 +59,49 @@ export const renderSelectField: RenderFieldFn = ({
       <br />
       <br />
     </div>
+  </div>
+);
+
+export const renderDateField: RenderFieldFn = ({
+  input,
+  label,
+  meta: { touched, error }
+}) => (
+  <div>
+    <DatePicker
+      label={label}
+      onChange={date => input.onChange(moment(date).format("YYYY-MM-DD"))}
+      value={moment(input.value, "YYYY-MM-DD").toDate()}
+    />
+    {touched && Boolean(error) && (
+      <Typography variant="caption">{error}</Typography>
+    )}
+    <br />
+    <br />
+  </div>
+);
+
+export const renderImageField: RenderFieldFn = ({
+  input,
+  label,
+  meta: { touched, error },
+  accept,
+  extensions
+}) => (
+  <div>
+    <ImageInput
+      label={label}
+      value={input.value}
+      accept={accept}
+      extensions={extensions}
+      onChange={file => {
+        input.onChange(file);
+      }}
+    />
+    {touched && Boolean(error) && (
+      <Typography variant="caption">{error}</Typography>
+    )}
+    <br />
   </div>
 );
 
