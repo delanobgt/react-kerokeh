@@ -24,20 +24,18 @@ import TopAction from "./TopAction";
 import CreateDialog from "./dialogs/CreateDialog";
 import UpdateDialog from "./dialogs/UpdateDialog";
 import DeleteDialog from "./dialogs/DeleteDialog";
-import DetailImageDialog from "./dialogs/DetailImageDialog";
 import useTableUrlState from "src/hooks/useTableUrlState";
 import {
-  PPromoCodeFilter,
-  PPromoCodePagination,
-  PromoCodeSortField,
-  IPromoCode,
-  IPromoCodeGetAction,
-  getPromoCodes,
-  PPromoCode
-} from "src/store/promo-code";
-import moment from "moment";
-import FilterForm from "../ProductBrand/FilterForm";
+  PSpecialCategoryFilter,
+  PSpecialCategoryPagination,
+  SpecialCategorySortField,
+  ISpecialCategory,
+  getSpecialCategories,
+  ISpecialCategoryGetAction,
+  PSpecialCategory
+} from "src/store/special-category";
 import SortForm from "src/components/generic/SortForm";
+import FilterForm from "../ProductBrand/FilterForm";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -52,7 +50,6 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: theme.spacing(2)
   },
   filterAndSortForm: {
-    marginBottom: "1rem",
     display: "flex",
     paddingLeft: theme.spacing(2)
     // justifyContent: "space-between"
@@ -63,7 +60,7 @@ const MyPaper = styled(Paper)`
   padding: 1.5em;
 `;
 
-function PromoCode() {
+function SpecialCategory() {
   const refreshDelay = 5000;
   const classes = useStyles({});
   const {
@@ -74,49 +71,34 @@ function PromoCode() {
     sorts,
     updateSorts
   } = useTableUrlState<
-    PPromoCodeFilter,
-    PPromoCodePagination,
-    PromoCodeSortField
+    PSpecialCategoryFilter,
+    PSpecialCategoryPagination,
+    SpecialCategorySortField
   >({}, { limit: 5, offset: 0 }, []);
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
-  const promoCodes = useSelector<RootState, IPromoCode[]>(
-    state => state.promoCode.promoCodes
+  const specialCategories = useSelector<RootState, ISpecialCategory[]>(
+    state => state.specialCategory.specialCategories
   );
   const [createDialogOpen, setCreateDialogOpen] = React.useState<boolean>(
     false
   );
-  const [updateDialogPCId, setUpdateDialogPCId] = React.useState<number>(null);
-  const [deleteDialogPCId, setDeleteDialogPCId] = React.useState<number>(null);
-  const [detailDialogImageUrl, setDetailDialogImageUrl] = React.useState<
-    string
-  >("");
+  const [updateDialogSCId, setUpdateDialogSCId] = React.useState<number>(null);
+  const [deleteDialogSCId, setDeleteDialogSCId] = React.useState<number>(null);
   const dispatch = useDispatch();
 
-  const promoCodeRealTotal = useSelector<RootState, number>(
-    state => state.promoCode.realTotal
+  const specialCategoryRealTotal = useSelector<RootState, number>(
+    state => state.specialCategory.realTotal
   );
-  const promoCodeSortFields: PromoCodeSortField[] = React.useMemo(
-    () => [
-      "active_status",
-      "code",
-      "created_by",
-      "description",
-      "expired_at",
-      "id",
-      "limit",
-      "percentage",
-      "product_type",
-      "updated_by",
-      "usage"
-    ],
+  const specialCategorySortFields: SpecialCategorySortField[] = React.useMemo(
+    () => ["id", "published", "name"],
     []
   );
 
   // interval fetch
   const autoFetch = React.useCallback(async () => {
-    const [err, res] = await goPromise<IPromoCodeGetAction>(
-      getPromoCodes(pagination, filter, sorts)
+    const [err, res] = await goPromise<ISpecialCategoryGetAction>(
+      getSpecialCategories(pagination, filter, sorts)
     );
     if (err) {
       throw err;
@@ -134,16 +116,16 @@ function PromoCode() {
   const fetch = React.useCallback(async () => {
     setError("");
     setLoading(true);
-    const [err, res] = await goPromise<IPromoCodeGetAction>(
-      getPromoCodes({ offset: 0, limit: 5 }, {}, [])
+    const [errDF, resDF] = await goPromise<ISpecialCategoryGetAction>(
+      getSpecialCategories({ offset: 0, limit: 5 }, {}, [])
     );
     setLoading(false);
 
-    if (err) {
-      console.log({ err });
+    if (errDF) {
+      console.log({ errDF });
       setError("error");
     } else {
-      dispatch(res);
+      dispatch(resDF);
       setIntervalRunAlive(true);
     }
   }, [dispatch, setIntervalRunAlive]);
@@ -170,65 +152,23 @@ function PromoCode() {
     },
     [updatePagination]
   );
-  const columns: Column<IPromoCode>[] = React.useMemo(
+  const columns: Column<ISpecialCategory>[] = React.useMemo(
     () => [
       {
         Header: "ID",
         accessor: "id"
       },
       {
-        Header: "Code",
-        accessor: row => row.code
+        Header: "Name",
+        accessor: row => row.name
       },
       {
-        Header: "Description",
-        accessor: row => row.description || "-"
+        Header: "Priority",
+        accessor: row => row.priority
       },
       {
-        Header: "Percentage",
-        accessor: row => row.percentage
-      },
-      {
-        Header: "Limit",
-        accessor: row => row.limit
-      },
-      {
-        Header: "Usage",
-        accessor: row => row.usage
-      },
-      {
-        Header: "Product Type",
-        accessor: row => _.startCase(row.product_type || "-")
-      },
-      {
-        Header: "Active Status",
-        accessor: row => (row.active_status ? "YES" : "NO")
-      },
-      {
-        Header: "Expired At",
-        accessor: row => moment(row.expired_at).format("D MMMM YYYY")
-      },
-      {
-        Header: "Created By",
-        accessor: "created_by"
-      },
-      {
-        Header: "Updated By",
-        accessor: "updated_by"
-      },
-      {
-        Header: "Image",
-        accessor: "",
-        Cell: ({ row: { original } }) => {
-          return (
-            <img
-              src={original.image_url}
-              alt=""
-              style={{ width: "65px", cursor: "pointer" }}
-              onClick={() => setDetailDialogImageUrl(original.image_url)}
-            />
-          );
-        }
+        Header: "Published",
+        accessor: row => (row.published ? "YES" : "NO")
       },
       {
         Header: "Actions",
@@ -237,18 +177,27 @@ function PromoCode() {
           return (
             <div>
               <Button
-                onClick={() => setUpdateDialogPCId(original.id)}
+                target="_blank"
+                href="google.com"
                 color="primary"
                 variant="outlined"
               >
-                Update
+                View List
               </Button>
-              <br />
+
               <Button
-                onClick={() => setDeleteDialogPCId(original.id)}
+                onClick={() => setUpdateDialogSCId(original.id)}
                 color="primary"
                 variant="outlined"
-                style={{ marginTop: "1rem" }}
+                style={{ marginLeft: "1rem" }}
+              >
+                Update
+              </Button>
+              <Button
+                onClick={() => setDeleteDialogSCId(original.id)}
+                color="primary"
+                variant="outlined"
+                style={{ marginLeft: "1rem" }}
               >
                 Delete
               </Button>
@@ -262,21 +211,18 @@ function PromoCode() {
 
   // set updateInitialValues
   const [updateInitialValues, setUpdateInitialValues] = React.useState<
-    PPromoCode
-  >({ expired_at: moment().format("YYYY-MM-DD") });
+    PSpecialCategory
+  >({ name: "", priority: 0, published: 0 });
   React.useEffect(() => {
-    if (!updateDialogPCId)
-      return setUpdateInitialValues({
-        expired_at: moment().format("YYYY-MM-DD")
-      });
-    const promoCode: IPromoCode = (_.find(
-      promoCodes,
-      pc => ((pc as unknown) as IPromoCode).id === updateDialogPCId
-    ) as unknown) as IPromoCode;
-    promoCode.active_status = Number(promoCode.active_status);
-    promoCode.expired_at = moment(promoCode.expired_at).format("YYYY-MM-DD");
-    setUpdateInitialValues(promoCode);
-  }, [promoCodes, updateDialogPCId, setUpdateInitialValues]);
+    if (!updateDialogSCId)
+      return setUpdateInitialValues({ name: "", priority: 0, published: 0 });
+    const specialCategory: ISpecialCategory = (_.find(
+      specialCategories,
+      pc => ((pc as unknown) as ISpecialCategory).id === updateDialogSCId
+    ) as unknown) as ISpecialCategory;
+    specialCategory.published = Number(specialCategory.published);
+    setUpdateInitialValues(specialCategory);
+  }, [specialCategories, updateDialogSCId, setUpdateInitialValues]);
 
   return (
     <>
@@ -286,9 +232,9 @@ function PromoCode() {
         <Grid item xs={11} sm={11} md={11} lg={10}>
           <MyPaper elevation={3}>
             <Toolbar className={clsx(classes.root)}>
-              <Typography variant="h6">Promo Codes</Typography>
+              <Typography variant="h6">Special Categories</Typography>
               <Typography variant="subtitle1">
-                List of all promo codes
+                List of all special categories
               </Typography>
             </Toolbar>
             <br />
@@ -306,15 +252,15 @@ function PromoCode() {
                 </span>
                 .
               </Typography>
-            ) : promoCodes && _.isArray(promoCodes) ? (
+            ) : specialCategories && _.isArray(specialCategories) ? (
               <>
                 {/* Filter Form */}
                 <div className={classes.filterAndSortForm}>
                   <FilterForm filter={filter} updateFilter={updateFilter} />
                   <div style={{ marginLeft: "2rem" }}>
-                    <SortForm<PromoCodeSortField>
+                    <SortForm<SpecialCategorySortField>
                       sorts={sorts}
-                      sortFields={promoCodeSortFields}
+                      sortFields={specialCategorySortFields}
                       updateSorts={updateSorts}
                     />
                   </div>
@@ -329,8 +275,8 @@ function PromoCode() {
                   pageIndex={pagination.offset / pagination.limit}
                   pageSize={Number(pagination.limit)}
                   columns={columns}
-                  data={promoCodes}
-                  rowCount={promoCodeRealTotal}
+                  data={specialCategories}
+                  rowCount={specialCategoryRealTotal}
                   onPaginationChange={onPaginationChange}
                   disableSorting={true}
                 />
@@ -344,32 +290,25 @@ function PromoCode() {
           open={createDialogOpen}
           restartIntervalRun={restartIntervalRun}
           dismiss={() => setCreateDialogOpen(null)}
-          initialValues={{ expired_at: moment().format("YYYY-MM-DD") }}
         />
       )}
-      {Boolean(updateDialogPCId) && (
+      {Boolean(updateDialogSCId) && (
         <UpdateDialog
-          promoCodeId={updateDialogPCId}
+          specialCategoryId={updateDialogSCId}
           restartIntervalRun={intervalRun.restart}
-          dismiss={() => setUpdateDialogPCId(null)}
+          dismiss={() => setUpdateDialogSCId(null)}
           initialValues={updateInitialValues}
         />
       )}
-      {deleteDialogPCId && (
+      {deleteDialogSCId && (
         <DeleteDialog
-          promoCodeId={deleteDialogPCId}
+          specialCategoryId={deleteDialogSCId}
           restartIntervalRun={intervalRun.restart}
-          dismiss={() => setDeleteDialogPCId(null)}
-        />
-      )}
-      {detailDialogImageUrl && (
-        <DetailImageDialog
-          imageUrl={detailDialogImageUrl}
-          dismiss={() => setDetailDialogImageUrl(null)}
+          dismiss={() => setDeleteDialogSCId(null)}
         />
       )}
     </>
   );
 }
 
-export default PromoCode;
+export default SpecialCategory;

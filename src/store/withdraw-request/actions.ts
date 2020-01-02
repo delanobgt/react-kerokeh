@@ -1,19 +1,19 @@
 import _ from "lodash";
 import {
-  PPromoCodeFilter,
-  PPromoCodePagination,
-  PromoCodeSortField,
-  IPromoCodeGetAction,
-  EPromoCodeActionTypes
+  PWithdrawRequestFilter,
+  PWithdrawRequestPagination,
+  WithdrawRequestSortField,
+  IWithdrawRequestGetAction,
+  EWithdrawRequestActionTypes
 } from "./types";
 import celestineApi from "src/apis/celestine";
 import { ISort } from "src/util/types";
 
-export const getPromoCodes = async (
-  pagination: PPromoCodePagination,
-  filter: PPromoCodeFilter,
-  sorts: ISort<PromoCodeSortField>[]
-): Promise<IPromoCodeGetAction> => {
+export const getWithdrawRequests = async (
+  pagination: PWithdrawRequestPagination,
+  filter: PWithdrawRequestFilter,
+  sorts: ISort<WithdrawRequestSortField>[]
+): Promise<IWithdrawRequestGetAction> => {
   const sort = _.chain(sorts)
     .map(sort => `${sort.field}%20${sort.dir}`)
     .join(",")
@@ -22,11 +22,11 @@ export const getPromoCodes = async (
   const response = await celestineApi().get(`/admin/promo-code?sort=${sort}`, {
     params
   });
-  const promoCodes = response.data.data;
+  const withdrawRequests = response.data.data;
   const meta = response.data.meta;
   return {
-    type: EPromoCodeActionTypes.PROMO_CODE_GET,
-    promoCodes,
+    type: EWithdrawRequestActionTypes.WITHDRAW_REQUEST_GET,
+    withdrawRequests,
     realTotal: meta.total
   };
 };

@@ -21,23 +21,17 @@ import { RootState } from "src/store";
 import { goPromise } from "src/util/helper";
 import useIntervalRun from "src/hooks/useIntervalRun";
 import TopAction from "./TopAction";
-import CreateDialog from "./dialogs/CreateDialog";
-import UpdateDialog from "./dialogs/UpdateDialog";
-import DeleteDialog from "./dialogs/DeleteDialog";
-import DetailImageDialog from "./dialogs/DetailImageDialog";
 import useTableUrlState from "src/hooks/useTableUrlState";
-import {
-  PPromoCodeFilter,
-  PPromoCodePagination,
-  PromoCodeSortField,
-  IPromoCode,
-  IPromoCodeGetAction,
-  getPromoCodes,
-  PPromoCode
-} from "src/store/promo-code";
-import moment from "moment";
 import FilterForm from "../ProductBrand/FilterForm";
 import SortForm from "src/components/generic/SortForm";
+import {
+  IWithdrawRequest,
+  PWithdrawRequestFilter,
+  PWithdrawRequestPagination,
+  WithdrawRequestSortField,
+  IWithdrawRequestGetAction,
+  getWithdrawRequests
+} from "src/store/withdraw-request";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -74,49 +68,41 @@ function PromoCode() {
     sorts,
     updateSorts
   } = useTableUrlState<
-    PPromoCodeFilter,
-    PPromoCodePagination,
-    PromoCodeSortField
+    PWithdrawRequestFilter,
+    PWithdrawRequestPagination,
+    WithdrawRequestSortField
   >({}, { limit: 5, offset: 0 }, []);
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
-  const promoCodes = useSelector<RootState, IPromoCode[]>(
-    state => state.promoCode.promoCodes
+  const withdrawRequests = useSelector<RootState, IWithdrawRequest[]>(
+    state => state.withdrawRequest.withdrawRequests
   );
-  const [createDialogOpen, setCreateDialogOpen] = React.useState<boolean>(
+  const [acceptDialogOpen, setAcceptDialogOpen] = React.useState<boolean>(
     false
   );
-  const [updateDialogPCId, setUpdateDialogPCId] = React.useState<number>(null);
-  const [deleteDialogPCId, setDeleteDialogPCId] = React.useState<number>(null);
-  const [detailDialogImageUrl, setDetailDialogImageUrl] = React.useState<
-    string
-  >("");
   const dispatch = useDispatch();
 
-  const promoCodeRealTotal = useSelector<RootState, number>(
-    state => state.promoCode.realTotal
+  const withdrawRequestRealTotal = useSelector<RootState, number>(
+    state => state.depositFee.realTotal
   );
-  const promoCodeSortFields: PromoCodeSortField[] = React.useMemo(
+  const withdrawRequestSortFields: WithdrawRequestSortField[] = React.useMemo(
     () => [
-      "active_status",
-      "code",
-      "created_by",
-      "description",
-      "expired_at",
+      "amount",
+      "approved_by",
+      "created_at",
       "id",
-      "limit",
-      "percentage",
-      "product_type",
-      "updated_by",
-      "usage"
+      "paid",
+      "rejected",
+      "rejected_reason",
+      "status"
     ],
     []
   );
 
   // interval fetch
   const autoFetch = React.useCallback(async () => {
-    const [err, res] = await goPromise<IPromoCodeGetAction>(
-      getPromoCodes(pagination, filter, sorts)
+    const [err, res] = await goPromise<IWithdrawRequestGetAction>(
+      getWithdrawRequests(pagination, filter, sorts)
     );
     if (err) {
       throw err;
@@ -134,8 +120,8 @@ function PromoCode() {
   const fetch = React.useCallback(async () => {
     setError("");
     setLoading(true);
-    const [err, res] = await goPromise<IPromoCodeGetAction>(
-      getPromoCodes({ offset: 0, limit: 5 }, {}, [])
+    const [err, res] = await goPromise<IWithdrawRequestGetAction>(
+      getWithdrawRequests({ offset: 0, limit: 5 }, {}, [])
     );
     setLoading(false);
 
@@ -170,43 +156,19 @@ function PromoCode() {
     },
     [updatePagination]
   );
-  const columns: Column<IPromoCode>[] = React.useMemo(
+  const columns: Column<IWithdrawRequest>[] = React.useMemo(
     () => [
       {
         Header: "ID",
         accessor: "id"
       },
       {
-        Header: "Code",
-        accessor: row => row.code
+        Header: "Amount",
+        accessor: row => row.amount
       },
       {
-        Header: "Description",
-        accessor: row => row.description || "-"
-      },
-      {
-        Header: "Percentage",
-        accessor: row => row.percentage
-      },
-      {
-        Header: "Limit",
-        accessor: row => row.limit
-      },
-      {
-        Header: "Usage",
-        accessor: row => row.usage
-      },
-      {
-        Header: "Product Type",
-        accessor: row => _.startCase(row.product_type || "-")
-      },
-      {
-        Header: "Active Status",
-        accessor: row => (row.active_status ? "YES" : "NO")
-      },
-      {
-        Header: "Expired At",
-        accessor: row => moment(row.expired_at).format("D MMMM YYYY")
+        Header: "Status",
+        accessor: row => row.status
       },
       {
         Header: "Created By",
@@ -217,40 +179,25 @@ function PromoCode() {
         accessor: "updated_by"
       },
       {
-        Header: "Image",
-        accessor: "",
-        Cell: ({ row: { original } }) => {
-          return (
-            <img
-              src={original.image_url}
-              alt=""
-              style={{ width: "65px", cursor: "pointer" }}
-              onClick={() => setDetailDialogImageUrl(original.image_url)}
-            />
-          );
-        }
-      },
-      {
         Header: "Actions",
         accessor: "",
         Cell: ({ row: { original } }) => {
           return (
             <div>
               <Button
-                onClick={() => setUpdateDialogPCId(original.id)}
+                onClick={() => setAcceptDialogOpen(true)}
                 color="primary"
                 variant="outlined"
               >
-                Update
+                Accept
               </Button>
-              <br />
               <Button
-                onClick={() => setDeleteDialogPCId(original.id)}
+                onClick={() => setAcceptDialogOpen(true)}
                 color="primary"
                 variant="outlined"
-                style={{ marginTop: "1rem" }}
+                style={{ marginLeft: "1rem" }}
               >
-                Delete
+                Reject
               </Button>
             </div>
           );
@@ -260,24 +207,6 @@ function PromoCode() {
     []
   );
 
-  // set updateInitialValues
-  const [updateInitialValues, setUpdateInitialValues] = React.useState<
-    PPromoCode
-  >({ expired_at: moment().format("YYYY-MM-DD") });
-  React.useEffect(() => {
-    if (!updateDialogPCId)
-      return setUpdateInitialValues({
-        expired_at: moment().format("YYYY-MM-DD")
-      });
-    const promoCode: IPromoCode = (_.find(
-      promoCodes,
-      pc => ((pc as unknown) as IPromoCode).id === updateDialogPCId
-    ) as unknown) as IPromoCode;
-    promoCode.active_status = Number(promoCode.active_status);
-    promoCode.expired_at = moment(promoCode.expired_at).format("YYYY-MM-DD");
-    setUpdateInitialValues(promoCode);
-  }, [promoCodes, updateDialogPCId, setUpdateInitialValues]);
-
   return (
     <>
       <br />
@@ -286,9 +215,9 @@ function PromoCode() {
         <Grid item xs={11} sm={11} md={11} lg={10}>
           <MyPaper elevation={3}>
             <Toolbar className={clsx(classes.root)}>
-              <Typography variant="h6">Promo Codes</Typography>
+              <Typography variant="h6">Withdraw Requests</Typography>
               <Typography variant="subtitle1">
-                List of all promo codes
+                List of all withdraw requests
               </Typography>
             </Toolbar>
             <br />
@@ -306,15 +235,15 @@ function PromoCode() {
                 </span>
                 .
               </Typography>
-            ) : promoCodes && _.isArray(promoCodes) ? (
+            ) : withdrawRequests && _.isArray(withdrawRequests) ? (
               <>
                 {/* Filter Form */}
                 <div className={classes.filterAndSortForm}>
                   <FilterForm filter={filter} updateFilter={updateFilter} />
                   <div style={{ marginLeft: "2rem" }}>
-                    <SortForm<PromoCodeSortField>
+                    <SortForm<WithdrawRequestSortField>
                       sorts={sorts}
-                      sortFields={promoCodeSortFields}
+                      sortFields={withdrawRequestSortFields}
                       updateSorts={updateSorts}
                     />
                   </div>
@@ -323,14 +252,13 @@ function PromoCode() {
                 <TopAction
                   intervalRun={intervalRun}
                   refreshDelay={refreshDelay}
-                  setCreateDialogOpen={setCreateDialogOpen}
                 />
                 <Table
                   pageIndex={pagination.offset / pagination.limit}
                   pageSize={Number(pagination.limit)}
                   columns={columns}
-                  data={promoCodes}
-                  rowCount={promoCodeRealTotal}
+                  data={withdrawRequests}
+                  rowCount={withdrawRequestRealTotal}
                   onPaginationChange={onPaginationChange}
                   disableSorting={true}
                 />
@@ -339,35 +267,14 @@ function PromoCode() {
           </MyPaper>
         </Grid>
       </Grid>
-      {Boolean(createDialogOpen) && (
+      {/* {Boolean(createDialogOpen) && (
         <CreateDialog
           open={createDialogOpen}
           restartIntervalRun={restartIntervalRun}
           dismiss={() => setCreateDialogOpen(null)}
           initialValues={{ expired_at: moment().format("YYYY-MM-DD") }}
         />
-      )}
-      {Boolean(updateDialogPCId) && (
-        <UpdateDialog
-          promoCodeId={updateDialogPCId}
-          restartIntervalRun={intervalRun.restart}
-          dismiss={() => setUpdateDialogPCId(null)}
-          initialValues={updateInitialValues}
-        />
-      )}
-      {deleteDialogPCId && (
-        <DeleteDialog
-          promoCodeId={deleteDialogPCId}
-          restartIntervalRun={intervalRun.restart}
-          dismiss={() => setDeleteDialogPCId(null)}
-        />
-      )}
-      {detailDialogImageUrl && (
-        <DetailImageDialog
-          imageUrl={detailDialogImageUrl}
-          dismiss={() => setDetailDialogImageUrl(null)}
-        />
-      )}
+      )} */}
     </>
   );
 }

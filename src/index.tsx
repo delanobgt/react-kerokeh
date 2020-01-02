@@ -27,9 +27,9 @@ const myTheme = createMuiTheme({
 ReactDOM.render(
   <Provider store={store}>
     <MuiThemeProvider theme={myTheme}>
-      <HttpsRedirect>
-        <Router />
-      </HttpsRedirect>
+      {/* <HttpsRedirect> */}
+      <Router />
+      {/* </HttpsRedirect> */}
     </MuiThemeProvider>
   </Provider>,
   document.getElementById("root")

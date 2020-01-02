@@ -1,6 +1,11 @@
 import _ from "lodash";
 import React from "react";
-import { Button, CircularProgress, Typography } from "@material-ui/core";
+import {
+  Button,
+  CircularProgress,
+  Typography,
+  MenuItem
+} from "@material-ui/core";
 import {
   Field,
   reduxForm,
@@ -13,28 +18,32 @@ import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/BasicDialog";
 import {
   requiredValidator,
-  unsignedRealNumberValidator
+  wholeNumberValidator
 } from "src/redux-form/validators";
-import { renderTextField } from "src/redux-form/renderers";
-import { updateConfig, PConfig } from "src/store/config";
+import { renderTextField, renderSelectField } from "src/redux-form/renderers";
+import {
+  updateSpecialCategory,
+  PSpecialCategory
+} from "src/store/special-category";
 
 interface IComponentProps {
-  configId: number;
+  specialCategoryId: number;
   dismiss: () => void;
   restartIntervalRun: () => void;
-  initialValues: PConfig;
+  initialValues: PSpecialCategory;
 }
 
 interface IFormProps {
   name: string;
-  value: number;
+  priority: number;
+  published: number | boolean;
 }
 
 function UpdateDialog(
   props: IComponentProps & InjectedFormProps<IFormProps, IComponentProps>
 ) {
   const {
-    configId,
+    specialCategoryId,
     dismiss,
     handleSubmit,
     restartIntervalRun,
@@ -48,28 +57,28 @@ function UpdateDialog(
   const handleSave = React.useCallback(
     async (formValues: IFormProps) => {
       setLoading(true);
-      const { name, value } = formValues;
-      const [errPB] = await goPromise(
-        updateConfig({
-          id: initialValues.id,
-          name: name,
-          value: Number(value)
+      const { name, priority, published } = formValues;
+      const [err] = await goPromise(
+        updateSpecialCategory(initialValues, {
+          name,
+          priority: Number(priority),
+          published: Boolean(published)
         })
       );
       setLoading(false);
-      if (errPB) {
-        if (_.has(errPB, "response.data.errors")) {
-          throw new SubmissionError(errPB.response.data.errors);
+      if (err) {
+        if (_.has(err, "response.data.errors")) {
+          throw new SubmissionError(err.response.data.errors);
         } else {
           setError("error");
         }
       } else {
         restartIntervalRun();
         dismiss();
-        snackbar.showMessage("Product Brand updated.");
+        snackbar.showMessage("Special Category updated.");
       }
     },
-    [dismiss, restartIntervalRun, initialValues.id, snackbar]
+    [dismiss, restartIntervalRun, initialValues, snackbar]
   );
 
   const handleClose = () => {
@@ -79,13 +88,13 @@ function UpdateDialog(
   return (
     <div>
       <BasicDialog
-        open={Boolean(configId)}
+        open={Boolean(specialCategoryId)}
         dismiss={dismiss}
         maxWidth="xs"
         fullWidth
         bgClose
       >
-        <title>Update Config</title>
+        <title>Update Special Category</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>
             <Field
@@ -94,16 +103,26 @@ function UpdateDialog(
               label="Name"
               component={renderTextField}
               validate={[requiredValidator]}
-              disabled={true}
-            />
-            <Field
-              name="value"
-              type="text"
-              label="Value"
-              component={renderTextField}
-              validate={[requiredValidator, unsignedRealNumberValidator]}
               disabled={loading}
             />
+            <Field
+              name="priority"
+              type="text"
+              label="Priority"
+              component={renderTextField}
+              validate={[requiredValidator, wholeNumberValidator]}
+              disabled={loading}
+            />
+            <Field
+              name="published"
+              label="Published"
+              component={renderSelectField}
+              validate={[requiredValidator]}
+              disabled={loading}
+            >
+              <MenuItem value={0}>False</MenuItem>
+              <MenuItem value={1}>True</MenuItem>
+            </Field>
             {error && (
               <Typography variant="subtitle1">
                 Something is wrong. Please try again.
@@ -125,6 +144,6 @@ function UpdateDialog(
 }
 
 export default reduxForm<IFormProps, IComponentProps>({
-  form: "updateConfigDialogForm",
+  form: "updateSpecialCategoryDialogForm",
   enableReinitialize: true
 })(UpdateDialog);

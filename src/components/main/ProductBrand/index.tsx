@@ -110,10 +110,16 @@ function ProductBrand() {
     const [err, res] = await goPromise<IProductBrandGetAction>(
       getProductBrands(pagination, filter, sorts)
     );
+    const [errParent, resParent] = await goPromise<IProductBrandGetAction>(
+      getProductBrands({ offset: 0, limit: 100 }, { parent_id: "0" }, [
+        { field: "full_name", dir: "asc" }
+      ])
+    );
     if (err) {
       throw err;
     } else {
       dispatch(res);
+      setProductBrandsDictId(_.mapKeys(resParent.productBrands, "id"));
     }
   }, [dispatch, pagination, filter, sorts]);
   const intervalRun = useIntervalRun(() => autoFetch(), refreshDelay);

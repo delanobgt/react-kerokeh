@@ -18,8 +18,8 @@ import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/BasicDialog";
 import {
   requiredValidator,
-  realNumberValidator,
-  wholeNumberValidator
+  unsignedRealNumberValidator,
+  unsignedWholeNumberValidator
 } from "src/redux-form/validators";
 import {
   renderTextField,
@@ -79,7 +79,7 @@ function UpdateDialog(
       } else {
         restartIntervalRun();
         dismiss();
-        snackbar.showMessage("Promo Code created.");
+        snackbar.showMessage("Promo Code updated.");
       }
     },
     [dismiss, restartIntervalRun, snackbar, initialValues]
@@ -115,7 +115,7 @@ function UpdateDialog(
                 type="text"
                 label="Percentage"
                 component={renderTextField}
-                validate={[requiredValidator, realNumberValidator]}
+                validate={[requiredValidator, unsignedRealNumberValidator]}
                 disabled={loading}
               />
               <Field
@@ -123,7 +123,7 @@ function UpdateDialog(
                 type="text"
                 label="Limit"
                 component={renderTextField}
-                validate={[requiredValidator, wholeNumberValidator]}
+                validate={[requiredValidator, unsignedWholeNumberValidator]}
                 disabled={loading}
               />
               <Field
@@ -184,8 +184,8 @@ function UpdateDialog(
                 label="Replace Promo Code Image"
                 component={renderImageField}
                 disabled={loading}
-                accept="image/jpg"
-                extensions={["jpg"]}
+                accept="image/svg"
+                extensions={["svg"]}
               />
               {error && (
                 <Typography variant="subtitle1">

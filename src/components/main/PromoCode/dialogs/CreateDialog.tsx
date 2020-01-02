@@ -18,8 +18,8 @@ import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/BasicDialog";
 import {
   requiredValidator,
-  realNumberValidator,
-  wholeNumberValidator
+  unsignedRealNumberValidator,
+  unsignedWholeNumberValidator
 } from "src/redux-form/validators";
 import {
   renderTextField,
@@ -110,7 +110,7 @@ function CreateDialog(
                 type="text"
                 label="Percentage"
                 component={renderTextField}
-                validate={[requiredValidator, realNumberValidator]}
+                validate={[requiredValidator, unsignedRealNumberValidator]}
                 disabled={loading}
               />
               <Field
@@ -118,7 +118,7 @@ function CreateDialog(
                 type="text"
                 label="Limit"
                 component={renderTextField}
-                validate={[requiredValidator, wholeNumberValidator]}
+                validate={[requiredValidator, unsignedWholeNumberValidator]}
                 disabled={loading}
               />
               <Field
