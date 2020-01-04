@@ -35,13 +35,7 @@ import {
   IProductBrandGetAction,
   PProductBrand
 } from "src/store/product-brand";
-
-type TInitialValues = PProductBrand & {
-  parent: {
-    label: string;
-    value: number;
-  };
-};
+import { TInitialValues } from "./types";
 
 const useStyles = makeStyles(theme => ({
   root: {

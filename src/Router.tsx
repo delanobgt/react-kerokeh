@@ -24,6 +24,7 @@ import PromoCode from "./components/main/PromoCode";
 import Identification from "./components/main/Identification";
 import User from "./components/main/User";
 import SpecialCategory from "./components/main/SpecialCategory";
+import SpecialCategoryList from "./components/main/SpecialCategoryList";
 import WithdrawRequest from "./components/main/WithdrawRequest";
 import JwtTimer from "./components/misc/JwtTimer";
 import { RootState } from "./store";
@@ -134,6 +135,9 @@ const AdminRoutes = () => {
           </Route>
           <Route path="/special_category">
             <SpecialCategory />
+          </Route>
+          <Route path="/special_category_list">
+            <SpecialCategoryList />
           </Route>
           <Route path="/product_category">
             <ProductCategory />

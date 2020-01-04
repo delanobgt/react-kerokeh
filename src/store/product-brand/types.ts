@@ -18,6 +18,7 @@ export type PProductBrand = Partial<IProductBrand>;
 interface IProductBrandFilter {
   id: string;
   name: string;
+  full_name: string;
   slug: string;
   parent_id: string;
 }

@@ -24,6 +24,7 @@ import {
   getProductBrands,
   IProductBrandGetAction
 } from "src/store/product-brand";
+import { TInitialValues } from "../types";
 
 const Span = styled.span`
   display: inline-block;
@@ -31,13 +32,6 @@ const Span = styled.span`
   margin-right: 1rem;
   margin-bottom: 0.5rem;
 `;
-
-type TInitialValues = PProductBrand & {
-  parent: {
-    label: string;
-    value: number;
-  };
-};
 
 interface IComponentProps {
   productBrandId: number;

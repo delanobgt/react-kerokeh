@@ -12,7 +12,11 @@ export interface ISpecialCategory {
 }
 export type PSpecialCategory = Partial<ISpecialCategory>;
 
-interface ISpecialCategoryFilter {}
+interface ISpecialCategoryFilter {
+  id: string;
+  name: string;
+  published: string;
+}
 export type PSpecialCategoryFilter = Partial<ISpecialCategoryFilter>;
 
 interface ISpecialCategoryPagination {
@@ -21,7 +25,7 @@ interface ISpecialCategoryPagination {
 }
 export type PSpecialCategoryPagination = Partial<ISpecialCategoryPagination>;
 
-export type SpecialCategorySortField = "id" | "published" | "name";
+export type SpecialCategorySortField = "id" | "published" | "name" | "priority";
 
 // redux state type
 export interface ISpecialCategoryState {

@@ -7,8 +7,13 @@ import {
   Select
 } from "@material-ui/core";
 
-import { RenderFieldFn, RenderAutoSuggestFieldFn } from "src/util/types";
+import {
+  RenderFieldFn,
+  RenderAutoSuggestFieldFn,
+  RenderAsyncAutoSuggestFieldFn
+} from "src/util/types";
 import ReactSelect from "react-select";
+import AsyncReactSelect from "react-select/async";
 import moment from "moment";
 import DatePicker from "src/components/generic/DatePicker";
 import ImageInput from "src/components/generic/ImageInput";
@@ -110,17 +115,49 @@ export const renderAutoSuggestField: RenderAutoSuggestFieldFn = ({
   label,
   meta: { touched, error },
   options,
+  disabled,
   ...rest
 }) => {
   return (
     <div>
       <div>
         <ReactSelect
-          value={rest.value || ""}
+          {...rest}
           {...input}
-          onBlur={() => input.onBlur(rest.value)}
+          onBlur={value => input.onBlur()}
           placeholder={label}
           options={options}
+        />
+        {touched && Boolean(error) && (
+          <Typography variant="caption">{error}</Typography>
+        )}
+        <br />
+        <br />
+      </div>
+    </div>
+  );
+};
+
+export const renderAsyncAutoSuggestField: RenderAsyncAutoSuggestFieldFn = ({
+  input,
+  label,
+  meta: { touched, error },
+  promiseOptions,
+  disabled,
+  ...rest
+}) => {
+  return (
+    <div>
+      <div>
+        <AsyncReactSelect
+          {...rest}
+          {...input}
+          isDisabled={disabled || false}
+          cacheOptions
+          defaultOptions
+          loadOptions={promiseOptions}
+          onBlur={() => input.onBlur()}
+          placeholder={label}
         />
         {touched && Boolean(error) && (
           <Typography variant="caption">{error}</Typography>

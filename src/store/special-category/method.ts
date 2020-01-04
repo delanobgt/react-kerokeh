@@ -3,6 +3,13 @@ import celestineApi from "src/apis/celestine";
 import { ISpecialCategory, PSpecialCategory } from "./types";
 import shallowDiff from "shallow-diff";
 
+export const getSpecialCategoryById = async (id:number|string): Promise<ISpecialCategory> => {
+  const response = await celestineApi().get(
+    `/admin/special-category/${id}`
+  );
+  return response.data;
+};
+
 export const createSpecialCategory = async (specialCategory: PSpecialCategory): Promise<ISpecialCategory> => {
   const response = await celestineApi().post(
     `/admin/special-category`,

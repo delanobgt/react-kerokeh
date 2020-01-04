@@ -24,10 +24,25 @@ export interface IRenderAutoSuggestFieldProps {
   meta: { touched: boolean; error: boolean | string };
   children: ReactNode;
   value: any;
+  disabled: boolean;
 }
 export type RenderAutoSuggestFieldFn = (
   renderFieldProps: IRenderAutoSuggestFieldProps
 ) => ReactElement;
+
+export interface IRenderAsyncAutoSuggestFieldProps {
+  input: any;
+  label: string;
+  type: string;
+  meta: { touched: boolean; error: boolean | string };
+  value: any;
+  disabled: boolean;
+  promiseOptions: (inputValue:string) => Promise<any>;
+}
+export type RenderAsyncAutoSuggestFieldFn = (
+  renderFieldProps: IRenderAsyncAutoSuggestFieldProps
+) => ReactElement;
+
 
 export interface IRenderFieldArrayProps {
   fields: any;
