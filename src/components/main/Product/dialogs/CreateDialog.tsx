@@ -27,13 +27,15 @@ import {
   renderDateField,
   renderImageField
 } from "src/redux-form/renderers";
-import { updatePromoCode, PPromoCode } from "src/store/promo-code";
+import { createPromoCode } from "src/store/promo-code";
 
 interface IComponentProps {
-  promoCodeId: number;
+  open: boolean;
   dismiss: () => void;
   restartIntervalRun: () => void;
-  initialValues: PPromoCode;
+  initialValues: {
+    expired_at: string;
+  };
 }
 
 interface IFormProps {
@@ -47,27 +49,20 @@ interface IFormProps {
   image: any;
 }
 
-function UpdateDialog(
+function CreateDialog(
   props: IComponentProps & InjectedFormProps<IFormProps, IComponentProps>
 ) {
-  const {
-    initialValues,
-    promoCodeId,
-    dismiss,
-    handleSubmit,
-    restartIntervalRun
-  } = props;
-  console.log({ initialValues });
+  const { open, dismiss, handleSubmit, restartIntervalRun } = props;
+
   const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
 
   const handleSave = React.useCallback(
     async (formValues: IFormProps) => {
-      console.log(formValues);
       setLoading(true);
       const [err] = await goPromise(
-        updatePromoCode(initialValues, formValues, formValues.image)
+        createPromoCode(formValues, formValues.image)
       );
       setLoading(false);
       if (err) {
@@ -79,10 +74,10 @@ function UpdateDialog(
       } else {
         restartIntervalRun();
         dismiss();
-        snackbar.showMessage("Promo Code updated.");
+        snackbar.showMessage("Promo Code created.");
       }
     },
-    [dismiss, restartIntervalRun, snackbar, initialValues]
+    [dismiss, restartIntervalRun, snackbar]
   );
 
   const handleClose = () => {
@@ -92,13 +87,13 @@ function UpdateDialog(
   return (
     <div>
       <BasicDialog
-        open={Boolean(promoCodeId)}
+        open={open}
         dismiss={dismiss}
         maxWidth="xs"
         fullWidth
         bgClose
       >
-        <title>Update Promo Code</title>
+        <title>Create New Promo Code</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>
             <>
@@ -171,18 +166,11 @@ function UpdateDialog(
                 validate={[requiredValidator]}
                 disabled={loading}
               />
-              <div>
-                <Typography variant="subtitle1">Current Image</Typography>
-                <img
-                  src={initialValues.image_url}
-                  alt=""
-                  style={{ width: "100%" }}
-                />
-              </div>
               <Field
                 name="image"
-                label="Replace Image"
+                label="Promo Code Image"
                 component={renderImageField}
+                validate={[requiredValidator]}
                 disabled={loading}
                 accept="image/svg"
                 extensions={["svg"]}
@@ -209,6 +197,5 @@ function UpdateDialog(
 }
 
 export default reduxForm<IFormProps, IComponentProps>({
-  form: "updatePromoCodeDialogForm",
-  enableReinitialize: true
-})(UpdateDialog);
+  form: "createPromoCodeDialogForm"
+})(CreateDialog);

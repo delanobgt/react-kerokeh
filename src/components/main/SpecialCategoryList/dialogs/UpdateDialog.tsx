@@ -52,11 +52,7 @@ interface IFormProps {
   name: string;
   priority: number;
   published: number | boolean;
-  product_brand: {
-    label: string;
-    value: number;
-  };
-  special_category: {
+  product_brand_option: {
     label: string;
     value: number;
   };
@@ -81,13 +77,24 @@ function UpdateDialog(
   const handleSave = React.useCallback(
     async (formValues: IFormProps) => {
       setLoading(true);
-      const { name, priority, published } = formValues;
+      const {
+        name,
+        priority,
+        published,
+        product_brand_option,
+        image
+      } = formValues;
       const [err] = await goPromise(
-        updateSpecialCategoryList(initialValues, {
-          name,
-          priority: Number(priority),
-          published: Boolean(published)
-        })
+        updateSpecialCategoryList(
+          initialValues,
+          {
+            name,
+            priority: Number(priority),
+            published: Boolean(published),
+            product_brand_id: product_brand_option.value
+          },
+          image
+        )
       );
       setLoading(false);
       if (err) {
@@ -122,26 +129,6 @@ function UpdateDialog(
         const options = res.productBrands.map(pb => ({
           label: pb.full_name,
           value: pb.id
-        }));
-        console.log({ options });
-        resolve(options);
-      }),
-    []
-  );
-
-  const specialCategoryPromiseOptions = React.useCallback(
-    (inputValue: string) =>
-      new Promise(async resolve => {
-        const [, res] = await goPromise<ISpecialCategoryGetAction>(
-          getSpecialCategories(
-            { offset: 0, limit: 100 },
-            { name: inputValue },
-            []
-          )
-        );
-        const options = res.specialCategories.map(sc => ({
-          label: sc.name,
-          value: sc.id
         }));
         resolve(options);
       }),
@@ -184,29 +171,28 @@ function UpdateDialog(
               disabled={loading}
             >
               <MenuItem value={0}>False</MenuItem>
-              <MenuItem value={0}>True</MenuItem>
+              <MenuItem value={1}>True</MenuItem>
             </Field>
+            <div>
+              <Typography variant="subtitle1">Current Image</Typography>
+              <img
+                src={initialValues.image_path}
+                alt=""
+                style={{ width: "100%" }}
+              />
+            </div>
             <Field
               name="image"
-              label="Special Category List Image"
+              label="Replace Image"
               component={renderImageField}
-              validate={[requiredValidator]}
               disabled={loading}
               accept="image/png"
               extensions={["png"]}
             />
             <Field
-              name="product_brand"
+              name="product_brand_option"
               label="Product Brand"
               promiseOptions={productBrandPromiseOptions}
-              component={renderAsyncAutoSuggestField}
-              validate={[requiredValidator]}
-              disabled={loading}
-            />
-            <Field
-              name="special_category"
-              label="Special Category"
-              promiseOptions={specialCategoryPromiseOptions}
               component={renderAsyncAutoSuggestField}
               validate={[requiredValidator]}
               disabled={loading}

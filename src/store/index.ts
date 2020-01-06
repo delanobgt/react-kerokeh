@@ -5,6 +5,7 @@ import { authReducer } from "./auth";
 import { configReducer } from "./config";
 import { depositFeeReducer } from "./deposit-fee";
 import { identificationReducer } from "./identification";
+import { productReducer } from "./product";
 import { productBrandReducer } from "./product-brand";
 import { productCategoryReducer } from "./product-category";
 import { specialCategoryReducer } from "./special-category";
@@ -23,6 +24,7 @@ export const rootReducer = combineReducers({
   depositFee: depositFeeReducer,
   form: formReducer,
   identification: identificationReducer,
+  product: productReducer,
   productBrand: productBrandReducer,
   productCategory: productCategoryReducer,
   promoCode: promoCodeReducer,

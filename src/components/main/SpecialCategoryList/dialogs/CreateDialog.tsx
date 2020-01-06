@@ -38,6 +38,7 @@ import {
 
 interface IComponentProps {
   open: boolean;
+  specialCategoryId: number;
   dismiss: () => void;
   restartIntervalRun: () => void;
 }
@@ -46,11 +47,7 @@ interface IFormProps {
   name: string;
   priority: number;
   published: boolean | number;
-  product_brand: {
-    label: string;
-    value: number;
-  };
-  special_category: {
+  product_brand_option: {
     label: string;
     value: number;
   };
@@ -60,7 +57,13 @@ interface IFormProps {
 function CreateDialog(
   props: IComponentProps & InjectedFormProps<IFormProps, IComponentProps>
 ) {
-  const { open, dismiss, handleSubmit, restartIntervalRun } = props;
+  const {
+    open,
+    specialCategoryId,
+    dismiss,
+    handleSubmit,
+    restartIntervalRun
+  } = props;
 
   const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -68,12 +71,12 @@ function CreateDialog(
 
   const handleSave = React.useCallback(
     async (formValues: IFormProps) => {
+      console.log({ formValues });
       const {
         name,
         published,
         priority,
-        product_brand,
-        special_category,
+        product_brand_option,
         image
       } = formValues;
       setLoading(true);
@@ -83,8 +86,8 @@ function CreateDialog(
             name,
             published,
             priority,
-            product_brand_id: product_brand.value,
-            special_category_id: special_category.value
+            product_brand_id: product_brand_option.value,
+            special_category_id: specialCategoryId
           },
           image
         )
@@ -102,7 +105,7 @@ function CreateDialog(
         snackbar.showMessage("Special Category List created.");
       }
     },
-    [dismiss, restartIntervalRun, snackbar]
+    [dismiss, restartIntervalRun, snackbar, specialCategoryId]
   );
 
   const handleClose = () => {
@@ -122,26 +125,6 @@ function CreateDialog(
         const options = res.productBrands.map(pb => ({
           label: pb.full_name,
           value: pb.id
-        }));
-        console.log({ options });
-        resolve(options);
-      }),
-    []
-  );
-
-  const specialCategoryPromiseOptions = React.useCallback(
-    (inputValue: string) =>
-      new Promise(async resolve => {
-        const [, res] = await goPromise<ISpecialCategoryGetAction>(
-          getSpecialCategories(
-            { offset: 0, limit: 100 },
-            { name: inputValue },
-            []
-          )
-        );
-        const options = res.specialCategories.map(sc => ({
-          label: sc.name,
-          value: sc.id
         }));
         resolve(options);
       }),
@@ -185,7 +168,7 @@ function CreateDialog(
                 disabled={loading}
               >
                 <MenuItem value={0}>False</MenuItem>
-                <MenuItem value={0}>True</MenuItem>
+                <MenuItem value={1}>True</MenuItem>
               </Field>
               <Field
                 name="image"
@@ -197,17 +180,9 @@ function CreateDialog(
                 extensions={["png"]}
               />
               <Field
-                name="product_brand"
+                name="product_brand_option"
                 label="Product Brand"
                 promiseOptions={productBrandPromiseOptions}
-                component={renderAsyncAutoSuggestField}
-                validate={[requiredValidator]}
-                disabled={loading}
-              />
-              <Field
-                name="special_category"
-                label="Special Category"
-                promiseOptions={specialCategoryPromiseOptions}
                 component={renderAsyncAutoSuggestField}
                 validate={[requiredValidator]}
                 disabled={loading}

@@ -13,7 +13,6 @@ import styled from "styled-components";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
-import queryString from "query-string";
 
 import Table, {
   OnPaginationChangeFn
@@ -25,24 +24,20 @@ import TopAction from "./TopAction";
 import CreateDialog from "./dialogs/CreateDialog";
 import UpdateDialog from "./dialogs/UpdateDialog";
 import DeleteDialog from "./dialogs/DeleteDialog";
+import DetailDialog from "./dialogs/DetailDialog";
 import DetailImageDialog from "./dialogs/DetailImageDialog";
 import useTableUrlState from "src/hooks/useTableUrlState";
-import SortForm from "src/components/generic/SortForm";
+import moment from "moment";
 import FilterForm from "./FilterForm";
+import SortForm from "src/components/generic/SortForm";
 import {
-  ISpecialCategoryListGetAction,
-  SpecialCategoryListSortField,
-  PSpecialCategoryListPagination,
-  ISpecialCategoryList,
-  PSpecialCategoryListFilter,
-  getSpecialCategoryLists
-} from "src/store/special-category-list";
-import useReactRouter from "use-react-router";
-import { TInitialValues } from "./types";
-import {
-  ISpecialCategory,
-  getSpecialCategoryById
-} from "src/store/special-category";
+  PProductFilter,
+  PProductPagination,
+  ProductSortField,
+  IProduct,
+  getProducts,
+  IProductGetAction
+} from "src/store/product";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -57,6 +52,7 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: theme.spacing(2)
   },
   filterAndSortForm: {
+    marginBottom: "1rem",
     display: "flex",
     paddingLeft: theme.spacing(2)
     // justifyContent: "space-between"
@@ -67,13 +63,9 @@ const MyPaper = styled(Paper)`
   padding: 1.5em;
 `;
 
-function SpecialCategoryList() {
+function Product() {
   const refreshDelay = 5000;
   const classes = useStyles({});
-  const { location } = useReactRouter();
-  const search = React.useMemo(() => queryString.parse(location.search), [
-    location.search
-  ]);
   const {
     filter,
     updateFilter,
@@ -81,65 +73,65 @@ function SpecialCategoryList() {
     updatePagination,
     sorts,
     updateSorts
-  } = useTableUrlState<
-    PSpecialCategoryListFilter,
-    PSpecialCategoryListPagination,
-    SpecialCategoryListSortField
-  >(
-    { special_category_id: String(search.special_category_id) },
+  } = useTableUrlState<PProductFilter, PProductPagination, ProductSortField>(
+    {},
     { limit: 5, offset: 0 },
     []
   );
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
-  const specialCategoryLists = useSelector<RootState, ISpecialCategoryList[]>(
-    state => state.specialCategoryList.specialCategoryLists
+  const products = useSelector<RootState, IProduct[]>(
+    state => state.product.products
   );
   const [createDialogOpen, setCreateDialogOpen] = React.useState<boolean>(
     false
   );
   const [updateDialogId, setUpdateDialogId] = React.useState<number>(null);
   const [deleteDialogId, setDeleteDialogId] = React.useState<number>(null);
+  const [detailDialogId, setDetailDialogId] = React.useState<number>(null);
   const [detailDialogImageUrl, setDetailDialogImageUrl] = React.useState<
     string
   >("");
   const dispatch = useDispatch();
 
-  const [currentSpecialCategory, setCurrentSpecialCategory] = React.useState<
-    ISpecialCategory
-  >(null);
-  const specialCategoryListRealTotal = useSelector<RootState, number>(
-    state => state.specialCategoryList.realTotal
+  const productRealTotal = useSelector<RootState, number>(
+    state => state.product.realTotal
   );
-  const specialCategorySortFields: SpecialCategoryListSortField[] = React.useMemo(
-    () => ["id", "published", "name", "priority"],
+  const productSortFields: ProductSortField[] = React.useMemo(
+    () => [
+      "bnib_highest_bid_price",
+      "bnib_lowest_sell_price",
+      "code",
+      "color",
+      "description",
+      "detail",
+      "gender",
+      "id",
+      "is_active",
+      "name",
+      "pre_order_highest_bid_price",
+      "pre_order_lowest_sell_price",
+      "release_date",
+      "retail_price",
+      "slug",
+      "sold_count",
+      "story",
+      "view_count"
+    ],
     []
   );
 
   // interval fetch
   const autoFetch = React.useCallback(async () => {
-    const [errSCLs, resSCLs] = await goPromise<ISpecialCategoryListGetAction>(
-      getSpecialCategoryLists(pagination, filter, sorts)
+    const [err, res] = await goPromise<IProductGetAction>(
+      getProducts(pagination, filter, sorts)
     );
-    const [errSC, resSC] = await goPromise<ISpecialCategory>(
-      getSpecialCategoryById(String(search.special_category_id))
-    );
-    if (errSCLs) {
-      throw errSCLs;
-    } else if (errSC) {
-      throw errSC;
+    if (err) {
+      throw err;
     } else {
-      dispatch(resSCLs);
-      setCurrentSpecialCategory(resSC);
+      dispatch(res);
     }
-  }, [
-    dispatch,
-    pagination,
-    filter,
-    sorts,
-    setCurrentSpecialCategory,
-    search.special_category_id
-  ]);
+  }, [dispatch, pagination, filter, sorts]);
   const intervalRun = useIntervalRun(() => autoFetch(), refreshDelay);
   const {
     setAlive: setIntervalRunAlive,
@@ -148,37 +140,21 @@ function SpecialCategoryList() {
 
   // initial fetch
   const fetch = React.useCallback(async () => {
-    if (
-      !search.special_category_id ||
-      search.special_category_id === "undefined"
-    ) {
-      setError("special_category_id is empty");
-      return;
-    }
-
     setError("");
     setLoading(true);
-    const [errSCLs, resSCLs] = await goPromise<ISpecialCategoryListGetAction>(
-      getSpecialCategoryLists(
-        { offset: 0, limit: 5 },
-        { special_category_id: String(search.special_category_id) },
-        []
-      )
-    );
-    const [errSC, resSC] = await goPromise<ISpecialCategory>(
-      getSpecialCategoryById(String(search.special_category_id))
+    const [err, res] = await goPromise<IProductGetAction>(
+      getProducts({ offset: 0, limit: 5 }, {}, [])
     );
     setLoading(false);
 
-    if (errSCLs || errSC) {
-      console.log({ errSCLs, errSC });
+    if (err) {
+      console.log({ err });
       setError("error");
     } else {
-      dispatch(resSCLs);
-      setCurrentSpecialCategory(resSC);
+      dispatch(res);
       setIntervalRunAlive(true);
     }
-  }, [dispatch, setIntervalRunAlive, search, setCurrentSpecialCategory]);
+  }, [dispatch, setIntervalRunAlive]);
   React.useEffect(() => {
     fetch();
   }, [fetch]);
@@ -202,27 +178,31 @@ function SpecialCategoryList() {
     },
     [updatePagination]
   );
-  const columns: Column<ISpecialCategoryList>[] = React.useMemo(
+  const columns: Column<IProduct>[] = React.useMemo(
     () => [
       {
         Header: "ID",
         accessor: "id"
       },
       {
+        Header: "Code",
+        accessor: row => row.code
+      },
+      {
         Header: "Name",
         accessor: row => row.name
       },
       {
-        Header: "Priority",
-        accessor: row => row.priority
+        Header: "Color",
+        accessor: row => row.color
       },
       {
-        Header: "Published",
-        accessor: row => (row.published ? "YES" : "NO")
+        Header: "Description",
+        accessor: row => row.description || "-"
       },
       {
-        Header: "Product Brand",
-        accessor: row => row.product_brand.full_name
+        Header: "Is Active",
+        accessor: row => (row.is_active ? "YES" : "NO")
       },
       {
         Header: "Image",
@@ -230,10 +210,10 @@ function SpecialCategoryList() {
         Cell: ({ row: { original } }) => {
           return (
             <img
-              src={original.image_path}
+              src={""}
               alt=""
               style={{ width: "65px", cursor: "pointer" }}
-              onClick={() => setDetailDialogImageUrl(original.image_path)}
+              onClick={() => setDetailDialogImageUrl("")}
             />
           );
         }
@@ -245,18 +225,27 @@ function SpecialCategoryList() {
           return (
             <div>
               <Button
+                onClick={() => setDetailDialogId(original.id)}
+                color="primary"
+                variant="outlined"
+              >
+                Detail
+              </Button>
+              <br />
+              <Button
                 onClick={() => setUpdateDialogId(original.id)}
                 color="primary"
                 variant="outlined"
-                style={{ marginLeft: "1rem" }}
+                style={{ marginTop: "1rem" }}
               >
                 Update
               </Button>
+              <br />
               <Button
                 onClick={() => setDeleteDialogId(original.id)}
                 color="primary"
                 variant="outlined"
-                style={{ marginLeft: "1rem" }}
+                style={{ marginTop: "1rem" }}
               >
                 Delete
               </Button>
@@ -269,25 +258,22 @@ function SpecialCategoryList() {
   );
 
   // set updateInitialValues
-  const [updateInitialValues, setUpdateInitialValues] = React.useState<
-    TInitialValues
-  >({});
-  React.useEffect(() => {
-    if (!updateDialogId) return setUpdateInitialValues({});
-    const specialCategoryList: ISpecialCategoryList = (_.find(
-      specialCategoryLists,
-      pc => ((pc as unknown) as ISpecialCategoryList).id === updateDialogId
-    ) as unknown) as ISpecialCategoryList;
-    specialCategoryList.published = Number(specialCategoryList.published);
-
-    setUpdateInitialValues({
-      ...specialCategoryList,
-      product_brand_option: {
-        label: specialCategoryList.product_brand.full_name,
-        value: specialCategoryList.product_brand_id
-      }
-    });
-  }, [specialCategoryLists, updateDialogId, setUpdateInitialValues]);
+  // const [updateInitialValues, setUpdateInitialValues] = React.useState<
+  //   PPromoCode
+  // >({ expired_at: moment().format("YYYY-MM-DD") });
+  // React.useEffect(() => {
+  //   if (!updateDialogPCId)
+  //     return setUpdateInitialValues({
+  //       expired_at: moment().format("YYYY-MM-DD")
+  //     });
+  //   const promoCode: IPromoCode = (_.find(
+  //     promoCodes,
+  //     pc => ((pc as unknown) as IPromoCode).id === updateDialogPCId
+  //   ) as unknown) as IPromoCode;
+  //   promoCode.active_status = Number(promoCode.active_status);
+  //   promoCode.expired_at = moment(promoCode.expired_at).format("YYYY-MM-DD");
+  //   setUpdateInitialValues(promoCode);
+  // }, [promoCodes, updateDialogPCId, setUpdateInitialValues]);
 
   return (
     <>
@@ -297,13 +283,8 @@ function SpecialCategoryList() {
         <Grid item xs={11} sm={11} md={11} lg={10}>
           <MyPaper elevation={3}>
             <Toolbar className={clsx(classes.root)}>
-              <Typography variant="h6">
-                Special Category List for{" "}
-                {!currentSpecialCategory ? "..." : currentSpecialCategory.name}
-              </Typography>
-              <Typography variant="subtitle1">
-                List of all special category lists
-              </Typography>
+              <Typography variant="h6">Products</Typography>
+              <Typography variant="subtitle1">List of all products</Typography>
             </Toolbar>
             <br />
             <br />
@@ -313,31 +294,26 @@ function SpecialCategoryList() {
                 <CircularProgress size={24} /> Loading...
               </div>
             ) : error ? (
-              <Typography
-                variant="subtitle1"
-                color="secondary"
-                style={{ marginLeft: "1rem" }}
-              >
+              <Typography variant="subtitle1" color="secondary">
                 An error occured, please{" "}
                 <span onClick={fetch} style={{ color: "lightblue" }}>
                   retry
-                </span>{" "}
-                ({error}).
+                </span>
+                .
               </Typography>
-            ) : specialCategoryLists && _.isArray(specialCategoryLists) ? (
+            ) : products && _.isArray(products) ? (
               <>
                 {/* Filter Form */}
                 <div className={classes.filterAndSortForm}>
                   <FilterForm filter={filter} updateFilter={updateFilter} />
                   <div style={{ marginLeft: "2rem" }}>
-                    <SortForm<SpecialCategoryListSortField>
+                    <SortForm<ProductSortField>
                       sorts={sorts}
-                      sortFields={specialCategorySortFields}
+                      sortFields={productSortFields}
                       updateSorts={updateSorts}
                     />
                   </div>
                 </div>
-                <br />
                 {/* top action */}
                 <TopAction
                   intervalRun={intervalRun}
@@ -348,8 +324,8 @@ function SpecialCategoryList() {
                   pageIndex={pagination.offset / pagination.limit}
                   pageSize={Number(pagination.limit)}
                   columns={columns}
-                  data={specialCategoryLists}
-                  rowCount={specialCategoryListRealTotal}
+                  data={products}
+                  rowCount={productRealTotal}
                   onPaginationChange={onPaginationChange}
                   disableSorting={true}
                 />
@@ -358,37 +334,43 @@ function SpecialCategoryList() {
           </MyPaper>
         </Grid>
       </Grid>
-      {Boolean(createDialogOpen) && (
+      {Boolean(detailDialogId) && (
+        <DetailDialog
+          productId={detailDialogId}
+          dismiss={() => setDetailDialogId(null)}
+        />
+      )}
+      {/* {Boolean(createDialogOpen) && (
         <CreateDialog
           open={createDialogOpen}
-          specialCategoryId={Number(search.special_category_id)}
           restartIntervalRun={restartIntervalRun}
           dismiss={() => setCreateDialogOpen(null)}
+          initialValues={{ expired_at: moment().format("YYYY-MM-DD") }}
         />
-      )}
-      {Boolean(updateDialogId) && (
+      )} */}
+      {/* {Boolean(updateDialogPCId) && (
         <UpdateDialog
-          specialCategoryListId={updateDialogId}
+          promoCodeId={updateDialogPCId}
           restartIntervalRun={intervalRun.restart}
-          dismiss={() => setUpdateDialogId(null)}
+          dismiss={() => setUpdateDialogPCId(null)}
           initialValues={updateInitialValues}
         />
-      )}
-      {deleteDialogId && (
+      )} */}
+      {/* {deleteDialogPCId && (
         <DeleteDialog
-          specialCategoryListId={deleteDialogId}
+          promoCodeId={deleteDialogPCId}
           restartIntervalRun={intervalRun.restart}
-          dismiss={() => setDeleteDialogId(null)}
+          dismiss={() => setDeleteDialogPCId(null)}
         />
-      )}
-      {detailDialogImageUrl && (
+      )} */}
+      {/* {detailDialogImageUrl && (
         <DetailImageDialog
           imageUrl={detailDialogImageUrl}
           dismiss={() => setDetailDialogImageUrl(null)}
         />
-      )}
+      )} */}
     </>
   );
 }
 
-export default SpecialCategoryList;
+export default Product;

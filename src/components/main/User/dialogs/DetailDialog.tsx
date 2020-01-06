@@ -1,16 +1,6 @@
 import _ from "lodash";
-import React, { ReactNode } from "react";
-import {
-  Button,
-  Typography,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  CircularProgress,
-  Chip
-} from "@material-ui/core";
-import styled from "styled-components";
-import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
+import React from "react";
+import { Button, Typography, CircularProgress, Chip } from "@material-ui/core";
 
 import {
   IUser,
@@ -27,28 +17,11 @@ import {
 } from "src/store/identification";
 import { MyDesc } from "../../Identification/components";
 import { statusLabelDict } from "../../Identification/constants";
-
-const SingleEntry = styled.div`
-  display: flex;
-  margin-bottom: 0.5rem;
-`;
-const Label = styled(Typography)`
-  flex-basis: 175px;
-`;
+import { makeExpansion } from "src/components/generic/detail-dialog";
 
 interface IComponentProps {
   userId: number;
   dismiss: () => void;
-}
-
-interface FieldEntry {
-  label: string;
-  value: string | number | ReactNode;
-}
-
-interface ExpansionEntry {
-  title: string;
-  entries: FieldEntry[];
 }
 
 function DetailDialog(props: IComponentProps) {
@@ -121,41 +94,6 @@ function DetailDialog(props: IComponentProps) {
 
   const handleClose = () => {
     dismiss();
-  };
-
-  const makeEntry = (e: FieldEntry) => (
-    <SingleEntry key={e.label}>
-      <Label>{e.label}</Label>
-      {["string", "number"].includes(typeof e.value) ? (
-        <Typography>{e.value}</Typography>
-      ) : (
-        e.value
-      )}
-    </SingleEntry>
-  );
-
-  const makeExpansion = (e: ExpansionEntry, expanded?: boolean) => {
-    const props = {
-      expanded
-    };
-    return (
-      <ExpansionPanel {...props}>
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>
-            <strong>{e.title}</strong>
-          </Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          {!e.entries.length ? (
-            <Typography variant="subtitle1">No data.</Typography>
-          ) : (
-            <div style={{ width: "100%" }}>
-              {e.entries.map(e => makeEntry(e))}
-            </div>
-          )}
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-    );
   };
 
   const generalEntries = React.useMemo(() => {

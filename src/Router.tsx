@@ -18,6 +18,7 @@ import Logout from "./components/main/Auth/Logout";
 import AdminUser from "./components/main/AdminUser";
 import Config from "./components/main/Config";
 import DepositFee from "./components/main/DepositFee";
+import Product from "./components/main/Product";
 import ProductBrand from "./components/main/ProductBrand";
 import ProductCategory from "./components/main/ProductCategory";
 import PromoCode from "./components/main/PromoCode";
@@ -138,6 +139,9 @@ const AdminRoutes = () => {
           </Route>
           <Route path="/special_category_list">
             <SpecialCategoryList />
+          </Route>
+          <Route path="/product">
+            <Product />
           </Route>
           <Route path="/product_category">
             <ProductCategory />

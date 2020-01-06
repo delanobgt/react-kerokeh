@@ -20,15 +20,18 @@ export const createSpecialCategoryList = async (specialCategoryList: PSpecialCat
 
 export const updateSpecialCategoryList = async (
   oldSpecialCategoryList: PSpecialCategoryList,
-  newSpecialCategoryList: PSpecialCategoryList
+  newSpecialCategoryList: PSpecialCategoryList,
+  image:any
 ): Promise<ISpecialCategoryList> => {
-  const diffSpecialCategoryList = _.pick(
-    newSpecialCategoryList,
-    shallowDiff(oldSpecialCategoryList, newSpecialCategoryList).updated
-  );
+  const formData = new FormData();
+  formData.append("name", String(newSpecialCategoryList.name));
+  formData.append("priority", String(newSpecialCategoryList.priority));
+  formData.append("published", String(newSpecialCategoryList.published));
+  formData.append("product_brand_id", String(newSpecialCategoryList.product_brand_id));
+  if (image) formData.append("image", image);
   const response = await celestineApi().patch(
     `/admin/special-category-list/${oldSpecialCategoryList.id}`,
-    diffSpecialCategoryList
+    formData
   );
   return response.data;
 };

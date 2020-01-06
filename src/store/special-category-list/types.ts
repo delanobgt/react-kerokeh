@@ -1,3 +1,6 @@
+import { IProductBrand } from "../product-brand";
+import { ISpecialCategory } from "../special-category/types";
+
 // enums
 export enum ESpecialCategoryListActionTypes {
   SPECIAL_CATEGORY_LIST_GET = "@@special-category-list/SPECIAL_CATEGORY_LIST_GET"
@@ -11,8 +14,9 @@ export interface ISpecialCategoryList {
   priority: number;
   published: boolean | number;
   product_brand_id: number;
-  product_brand_name: string;
+  product_brand: IProductBrand;
   special_category_id: number;
+  special_category: ISpecialCategory;
 }
 export type PSpecialCategoryList = Partial<ISpecialCategoryList>;
 

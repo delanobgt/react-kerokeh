@@ -181,7 +181,7 @@ function UpdateDialog(
               </div>
               <Field
                 name="image"
-                label="Replace Image"
+                label="Replace Promo Code Image"
                 component={renderImageField}
                 disabled={loading}
                 accept="image/svg"
