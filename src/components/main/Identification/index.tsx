@@ -36,8 +36,8 @@ import {
   getIdentifications
 } from "src/store/identification";
 import { statusLabelDict } from "./constants";
-import { MyDesc } from "./components";
 import useTableUrlState from "src/hooks/useTableUrlState";
+import { MyDesc } from "src/components/generic/detail-dialog";
 
 const useStyles = makeStyles(theme => ({
   root: {

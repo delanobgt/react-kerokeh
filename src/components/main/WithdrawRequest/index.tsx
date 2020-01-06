@@ -22,8 +22,9 @@ import { goPromise } from "src/util/helper";
 import useIntervalRun from "src/hooks/useIntervalRun";
 import TopAction from "./TopAction";
 import useTableUrlState from "src/hooks/useTableUrlState";
-import FilterForm from "../ProductBrand/FilterForm";
+import FilterForm from "./FilterForm";
 import SortForm from "src/components/generic/SortForm";
+import DetailDialog from "./dialogs/DetailDialog";
 import {
   IWithdrawRequest,
   PWithdrawRequestFilter,
@@ -57,7 +58,7 @@ const MyPaper = styled(Paper)`
   padding: 1.5em;
 `;
 
-function PromoCode() {
+function WithdrawRequest() {
   const refreshDelay = 5000;
   const classes = useStyles({});
   const {
@@ -77,13 +78,11 @@ function PromoCode() {
   const withdrawRequests = useSelector<RootState, IWithdrawRequest[]>(
     state => state.withdrawRequest.withdrawRequests
   );
-  const [acceptDialogOpen, setAcceptDialogOpen] = React.useState<boolean>(
-    false
-  );
+  const [detailDialogId, setDetailDialogId] = React.useState<number>(null);
   const dispatch = useDispatch();
 
   const withdrawRequestRealTotal = useSelector<RootState, number>(
-    state => state.depositFee.realTotal
+    state => state.withdrawRequest.realTotal
   );
   const withdrawRequestSortFields: WithdrawRequestSortField[] = React.useMemo(
     () => [
@@ -164,19 +163,11 @@ function PromoCode() {
       },
       {
         Header: "Amount",
-        accessor: row => row.amount
+        accessor: row => Boolean(console.log(row)) && row.amount
       },
       {
         Header: "Status",
-        accessor: row => row.status
-      },
-      {
-        Header: "Created By",
-        accessor: "created_by"
-      },
-      {
-        Header: "Updated By",
-        accessor: "updated_by"
+        accessor: row => _.startCase(row.status)
       },
       {
         Header: "Actions",
@@ -185,19 +176,11 @@ function PromoCode() {
           return (
             <div>
               <Button
-                onClick={() => setAcceptDialogOpen(true)}
+                onClick={() => setDetailDialogId(original.id)}
                 color="primary"
                 variant="outlined"
               >
-                Accept
-              </Button>
-              <Button
-                onClick={() => setAcceptDialogOpen(true)}
-                color="primary"
-                variant="outlined"
-                style={{ marginLeft: "1rem" }}
-              >
-                Reject
+                Detail
               </Button>
             </div>
           );
@@ -267,16 +250,15 @@ function PromoCode() {
           </MyPaper>
         </Grid>
       </Grid>
-      {/* {Boolean(createDialogOpen) && (
-        <CreateDialog
-          open={createDialogOpen}
+      {Boolean(detailDialogId) && (
+        <DetailDialog
+          withdrawRequestId={detailDialogId}
           restartIntervalRun={restartIntervalRun}
-          dismiss={() => setCreateDialogOpen(null)}
-          initialValues={{ expired_at: moment().format("YYYY-MM-DD") }}
+          dismiss={() => setDetailDialogId(null)}
         />
-      )} */}
+      )}
     </>
   );
 }
 
-export default PromoCode;
+export default WithdrawRequest;

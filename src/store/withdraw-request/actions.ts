@@ -19,7 +19,7 @@ export const getWithdrawRequests = async (
     .join(",")
     .value();
   const params = _.pickBy({ ...pagination, ...filter }, val => val);
-  const response = await celestineApi().get(`/admin/promo-code?sort=${sort}`, {
+  const response = await celestineApi().get(`/admin/withdraw-request?sort=${sort}`, {
     params
   });
   const withdrawRequests = response.data.data;

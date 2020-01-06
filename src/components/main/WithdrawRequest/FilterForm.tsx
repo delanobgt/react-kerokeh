@@ -1,12 +1,12 @@
 import React from "react";
 import { TextField, Typography, MenuItem } from "@material-ui/core";
 import styled from "styled-components";
-import { PPromoCodeFilter } from "src/store/promo-code";
 import BasicSelect from "src/components/generic/BasicSelect";
+import { PWithdrawRequestFilter } from "src/store/withdraw-request";
 
 interface IComponentProps {
-  filter: PPromoCodeFilter;
-  updateFilter: (_filter: PPromoCodeFilter) => void;
+  filter: PWithdrawRequestFilter;
+  updateFilter: (_filter: PWithdrawRequestFilter) => void;
 }
 
 const Div = styled.div`
@@ -30,27 +30,10 @@ function FilterForm(props: IComponentProps) {
 
       <Div>
         <TextField
-          label="Code"
-          value={filter.code || ""}
-          onChange={e => updateFilter({ code: e.target.value })}
+          label="Status"
+          value={filter.status || ""}
+          onChange={e => updateFilter({ status: e.target.value })}
         />
-      </Div>
-
-      <Div>
-        <BasicSelect
-          style={{ width: "8em" }}
-          label="Product Type"
-          value={filter.product_type || ""}
-          onChange={(value: string) => updateFilter({ product_type: value })}
-        >
-          <MenuItem value="">No Filter</MenuItem>
-          <MenuItem value="bnib_product">BNIB Product</MenuItem>
-          <MenuItem value="bnib_buy_order">BNIB Buy Order</MenuItem>
-          <MenuItem value="direct_bnib_product">Direct BNIB Product</MenuItem>
-          <MenuItem value="direct_bnib_buy_order">
-            Direct BNIB Buy Order
-          </MenuItem>
-        </BasicSelect>
       </Div>
     </div>
   );

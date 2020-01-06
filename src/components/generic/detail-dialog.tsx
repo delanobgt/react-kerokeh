@@ -12,8 +12,14 @@ export const SingleEntry = styled.div`
   display: flex;
   margin-bottom: 0.5rem;
 `;
+
 export const Label = styled(Typography)`
   flex-basis: 175px;
+`;
+
+export const MyDesc = styled(Typography)`
+  color: red;
+  padding-left: 0.75rem;
 `;
 
 export interface FieldEntry {
@@ -37,9 +43,9 @@ export const makeEntry = (e: FieldEntry) => (
   </SingleEntry>
 );
 
-export const makeExpansion = (e: ExpansionEntry, expanded?: boolean) => {
+export const makeExpansion = (e: ExpansionEntry, defaultExpanded?: boolean) => {
   const props = {
-    expanded
+    defaultExpanded
   };
   return (
     <ExpansionPanel {...props}>

@@ -1,7 +1,17 @@
 import celestineApi from "src/apis/celestine";
 import { IWithdrawRequest } from "./types";
 
-export const acceptWithdrawRequest = async (
+export const getWithdrawRequestById = async (
+  id: number
+): Promise<IWithdrawRequest> => {
+  const response = await celestineApi().get(
+    `/admin/withdraw-request?id=${id}`
+  );
+  return response.data.data[0];
+};
+
+
+export const approveWithdrawRequest = async (
   id: number
 ): Promise<IWithdrawRequest> => {
   const response = await celestineApi().post(
@@ -14,6 +24,7 @@ export const rejectWithdrawRequest = async (
   id: number,
   rejected_reason: string
 ): Promise<IWithdrawRequest> => {
+  console.log({rejected_reason})
   const response = await celestineApi().post(
     `/admin/withdraw-request/${id}/reject`,
     { rejected_reason }

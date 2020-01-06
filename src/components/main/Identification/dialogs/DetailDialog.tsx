@@ -21,9 +21,9 @@ import {
   getIdentificationByUserId
 } from "src/store/identification";
 import { statusLabelDict } from "../constants";
-import { MyDesc } from "../components";
 import AcceptDialog from "./AcceptDialog";
 import RejectDialog from "./RejectDialog";
+import { MyDesc } from "src/components/generic/detail-dialog";
 
 const SingleEntry = styled.div`
   display: flex;

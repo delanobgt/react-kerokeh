@@ -7,6 +7,14 @@ export enum EWithdrawRequestActionTypes {
 export interface IWithdrawRequest {
   amount: number;
   approved_by: null | string;
+  bank: {
+    id: number;
+    name: string;
+    number: string;
+    owner: string;
+    used_for_withdraw: number | boolean;
+    user_id: number;
+  },
   created_at: string;
   id: number;
   paid: boolean | number;
@@ -22,6 +30,7 @@ export type PWithdrawRequest = Partial<IWithdrawRequest>;
 
 interface IWithdrawRequestFilter {
   id: string;
+  user_id: string;
   status: string;
 }
 export type PWithdrawRequestFilter = Partial<IWithdrawRequestFilter>;

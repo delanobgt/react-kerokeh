@@ -15,9 +15,8 @@ import {
   IIdentification,
   getIdentificationByUserId
 } from "src/store/identification";
-import { MyDesc } from "../../Identification/components";
 import { statusLabelDict } from "../../Identification/constants";
-import { makeExpansion } from "src/components/generic/detail-dialog";
+import { makeExpansion, MyDesc } from "src/components/generic/detail-dialog";
 
 interface IComponentProps {
   userId: number;
