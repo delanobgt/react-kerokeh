@@ -20,7 +20,7 @@ function ApproveDialog(props: IComponentProps) {
   const [error, setError] = React.useState<string>("");
   const snackbar = useSnackbar();
 
-  const handleApprove = async () => {
+  const handleApprove = React.useCallback(async () => {
     setLoading(true);
     const [err] = await goPromise(approveWithdrawRequest(withdrawRequestId));
     setLoading(false);
@@ -32,7 +32,7 @@ function ApproveDialog(props: IComponentProps) {
       dismiss();
       snackbar.showMessage("Withdraw Request approved.");
     }
-  };
+  }, [withdrawRequestId, dismiss, restartIntervalRun, fetch, snackbar]);
 
   const handleClose = () => {
     dismiss();

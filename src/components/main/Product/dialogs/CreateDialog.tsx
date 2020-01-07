@@ -4,13 +4,16 @@ import {
   Button,
   CircularProgress,
   Typography,
-  MenuItem
+  MenuItem,
+  IconButton
 } from "@material-ui/core";
+import { Close as CloseIcon } from "@material-ui/icons";
 import {
   Field,
   reduxForm,
   SubmissionError,
-  InjectedFormProps
+  InjectedFormProps,
+  FieldArray
 } from "redux-form";
 import { useSnackbar } from "material-ui-snackbar-provider";
 
@@ -25,28 +28,47 @@ import {
   renderTextField,
   renderSelectField,
   renderDateField,
-  renderImageField
+  renderImageField,
+  renderAsyncAutoSuggestField
 } from "src/redux-form/renderers";
-import { createPromoCode } from "src/store/promo-code";
+import { RenderFieldArrayFn } from "src/util/types";
+import { createProduct } from "src/store/product";
+import {
+  getProductBrands,
+  IProductBrandGetAction
+} from "src/store/product-brand";
+import {
+  IProductCategoryGetAction,
+  getProductCategories
+} from "src/store/product-category";
 
 interface IComponentProps {
   open: boolean;
   dismiss: () => void;
   restartIntervalRun: () => void;
-  initialValues: {
-    expired_at: string;
-  };
+  initialValues: { release_date: string };
 }
 
 interface IFormProps {
-  active_status: boolean | number;
+  name: string;
+  slug: string;
   code: string;
   description: string;
-  expired_at: string;
-  limit: number;
-  percentage: number;
-  product_type: string;
-  image: any;
+  story: string;
+  is_active: boolean | number;
+  gender: number;
+  color: string;
+  release_date: string;
+  product_brand_option: {
+    label: string;
+    value: number;
+  };
+  product_category_option: {
+    label: string;
+    value: number;
+  };
+  display_image: any;
+  detail_images: any[];
 }
 
 function CreateDialog(
@@ -58,11 +80,109 @@ function CreateDialog(
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
 
+  const renderProducts: RenderFieldArrayFn<any> = React.useCallback(
+    ({ fields }) => (
+      <div>
+        {!Boolean(fields.length) ? (
+          <Typography variant="subtitle1">- no detail image yet -</Typography>
+        ) : (
+          fields
+            .map((member: any, index: number) => {
+              const field = fields.get(index);
+              return {
+                key: index,
+                component: (
+                  <div
+                    key={index}
+                    style={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Field
+                      name={`${member}`}
+                      label="Detail Image"
+                      component={renderImageField}
+                      validate={[requiredValidator]}
+                      disabled={loading}
+                      accept="image/png"
+                      extensions={["png"]}
+                    />
+                    <IconButton onClick={() => fields.remove(index)}>
+                      <CloseIcon />
+                    </IconButton>
+                  </div>
+                )
+              };
+            })
+            .map(e => e.component)
+        )}
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => fields.push(null)}
+        >
+          Add Product Size
+        </Button>
+      </div>
+    ),
+    []
+  );
+
+  const fieldArray = React.useMemo(
+    () => (
+      /* tslint:disable-next-line */
+      <FieldArray name="detail_images" component={renderProducts} />
+    ),
+    [renderProducts]
+  );
+
+  const productBrandPromiseOptions = React.useCallback(
+    (inputValue: string) =>
+      new Promise(async resolve => {
+        const [, res] = await goPromise<IProductBrandGetAction>(
+          getProductBrands(
+            { offset: 0, limit: 100 },
+            { full_name: inputValue },
+            []
+          )
+        );
+        const options = res.productBrands.map(pb => ({
+          label: pb.full_name,
+          value: pb.id
+        }));
+        resolve(options);
+      }),
+    []
+  );
+
+  const productCategoryPromiseOptions = React.useCallback(
+    (inputValue: string) =>
+      new Promise(async resolve => {
+        const [, res] = await goPromise<IProductCategoryGetAction>(
+          getProductCategories(
+            { offset: 0, limit: 100 },
+            { name: inputValue },
+            []
+          )
+        );
+        const options = res.productCategories.map(pb => ({
+          label: pb.name,
+          value: pb.id
+        }));
+        resolve(options);
+      }),
+    []
+  );
+
   const handleSave = React.useCallback(
     async (formValues: IFormProps) => {
       setLoading(true);
       const [err] = await goPromise(
-        createPromoCode(formValues, formValues.image)
+        createProduct(
+          formValues,
+          formValues.product_brand_option.value,
+          formValues.product_category_option.value,
+          formValues.display_image,
+          formValues.detail_images
+        )
       );
       setLoading(false);
       if (err) {
@@ -74,7 +194,7 @@ function CreateDialog(
       } else {
         restartIntervalRun();
         dismiss();
-        snackbar.showMessage("Promo Code created.");
+        snackbar.showMessage("Product created.");
       }
     },
     [dismiss, restartIntervalRun, snackbar]
@@ -93,10 +213,26 @@ function CreateDialog(
         fullWidth
         bgClose
       >
-        <title>Create New Promo Code</title>
+        <title>Create New Product</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>
             <>
+              <Field
+                name="name"
+                type="text"
+                label="Name"
+                component={renderTextField}
+                validate={[requiredValidator]}
+                disabled={loading}
+              />
+              <Field
+                name="slug"
+                type="text"
+                label="Slug"
+                component={renderTextField}
+                validate={[requiredValidator]}
+                disabled={loading}
+              />
               <Field
                 name="code"
                 type="text"
@@ -106,19 +242,11 @@ function CreateDialog(
                 disabled={loading}
               />
               <Field
-                name="percentage"
+                name="color"
                 type="text"
-                label="Percentage"
+                label="Color"
                 component={renderTextField}
-                validate={[requiredValidator, unsignedRealNumberValidator]}
-                disabled={loading}
-              />
-              <Field
-                name="limit"
-                type="text"
-                label="Limit"
-                component={renderTextField}
-                validate={[requiredValidator, unsignedWholeNumberValidator]}
+                validate={[requiredValidator]}
                 disabled={loading}
               />
               <Field
@@ -133,48 +261,73 @@ function CreateDialog(
                 variant="outlined"
               />
               <Field
-                name="product_type"
-                label="Product Type"
-                component={renderSelectField}
-                validate={[requiredValidator]}
-                disabled={loading}
-              >
-                <MenuItem value="bnib_product">BNIB Product</MenuItem>
-                <MenuItem value="bnib_buy_order">BNIB Buy Order</MenuItem>
-                <MenuItem value="direct_bnib_product">
-                  Direct BNIB Product
-                </MenuItem>
-                <MenuItem value="direct_bnib_buy_order">
-                  Direct BNIB Buy Order
-                </MenuItem>
-              </Field>
-              <Field
-                name="active_status"
-                label="Active Status"
-                component={renderSelectField}
-                validate={[requiredValidator]}
-                disabled={loading}
-              >
-                <MenuItem value={1}>Active</MenuItem>
-                <MenuItem value={0}>Inactive</MenuItem>
-              </Field>
-              <Field
-                name="expired_at"
+                name="story"
                 type="text"
-                label="Expired At"
+                label="Story"
+                component={renderTextField}
+                validate={[requiredValidator]}
+                disabled={loading}
+                multiline
+                rows="5"
+                variant="outlined"
+              />
+              <Field
+                name="release_date"
+                type="text"
+                label="Release Date"
                 component={renderDateField}
                 validate={[requiredValidator]}
                 disabled={loading}
               />
               <Field
-                name="image"
-                label="Promo Code Image"
+                name="product_brand_option"
+                label="Product Brand"
+                promiseOptions={productBrandPromiseOptions}
+                component={renderAsyncAutoSuggestField}
+                validate={[requiredValidator]}
+                disabled={loading}
+              />
+              <Field
+                name="product_category_option"
+                label="Product Category"
+                promiseOptions={productCategoryPromiseOptions}
+                component={renderAsyncAutoSuggestField}
+                validate={[requiredValidator]}
+                disabled={loading}
+              />
+              <Field
+                name="is_active"
+                label="Is Active"
+                component={renderSelectField}
+                validate={[requiredValidator]}
+                disabled={loading}
+              >
+                <MenuItem value={0}>False</MenuItem>
+                <MenuItem value={1}>True</MenuItem>
+              </Field>
+              <Field
+                name="gender"
+                label="Gender"
+                component={renderSelectField}
+                validate={[requiredValidator]}
+                disabled={loading}
+              >
+                <MenuItem value={0}>0</MenuItem>
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={4}>4</MenuItem>
+              </Field>
+              <Field
+                name="display_image"
+                label="Display Image"
                 component={renderImageField}
                 validate={[requiredValidator]}
                 disabled={loading}
-                accept="image/svg"
-                extensions={["svg"]}
+                accept="image/png"
+                extensions={["png"]}
               />
+              {fieldArray}
               {error && (
                 <Typography variant="subtitle1">
                   Something is wrong. Please try again.
@@ -197,5 +350,6 @@ function CreateDialog(
 }
 
 export default reduxForm<IFormProps, IComponentProps>({
-  form: "createPromoCodeDialogForm"
+  form: "createProductDialogForm",
+  enableReinitialize: true
 })(CreateDialog);

@@ -15,6 +15,7 @@ export interface IProduct {
   description: string;
   detail: string;
   detail_image_url: string;
+  detail_image_urls: string[];
   display_image_url: string;
   gender: number;
   id: number;

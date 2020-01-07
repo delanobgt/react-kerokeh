@@ -5,9 +5,9 @@ export const getWithdrawRequestById = async (
   id: number
 ): Promise<IWithdrawRequest> => {
   const response = await celestineApi().get(
-    `/admin/withdraw-request?id=${id}`
+    `/admin/withdraw-request/${id}`
   );
-  return response.data.data[0];
+  return response.data;
 };
 
 

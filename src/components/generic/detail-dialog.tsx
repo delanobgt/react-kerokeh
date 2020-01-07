@@ -48,7 +48,7 @@ export const makeExpansion = (e: ExpansionEntry, defaultExpanded?: boolean) => {
     defaultExpanded
   };
   return (
-    <ExpansionPanel {...props}>
+    <ExpansionPanel key={e.title} {...props}>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
         <Typography>
           <strong>{e.title}</strong>

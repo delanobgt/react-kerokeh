@@ -21,7 +21,7 @@ function DeleteDialog(props: IComponentProps) {
       <BasicDialog
         open={Boolean(imageUrl)}
         dismiss={dismiss}
-        maxWidth="md"
+        maxWidth="xs"
         fullWidth
         bgClose
       >

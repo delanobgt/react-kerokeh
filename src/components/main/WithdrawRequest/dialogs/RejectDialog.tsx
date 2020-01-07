@@ -64,7 +64,7 @@ function RejectDialog(
         snackbar.showMessage("Withdraw Request rejected.");
       }
     },
-    [dismiss, restartIntervalRun, snackbar]
+    [dismiss, restartIntervalRun, snackbar, withdrawRequestId, fetch]
   );
 
   const handleClose = () => {

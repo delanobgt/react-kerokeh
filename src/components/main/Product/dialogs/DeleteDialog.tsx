@@ -3,23 +3,23 @@ import { Button, CircularProgress, Typography } from "@material-ui/core";
 
 import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/BasicDialog";
-import { deletePromoCode } from "src/store/promo-code";
+import { deleteProduct } from "src/store/product";
 
 interface IComponentProps {
-  promoCodeId: number;
+  productId: number;
   dismiss: () => void;
   restartIntervalRun: () => void;
 }
 
 function DeleteDialog(props: IComponentProps) {
-  const { promoCodeId, restartIntervalRun, dismiss } = props;
+  const { productId, restartIntervalRun, dismiss } = props;
 
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
 
   const handleDelete = async () => {
     setLoading(true);
-    const [err] = await goPromise(deletePromoCode(promoCodeId));
+    const [err] = await goPromise(deleteProduct(productId));
     setLoading(false);
     if (err) {
       setError("error");
@@ -36,13 +36,13 @@ function DeleteDialog(props: IComponentProps) {
   return (
     <div>
       <BasicDialog
-        open={Boolean(promoCodeId)}
+        open={Boolean(productId)}
         dismiss={dismiss}
         maxWidth="xs"
         fullWidth
         bgClose
       >
-        <title>Delete Promo Code</title>
+        <title>Delete Product</title>
         <section>
           <form>
             <Typography variant="subtitle1">Delete ?</Typography>

@@ -4,7 +4,9 @@ import {
   Typography,
   FormControl,
   InputLabel,
-  Select
+  Select,
+  FormControlLabel,
+  Switch
 } from "@material-ui/core";
 
 import {
@@ -166,5 +168,27 @@ export const renderAsyncAutoSuggestField: RenderAsyncAutoSuggestFieldFn = ({
         <br />
       </div>
     </div>
+  );
+};
+
+export const renderSwitchField: RenderFieldFn = ({
+  input,
+  label,
+  type,
+  meta: { touched, error },
+  ...custom
+}) => {
+  return (
+    <>
+      <FormControlLabel
+        control={
+          <Switch size="small" checked={input.value} {...input} {...custom} />
+        }
+        label={label}
+      />
+      {touched && Boolean(error) && (
+        <Typography variant="caption">{error}</Typography>
+      )}
+    </>
   );
 };

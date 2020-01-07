@@ -36,8 +36,10 @@ import {
   ProductSortField,
   IProduct,
   getProducts,
-  IProductGetAction
+  IProductGetAction,
+  PProduct
 } from "src/store/product";
+import { TInitialValues } from "./types";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -210,10 +212,12 @@ function Product() {
         Cell: ({ row: { original } }) => {
           return (
             <img
-              src={""}
+              src={original.display_image_url}
               alt=""
               style={{ width: "65px", cursor: "pointer" }}
-              onClick={() => setDetailDialogImageUrl("")}
+              onClick={() =>
+                setDetailDialogImageUrl(original.display_image_url)
+              }
             />
           );
         }
@@ -258,22 +262,34 @@ function Product() {
   );
 
   // set updateInitialValues
-  // const [updateInitialValues, setUpdateInitialValues] = React.useState<
-  //   PPromoCode
-  // >({ expired_at: moment().format("YYYY-MM-DD") });
-  // React.useEffect(() => {
-  //   if (!updateDialogPCId)
-  //     return setUpdateInitialValues({
-  //       expired_at: moment().format("YYYY-MM-DD")
-  //     });
-  //   const promoCode: IPromoCode = (_.find(
-  //     promoCodes,
-  //     pc => ((pc as unknown) as IPromoCode).id === updateDialogPCId
-  //   ) as unknown) as IPromoCode;
-  //   promoCode.active_status = Number(promoCode.active_status);
-  //   promoCode.expired_at = moment(promoCode.expired_at).format("YYYY-MM-DD");
-  //   setUpdateInitialValues(promoCode);
-  // }, [promoCodes, updateDialogPCId, setUpdateInitialValues]);
+  const [updateInitialValues, setUpdateInitialValues] = React.useState<
+    TInitialValues
+  >({});
+  React.useEffect(() => {
+    if (!updateDialogId) return setUpdateInitialValues({});
+    const product: IProduct = (_.find(
+      products,
+      pc => ((pc as unknown) as IProduct).id === updateDialogId
+    ) as unknown) as IProduct;
+    product.is_active = Number(product.is_active);
+    product.release_date = moment(product.release_date).format("YYYY-MM-DD");
+    const initial_detail_images = product.detail_image_urls.map(url => ({
+      image_path: url,
+      deleted: false
+    }));
+    setUpdateInitialValues({
+      ...product,
+      product_brand_option: {
+        label: product.product_brand.full_name,
+        value: product.product_brand.id
+      },
+      product_category_option: {
+        label: product.product_category.name,
+        value: product.product_category.id
+      },
+      initial_detail_images
+    });
+  }, [products, updateDialogId, setUpdateInitialValues]);
 
   return (
     <>
@@ -340,35 +356,35 @@ function Product() {
           dismiss={() => setDetailDialogId(null)}
         />
       )}
-      {/* {Boolean(createDialogOpen) && (
+      {Boolean(createDialogOpen) && (
         <CreateDialog
           open={createDialogOpen}
           restartIntervalRun={restartIntervalRun}
           dismiss={() => setCreateDialogOpen(null)}
-          initialValues={{ expired_at: moment().format("YYYY-MM-DD") }}
+          initialValues={{ release_date: moment().format("YYYY-MM-DD") }}
         />
-      )} */}
-      {/* {Boolean(updateDialogPCId) && (
+      )}
+      {Boolean(updateDialogId) && (
         <UpdateDialog
-          promoCodeId={updateDialogPCId}
+          productId={updateDialogId}
           restartIntervalRun={intervalRun.restart}
-          dismiss={() => setUpdateDialogPCId(null)}
+          dismiss={() => setUpdateDialogId(null)}
           initialValues={updateInitialValues}
         />
-      )} */}
-      {/* {deleteDialogPCId && (
+      )}
+      {Boolean(deleteDialogId) && (
         <DeleteDialog
-          promoCodeId={deleteDialogPCId}
+          productId={deleteDialogId}
           restartIntervalRun={intervalRun.restart}
-          dismiss={() => setDeleteDialogPCId(null)}
+          dismiss={() => setDeleteDialogId(null)}
         />
-      )} */}
-      {/* {detailDialogImageUrl && (
+      )}
+      {detailDialogImageUrl && (
         <DetailImageDialog
           imageUrl={detailDialogImageUrl}
           dismiss={() => setDetailDialogImageUrl(null)}
         />
-      )} */}
+      )}
     </>
   );
 }

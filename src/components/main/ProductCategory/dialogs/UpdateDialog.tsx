@@ -104,6 +104,14 @@ function UpdateDialog(
     [productCategoryId]
   );
 
+  const fieldArray = React.useMemo(
+    () => (
+      /* tslint:disable-next-line */
+      <FieldArray name="productSizes" component={renderProductSizes} />
+    ),
+    [renderProductSizes]
+  );
+
   const handleSave = React.useCallback(
     async (formValues: IFormProps) => {
       setLoading(true);
@@ -145,11 +153,6 @@ function UpdateDialog(
   const handleClose = () => {
     dismiss();
   };
-
-  const fieldArray = (
-    /* tslint:disable-next-line */
-    <FieldArray name="productSizes" component={renderProductSizes} />
-  );
 
   return (
     <div>

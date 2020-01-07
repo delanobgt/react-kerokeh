@@ -4,7 +4,8 @@ import {
   PProductPagination,
   ProductSortField,
   IProductGetAction,
-  EProductActionTypes
+  EProductActionTypes,
+  IProduct
 } from "./types";
 import celestineApi from "src/apis/celestine";
 import { ISort } from "src/util/types";
@@ -22,7 +23,10 @@ export const getProducts = async (
   const response = await celestineApi().get(`/admin/product?sort=${sort}`, {
     params
   });
-  const products = response.data.data;
+  const products: IProduct[] = response.data.data;
+  for (let product of products) {
+    product.detail_image_urls = product.detail_image_url.split(',')
+  }
   const meta = response.data.meta;
   return {
     type: EProductActionTypes.PRODUCT_GET,

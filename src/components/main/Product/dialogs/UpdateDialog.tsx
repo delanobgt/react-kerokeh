@@ -4,13 +4,18 @@ import {
   Button,
   CircularProgress,
   Typography,
-  MenuItem
+  MenuItem,
+  IconButton,
+  FormControlLabel,
+  Switch
 } from "@material-ui/core";
+import { Close as CloseIcon } from "@material-ui/icons";
 import {
   Field,
   reduxForm,
   SubmissionError,
-  InjectedFormProps
+  InjectedFormProps,
+  FieldArray
 } from "redux-form";
 import { useSnackbar } from "material-ui-snackbar-provider";
 
@@ -25,49 +30,225 @@ import {
   renderTextField,
   renderSelectField,
   renderDateField,
-  renderImageField
+  renderImageField,
+  renderAsyncAutoSuggestField,
+  renderSwitchField
 } from "src/redux-form/renderers";
-import { updatePromoCode, PPromoCode } from "src/store/promo-code";
+import { RenderFieldArrayFn } from "src/util/types";
+import { createProduct, updateProduct } from "src/store/product";
+import {
+  getProductBrands,
+  IProductBrandGetAction
+} from "src/store/product-brand";
+import {
+  IProductCategoryGetAction,
+  getProductCategories
+} from "src/store/product-category";
+import { TInitialValues } from "../types";
 
 interface IComponentProps {
-  promoCodeId: number;
+  productId: number;
   dismiss: () => void;
   restartIntervalRun: () => void;
-  initialValues: PPromoCode;
+  initialValues: TInitialValues;
 }
 
 interface IFormProps {
-  active_status: boolean | number;
+  name: string;
+  slug: string;
   code: string;
   description: string;
-  expired_at: string;
-  limit: number;
-  percentage: number;
-  product_type: string;
-  image: any;
+  story: string;
+  is_active: boolean | number;
+  gender: number;
+  color: string;
+  release_date: string;
+  display_image: any;
+  detail_images: any[];
+  product_brand_option: {
+    label: string;
+    value: number;
+  };
+  product_category_option: {
+    label: string;
+    value: number;
+  };
+  initial_detail_images: { image_path: string; deleted: boolean }[];
 }
 
 function UpdateDialog(
   props: IComponentProps & InjectedFormProps<IFormProps, IComponentProps>
 ) {
   const {
-    initialValues,
-    promoCodeId,
+    productId,
     dismiss,
+    initialValues,
     handleSubmit,
     restartIntervalRun
   } = props;
-  console.log({ initialValues });
+
   const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
 
+  const renderInitialDetailImages: RenderFieldArrayFn<any> = React.useCallback(
+    ({ fields }) => (
+      <div>
+        <Typography variant="subtitle1">Existing Detail Images</Typography>
+        {!Boolean(fields.length) ? (
+          <Typography variant="body2">- no detail image yet -</Typography>
+        ) : (
+          fields
+            .map((member: any, index: number) => {
+              const field = fields.get(index);
+              return {
+                key: index,
+                component: (
+                  <div
+                    key={index}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "1rem"
+                    }}
+                  >
+                    <img
+                      src={field.image_path}
+                      alt=""
+                      style={{ width: "100px", marginRight: "1rem" }}
+                    />
+                    <Field
+                      name={`${member}.deleted`}
+                      label="Dispose"
+                      component={renderSwitchField}
+                      disabled={loading}
+                    />
+                  </div>
+                )
+              };
+            })
+            .map(e => e.component)
+        )}
+      </div>
+    ),
+    []
+  );
+  const initialDetailImageFieldArray = React.useMemo(
+    () => (
+      /* tslint:disable-next-line */
+      <FieldArray
+        name="initial_detail_images"
+        component={renderInitialDetailImages}
+      />
+    ),
+    [renderInitialDetailImages]
+  );
+
+  const renderDetailImages: RenderFieldArrayFn<any> = React.useCallback(
+    ({ fields }) => (
+      <div>
+        <Typography variant="subtitle1">Add Detail Images</Typography>
+        {!Boolean(fields.length) ? (
+          <Typography variant="body2">- no new detail image yet -</Typography>
+        ) : (
+          fields
+            .map((member: any, index: number) => {
+              const field = fields.get(index);
+              return {
+                key: index,
+                component: (
+                  <div
+                    key={index}
+                    style={{ display: "flex", alignItems: "center" }}
+                  >
+                    <Field
+                      name={`${member}`}
+                      label="New Detail Image"
+                      component={renderImageField}
+                      validate={[requiredValidator]}
+                      disabled={loading}
+                      accept="image/png"
+                      extensions={["png"]}
+                    />
+                    <IconButton onClick={() => fields.remove(index)}>
+                      <CloseIcon />
+                    </IconButton>
+                  </div>
+                )
+              };
+            })
+            .map(e => e.component)
+        )}
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => fields.push(null)}
+        >
+          Add Detail Image
+        </Button>
+      </div>
+    ),
+    []
+  );
+  const detailImageFieldArray = React.useMemo(
+    () => (
+      /* tslint:disable-next-line */
+      <FieldArray name="detail_images" component={renderDetailImages} />
+    ),
+    [renderDetailImages]
+  );
+
+  const productBrandPromiseOptions = React.useCallback(
+    (inputValue: string) =>
+      new Promise(async resolve => {
+        const [, res] = await goPromise<IProductBrandGetAction>(
+          getProductBrands(
+            { offset: 0, limit: 100 },
+            { full_name: inputValue },
+            []
+          )
+        );
+        const options = res.productBrands.map(pb => ({
+          label: pb.full_name,
+          value: pb.id
+        }));
+        resolve(options);
+      }),
+    []
+  );
+
+  const productCategoryPromiseOptions = React.useCallback(
+    (inputValue: string) =>
+      new Promise(async resolve => {
+        const [, res] = await goPromise<IProductCategoryGetAction>(
+          getProductCategories(
+            { offset: 0, limit: 100 },
+            { name: inputValue },
+            []
+          )
+        );
+        const options = res.productCategories.map(pb => ({
+          label: pb.name,
+          value: pb.id
+        }));
+        resolve(options);
+      }),
+    []
+  );
+
   const handleSave = React.useCallback(
     async (formValues: IFormProps) => {
-      console.log(formValues);
       setLoading(true);
       const [err] = await goPromise(
-        updatePromoCode(initialValues, formValues, formValues.image)
+        updateProduct(
+          initialValues,
+          formValues,
+          formValues.product_brand_option.value,
+          formValues.product_category_option.value,
+          formValues.display_image,
+          formValues.detail_images,
+          formValues.initial_detail_images
+        )
       );
       setLoading(false);
       if (err) {
@@ -79,10 +260,10 @@ function UpdateDialog(
       } else {
         restartIntervalRun();
         dismiss();
-        snackbar.showMessage("Promo Code updated.");
+        snackbar.showMessage("Product updated.");
       }
     },
-    [dismiss, restartIntervalRun, snackbar, initialValues]
+    [dismiss, restartIntervalRun, snackbar]
   );
 
   const handleClose = () => {
@@ -92,16 +273,32 @@ function UpdateDialog(
   return (
     <div>
       <BasicDialog
-        open={Boolean(promoCodeId)}
+        open={Boolean(productId)}
         dismiss={dismiss}
         maxWidth="xs"
         fullWidth
         bgClose
       >
-        <title>Update Promo Code</title>
+        <title>Update Product</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>
             <>
+              <Field
+                name="name"
+                type="text"
+                label="Name"
+                component={renderTextField}
+                validate={[requiredValidator]}
+                disabled={loading}
+              />
+              <Field
+                name="slug"
+                type="text"
+                label="Slug"
+                component={renderTextField}
+                validate={[requiredValidator]}
+                disabled={loading}
+              />
               <Field
                 name="code"
                 type="text"
@@ -111,19 +308,11 @@ function UpdateDialog(
                 disabled={loading}
               />
               <Field
-                name="percentage"
+                name="color"
                 type="text"
-                label="Percentage"
+                label="Color"
                 component={renderTextField}
-                validate={[requiredValidator, unsignedRealNumberValidator]}
-                disabled={loading}
-              />
-              <Field
-                name="limit"
-                type="text"
-                label="Limit"
-                component={renderTextField}
-                validate={[requiredValidator, unsignedWholeNumberValidator]}
+                validate={[requiredValidator]}
                 disabled={loading}
               />
               <Field
@@ -138,55 +327,81 @@ function UpdateDialog(
                 variant="outlined"
               />
               <Field
-                name="product_type"
-                label="Product Type"
-                component={renderSelectField}
-                validate={[requiredValidator]}
-                disabled={loading}
-              >
-                <MenuItem value="bnib_product">BNIB Product</MenuItem>
-                <MenuItem value="bnib_buy_order">BNIB Buy Order</MenuItem>
-                <MenuItem value="direct_bnib_product">
-                  Direct BNIB Product
-                </MenuItem>
-                <MenuItem value="direct_bnib_buy_order">
-                  Direct BNIB Buy Order
-                </MenuItem>
-              </Field>
-              <Field
-                name="active_status"
-                label="Active Status"
-                component={renderSelectField}
-                validate={[requiredValidator]}
-                disabled={loading}
-              >
-                <MenuItem value={1}>Active</MenuItem>
-                <MenuItem value={0}>Inactive</MenuItem>
-              </Field>
-              <Field
-                name="expired_at"
+                name="story"
                 type="text"
-                label="Expired At"
+                label="Story"
+                component={renderTextField}
+                validate={[requiredValidator]}
+                disabled={loading}
+                multiline
+                rows="5"
+                variant="outlined"
+              />
+              <Field
+                name="release_date"
+                type="text"
+                label="Release Date"
                 component={renderDateField}
                 validate={[requiredValidator]}
                 disabled={loading}
               />
+              <Field
+                name="product_brand_option"
+                label="Product Brand"
+                promiseOptions={productBrandPromiseOptions}
+                component={renderAsyncAutoSuggestField}
+                validate={[requiredValidator]}
+                disabled={loading}
+              />
+              <Field
+                name="product_category_option"
+                label="Product Category"
+                promiseOptions={productCategoryPromiseOptions}
+                component={renderAsyncAutoSuggestField}
+                validate={[requiredValidator]}
+                disabled={loading}
+              />
+              <Field
+                name="is_active"
+                label="Is Active"
+                component={renderSelectField}
+                validate={[requiredValidator]}
+                disabled={loading}
+              >
+                <MenuItem value={0}>False</MenuItem>
+                <MenuItem value={1}>True</MenuItem>
+              </Field>
+              <Field
+                name="gender"
+                label="Gender"
+                component={renderSelectField}
+                validate={[requiredValidator]}
+                disabled={loading}
+              >
+                <MenuItem value={0}>0</MenuItem>
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={4}>4</MenuItem>
+              </Field>
               <div>
                 <Typography variant="subtitle1">Current Image</Typography>
                 <img
-                  src={initialValues.image_url}
+                  src={initialValues.display_image_url}
                   alt=""
                   style={{ width: "100%" }}
                 />
               </div>
               <Field
-                name="image"
-                label="Replace Promo Code Image"
+                name="display_image"
+                label="Replace Display Image"
                 component={renderImageField}
                 disabled={loading}
-                accept="image/svg"
-                extensions={["svg"]}
+                accept="image/png"
+                extensions={["png"]}
               />
+              {initialDetailImageFieldArray}
+              {detailImageFieldArray}
               {error && (
                 <Typography variant="subtitle1">
                   Something is wrong. Please try again.
@@ -209,6 +424,6 @@ function UpdateDialog(
 }
 
 export default reduxForm<IFormProps, IComponentProps>({
-  form: "updatePromoCodeDialogForm",
+  form: "updateProductDialogForm",
   enableReinitialize: true
 })(UpdateDialog);
