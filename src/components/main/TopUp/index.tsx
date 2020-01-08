@@ -31,6 +31,9 @@ import {
   getTopUps,
   ITopUpGetAction
 } from "src/store/top-up";
+import SortForm from "src/components/generic/SortForm";
+import FilterForm from "./FilterForm";
+import moment from "moment";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,6 +46,12 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     justifyContent: "space-between",
     paddingLeft: theme.spacing(2)
+  },
+  filterAndSortForm: {
+    marginBottom: "1rem",
+    display: "flex",
+    paddingLeft: theme.spacing(2)
+    // justifyContent: "space-between"
   }
 }));
 
@@ -53,11 +62,21 @@ const MyPaper = styled(Paper)`
 function TopUp() {
   const refreshDelay = 5000;
   const classes = useStyles({});
-  const { filter, pagination, sorts, updatePagination } = useTableUrlState<
-    PTopUpFilter,
-    PTopUpPagination,
-    TopUpSortField
-  >({}, { limit: 5, offset: 0 }, []);
+  const {
+    filter,
+    updateFilter,
+    pagination,
+    updatePagination,
+    sorts,
+    updateSorts
+  } = useTableUrlState<PTopUpFilter, PTopUpPagination, TopUpSortField>(
+    {
+      created_at_start: moment.utc(0).format("YYYY-MM-DD"),
+      created_at_end: moment().format("YYYY-MM-DD")
+    },
+    { limit: 5, offset: 0 },
+    []
+  );
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
   const topUps = useSelector<RootState, ITopUp[]>(state => state.topUp.topUps);
@@ -66,6 +85,23 @@ function TopUp() {
 
   const topUpRealTotal = useSelector<RootState, number>(
     state => state.topUp.realTotal
+  );
+  const topUpSortFields: TopUpSortField[] = React.useMemo(
+    () => [
+      "amount",
+      "code",
+      "created_at",
+      "description",
+      "fraud_status",
+      "id",
+      "invoice_id",
+      "payment_channel",
+      "payment_code",
+      "payment_status",
+      "payment_type",
+      "virtual_account_number"
+    ],
+    []
   );
 
   // interval fetch
@@ -192,6 +228,17 @@ function TopUp() {
               </Typography>
             ) : topUps && _.isArray(topUps) ? (
               <>
+                {/* Filter Form */}
+                <div className={classes.filterAndSortForm}>
+                  <FilterForm filter={filter} updateFilter={updateFilter} />
+                  <div style={{ marginLeft: "2rem" }}>
+                    <SortForm<TopUpSortField>
+                      sorts={sorts}
+                      sortFields={topUpSortFields}
+                      updateSorts={updateSorts}
+                    />
+                  </div>
+                </div>
                 {/* top action */}
                 <TopAction
                   intervalRun={intervalRun}
