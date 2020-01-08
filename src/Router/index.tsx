@@ -33,6 +33,7 @@ import { getMe, IGetMeAction } from "src/store/auth";
 import { goPromise } from "src/util/helper";
 import { JWToken } from "src/util/types";
 import { RoutePath } from "./routes";
+import TopUp from "src/components/main/TopUp";
 
 enum EErrorType {
   FETCH_FAIL,
@@ -100,6 +101,10 @@ const routes = [
   {
     routePath: RoutePath.SPECIAL_CATEGORY_LIST,
     component: <SpecialCategoryList />
+  },
+  {
+    routePath: RoutePath.TOP_UP,
+    component: <TopUp />
   },
   {
     routePath: RoutePath.USER,

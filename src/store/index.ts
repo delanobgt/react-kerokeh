@@ -10,6 +10,7 @@ import { productBrandReducer } from "./product-brand";
 import { productCategoryReducer } from "./product-category";
 import { specialCategoryReducer } from "./special-category";
 import { specialCategoryListReducer } from "./special-category-list";
+import { topUpReducer } from "./top-up";
 import { userReducer } from "./user";
 import { promoCodeReducer } from "./promo-code";
 import { withdrawRequestReducer } from "./withdraw-request";
@@ -30,6 +31,7 @@ export const rootReducer = combineReducers({
   promoCode: promoCodeReducer,
   specialCategory: specialCategoryReducer,
   specialCategoryList: specialCategoryListReducer,
+  topUp: topUpReducer,
   user: userReducer,
   withdrawRequest: withdrawRequestReducer
 });
