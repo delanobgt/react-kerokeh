@@ -12,26 +12,27 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { SnackbarProvider } from "material-ui-snackbar-provider";
 
-import Nav from "./components/main/Nav";
-import Login from "./components/main/Auth/Login";
-import Logout from "./components/main/Auth/Logout";
-import AdminUser from "./components/main/AdminUser";
-import Config from "./components/main/Config";
-import DepositFee from "./components/main/DepositFee";
-import Product from "./components/main/Product";
-import ProductBrand from "./components/main/ProductBrand";
-import ProductCategory from "./components/main/ProductCategory";
-import PromoCode from "./components/main/PromoCode";
-import Identification from "./components/main/Identification";
-import User from "./components/main/User";
-import SpecialCategory from "./components/main/SpecialCategory";
-import SpecialCategoryList from "./components/main/SpecialCategoryList";
-import WithdrawRequest from "./components/main/WithdrawRequest";
-import JwtTimer from "./components/misc/JwtTimer";
-import { RootState } from "./store";
-import { getMe, IGetMeAction } from "./store/auth";
-import { goPromise } from "./util/helper";
-import { JWToken } from "./util/types";
+import Nav from "src/components/main/Nav";
+import Login from "src/components/main/Auth/Login";
+import Logout from "src/components/main/Auth/Logout";
+import AdminUser from "src/components/main/AdminUser";
+import Config from "src/components/main/Config";
+import DepositFee from "src/components/main/DepositFee";
+import Product from "src/components/main/Product";
+import ProductBrand from "src/components/main/ProductBrand";
+import ProductCategory from "src/components/main/ProductCategory";
+import PromoCode from "src/components/main/PromoCode";
+import Identification from "src/components/main/Identification";
+import User from "src/components/main/User";
+import SpecialCategory from "src/components/main/SpecialCategory";
+import SpecialCategoryList from "src/components/main/SpecialCategoryList";
+import WithdrawRequest from "src/components/main/WithdrawRequest";
+import JwtTimer from "src/components/misc/JwtTimer";
+import { RootState } from "src/store";
+import { getMe, IGetMeAction } from "src/store/auth";
+import { goPromise } from "src/util/helper";
+import { JWToken } from "src/util/types";
+import { RoutePath } from "./routes";
 
 enum EErrorType {
   FETCH_FAIL,
@@ -50,6 +51,65 @@ const CenterItAll = styled("div")`
   height: 100vh;
   width: 100vw;
 `;
+
+const routes = [
+  {
+    routePath: RoutePath.ADMIN_USER,
+    component: <AdminUser />
+  },
+  {
+    routePath: RoutePath.CONFIG,
+    component: <Config />
+  },
+  {
+    routePath: RoutePath.DASHBOARD,
+    component: <HeadlineText variant="h6">Dashboard</HeadlineText>
+  },
+  {
+    routePath: RoutePath.DEPOSIT_FEE,
+    component: <DepositFee />
+  },
+  {
+    routePath: RoutePath.IDENTIFICATION,
+    component: <Identification />
+  },
+  {
+    routePath: RoutePath.LOGOUT,
+    component: <Logout />
+  },
+  {
+    routePath: RoutePath.PRODUCT,
+    component: <Product />
+  },
+  {
+    routePath: RoutePath.PRODUCT_BRAND,
+    component: <ProductBrand />
+  },
+  {
+    routePath: RoutePath.PRODUCT_CATEGORY,
+    component: <ProductCategory />
+  },
+  {
+    routePath: RoutePath.PROMO_CODE,
+    component: <PromoCode />
+  },
+  {
+    routePath: RoutePath.SPECIAL_CATEGORY,
+    component: <SpecialCategory />
+  },
+  {
+    routePath: RoutePath.SPECIAL_CATEGORY_LIST,
+    component: <SpecialCategoryList />
+  },
+  {
+    routePath: RoutePath.USER,
+    component: <User />
+  },
+  {
+    routePath: RoutePath.WITHDRAW_REQUEST,
+    component: <WithdrawRequest />
+  }
+];
 
 const AdminRoutes = () => {
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -122,49 +182,12 @@ const AdminRoutes = () => {
         <JwtTimer />
 
         <Switch>
-          <Route path="/dashboard">
-            <HeadlineText variant="h6">Dashboard</HeadlineText>
-          </Route>
-          <Route path="/config">
-            <Config />
-          </Route>
-          <Route path="/withdraw_request">
-            <WithdrawRequest />
-          </Route>
-          <Route path="/deposit_fee">
-            <DepositFee />
-          </Route>
-          <Route path="/special_category">
-            <SpecialCategory />
-          </Route>
-          <Route path="/special_category_list">
-            <SpecialCategoryList />
-          </Route>
-          <Route path="/product">
-            <Product />
-          </Route>
-          <Route path="/product_category">
-            <ProductCategory />
-          </Route>
-          <Route path="/product_brand">
-            <ProductBrand />
-          </Route>
-          <Route path="/promo_code">
-            <PromoCode />
-          </Route>
-          <Route path="/identification">
-            <Identification />
-          </Route>
-          <Route path="/user">
-            <User />
-          </Route>
-          <Route path="/admin_user">
-            <AdminUser />
-          </Route>
-          <Route path="/logout">
-            <Logout />
-          </Route>
-          <Route path="*">{() => <Redirect to="/dashboard" />}</Route>
+          {routes.map(route => (
+            <Route key={route.routePath} path={route.routePath}>
+              {route.component}
+            </Route>
+          ))}
+          <Route path="*">{() => <Redirect to={RoutePath.DASHBOARD} />}</Route>
         </Switch>
         <br />
       </>
@@ -180,10 +203,10 @@ const App = () => {
       <Router>
         {!token ? (
           <Switch>
-            <Route path="/login">
+            <Route path={RoutePath.LOGIN}>
               <Login />
             </Route>
-            <Route path="*">{() => <Redirect to="/login" />}</Route>
+            <Route path="*">{() => <Redirect to={RoutePath.LOGIN} />}</Route>
           </Switch>
         ) : (
           <AdminRoutes />

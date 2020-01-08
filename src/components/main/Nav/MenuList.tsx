@@ -1,5 +1,11 @@
 import React from "react";
-import { ListItemIcon, ListItemText, ListItem, List } from "@material-ui/core";
+import {
+  ListItemIcon,
+  ListItemText,
+  ListItem,
+  List,
+  Collapse
+} from "@material-ui/core";
 import {
   PeopleAlt as PeopleAltIcon,
   VpnKey as VpnKeyIcon,
@@ -8,6 +14,7 @@ import {
 import useReactRouter from "use-react-router";
 
 import Link from "src/components/generic/Link";
+import { RoutePath } from "src/Router/routes";
 
 interface IProps {
   setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,9 +28,17 @@ interface IMenu {
 
 const menuList: IMenu[] = [
   { title: "Dashboard", Icon: PeopleAltIcon, link: "/dashboard" },
-  { title: "Identifications", Icon: PeopleAltIcon, link: "/identification" },
-  { title: "Users", Icon: PeopleAltIcon, link: "/user" },
-  { title: "Admin Users", Icon: VpnKeyIcon, link: "/admin_user" },
+  { title: "Product", Icon: PeopleAltIcon, link: RoutePath.PRODUCT },
+  {
+    title: "Product Brand",
+    Icon: PeopleAltIcon,
+    link: RoutePath.PRODUCT_BRAND
+  },
+  {
+    title: "Product Category",
+    Icon: PeopleAltIcon,
+    link: RoutePath.PRODUCT_CATEGORY
+  },
   { title: "Logout", Icon: ExitToAppIcon, link: "/logout" }
 ];
 
