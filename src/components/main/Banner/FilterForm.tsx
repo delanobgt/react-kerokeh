@@ -47,7 +47,7 @@ function FilterForm(props: IComponentProps) {
       <Div>
         <BasicSelect
           style={{ width: "8em" }}
-          label="Product Type"
+          label="Is Active"
           value={filter.is_active || ""}
           onChange={(value: string) => updateFilter({ is_active: value })}
         >

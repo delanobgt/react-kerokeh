@@ -45,6 +45,7 @@ export type BannerSortField =
   | "is_active"
   | "title"
   | "updated_by"
+  | "expired_at"
   | "view_count";
 
 // redux state type

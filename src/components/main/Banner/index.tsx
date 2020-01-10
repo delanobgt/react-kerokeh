@@ -28,7 +28,7 @@ import DetailDialog from "./dialogs/DetailDialog";
 import DetailImageDialog from "./dialogs/DetailImageDialog";
 import useTableUrlState from "src/hooks/useTableUrlState";
 import moment from "moment";
-import FilterForm from "../ProductBrand/FilterForm";
+import FilterForm from "./FilterForm";
 import SortForm from "src/components/generic/SortForm";
 import {
   PBannerFilter,
@@ -107,6 +107,7 @@ function Banner() {
       "id",
       "is_active",
       "title",
+      "expired_at",
       "updated_by",
       "view_count"
     ],
