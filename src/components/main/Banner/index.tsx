@@ -75,7 +75,10 @@ function Banner() {
     sorts,
     updateSorts
   } = useTableUrlState<PBannerFilter, PBannerPagination, BannerSortField>(
-    {},
+    {
+      expired_at_start: moment.utc(0).format("YYYY-MM-DD"),
+      expired_at_end: moment().format("YYYY-MM-DD")
+    },
     { limit: 5, offset: 0 },
     []
   );
