@@ -34,6 +34,7 @@ import { goPromise } from "src/util/helper";
 import { JWToken } from "src/util/types";
 import { RoutePath } from "./routes";
 import TopUp from "src/components/main/TopUp";
+import Banner from "src/components/main/Banner";
 
 enum EErrorType {
   FETCH_FAIL,
@@ -57,6 +58,10 @@ const routes = [
   {
     routePath: RoutePath.ADMIN_USER,
     component: <AdminUser />
+  },
+  {
+    routePath: RoutePath.BANNER,
+    component: <Banner />
   },
   {
     routePath: RoutePath.CONFIG,

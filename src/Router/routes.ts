@@ -1,6 +1,7 @@
 export enum RoutePath {
-  DASHBOARD = "/dashboard",
+  BANNER = "/banner",
   CONFIG = "/config",
+  DASHBOARD = "/dashboard",
   WITHDRAW_REQUEST = "/withdraw_request",
   DEPOSIT_FEE = "/deposit_fee",
   SPECIAL_CATEGORY = "/special_category",

@@ -39,7 +39,7 @@ const menuList: IMenu[] = [
     Icon: PeopleAltIcon,
     link: RoutePath.PRODUCT_CATEGORY
   },
-  { title: "Logout", Icon: ExitToAppIcon, link: "/logout" }
+  { title: "Logout", Icon: ExitToAppIcon, link: RoutePath.LOGOUT }
 ];
 
 export default function MenuList({ setDrawerOpen }: IProps) {
