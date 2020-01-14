@@ -8,7 +8,7 @@ const Logout: React.FC = () => {
 
   React.useEffect(() => {
     dispatch(signOut());
-  });
+  }, [dispatch]);
 
   return null;
 };

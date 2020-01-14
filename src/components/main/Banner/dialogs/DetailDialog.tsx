@@ -1,4 +1,3 @@
-import _ from "lodash";
 import React from "react";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";

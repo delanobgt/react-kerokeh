@@ -8,6 +8,7 @@ import {
 } from "./types";
 import celestineApi from "src/apis/celestine";
 import { ISort } from "src/util/types";
+import { PRIMARY_ROUTE } from "./constants";
 
 export const getConfigs = async (
   pagination: PConfigPagination,
@@ -20,7 +21,7 @@ export const getConfigs = async (
     .value();
   const params = _.pickBy({ ...pagination, ...filter }, val => val);
   const response = await celestineApi().get(
-    `/admin/config?sort=${sort}`,
+    `${PRIMARY_ROUTE}?sort=${sort}`,
     {
       params
     }

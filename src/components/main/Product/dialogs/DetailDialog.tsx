@@ -1,23 +1,19 @@
-import _ from "lodash";
 import React from "react";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 import BasicDialog from "src/components/generic/BasicDialog";
 import { IProduct, getProductById } from "src/store/product";
-import { RootState } from "src/store";
-import { useSelector } from "react-redux";
 import { makeExpansion } from "src/components/generic/detail-dialog";
 import { goPromise } from "src/util/helper";
 import moment from "moment";
-import { FieldArray } from "redux-form";
 
 interface IComponentProps {
   productId: number;
   dismiss: () => void;
 }
 
-function DeleteDialog(props: IComponentProps) {
+function DetailDialog(props: IComponentProps) {
   const { productId, dismiss } = props;
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string>("");
@@ -187,4 +183,4 @@ function DeleteDialog(props: IComponentProps) {
   );
 }
 
-export default DeleteDialog;
+export default DetailDialog;

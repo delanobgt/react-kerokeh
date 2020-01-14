@@ -69,7 +69,7 @@ export default function PrimarySearchAppBar() {
             color="inherit"
             noWrap
           >
-            Wardite Admin Panel
+            Depatu Buy &amp; Sell Admin Panel
           </Typography>
 
           <div className={classes.grow} />

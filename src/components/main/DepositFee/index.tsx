@@ -69,11 +69,8 @@ function DepositFee() {
   const [createDialogOpen, setCreateDialogOpen] = React.useState<boolean>(
     false
   );
-  const [updateDialogDFId, setUpdateDialogDFId] = React.useState<number>(null);
-  const [
-    deleteDialogDepositFeeId,
-    setDeleteDialogDepositFeeId
-  ] = React.useState<number>(null);
+  const [updateDialogId, setUpdateDialogId] = React.useState<number>(null);
+  const [deleteDialogId, setDeleteDialogId] = React.useState<number>(null);
   const dispatch = useDispatch();
 
   const depositFeeRealTotal = useSelector<RootState, number>(
@@ -101,16 +98,16 @@ function DepositFee() {
   const fetch = React.useCallback(async () => {
     setError("");
     setLoading(true);
-    const [errDF, resDF] = await goPromise<IDepositFeeGetAction>(
+    const [err, res] = await goPromise<IDepositFeeGetAction>(
       getDepositFees({ offset: 0, limit: 5 }, {}, [])
     );
     setLoading(false);
 
-    if (errDF) {
-      console.log({ errDF });
+    if (err) {
+      console.log({ err });
       setError("error");
     } else {
-      dispatch(resDF);
+      dispatch(res);
       setIntervalRunAlive(true);
     }
   }, [dispatch, setIntervalRunAlive]);
@@ -167,14 +164,14 @@ function DepositFee() {
           return (
             <div>
               <Button
-                onClick={() => setUpdateDialogDFId(original.id)}
+                onClick={() => setUpdateDialogId(original.id)}
                 color="primary"
                 variant="outlined"
               >
                 Update
               </Button>
               <Button
-                onClick={() => setDeleteDialogDepositFeeId(original.id)}
+                onClick={() => setDeleteDialogId(original.id)}
                 color="primary"
                 variant="outlined"
                 style={{ marginLeft: "1rem" }}
@@ -194,14 +191,14 @@ function DepositFee() {
     PDepositFee
   >({ fee: 0, starting_price: 0 });
   React.useEffect(() => {
-    if (!updateDialogDFId)
+    if (!updateDialogId)
       return setUpdateInitialValues({ fee: 0, starting_price: 0 });
     const depositFee: IDepositFee = (_.find(
       depositFees,
-      pc => ((pc as unknown) as IDepositFee).id === updateDialogDFId
+      pc => ((pc as unknown) as IDepositFee).id === updateDialogId
     ) as unknown) as IDepositFee;
     setUpdateInitialValues(depositFee);
-  }, [depositFees, updateDialogDFId, setUpdateInitialValues]);
+  }, [depositFees, updateDialogId, setUpdateInitialValues]);
 
   return (
     <>
@@ -233,7 +230,6 @@ function DepositFee() {
               </Typography>
             ) : depositFees && _.isArray(depositFees) ? (
               <>
-                {/* top action */}
                 <TopAction
                   intervalRun={intervalRun}
                   refreshDelay={refreshDelay}
@@ -260,19 +256,19 @@ function DepositFee() {
           dismiss={() => setCreateDialogOpen(null)}
         />
       )}
-      {Boolean(updateDialogDFId) && (
+      {Boolean(updateDialogId) && (
         <UpdateDialog
-          productBrandId={updateDialogDFId}
+          productBrandId={updateDialogId}
           restartIntervalRun={intervalRun.restart}
-          dismiss={() => setUpdateDialogDFId(null)}
+          dismiss={() => setUpdateDialogId(null)}
           initialValues={updateInitialValues}
         />
       )}
-      {deleteDialogDepositFeeId && (
+      {deleteDialogId && (
         <DeleteDialog
-          depositFeeId={deleteDialogDepositFeeId}
+          depositFeeId={deleteDialogId}
           restartIntervalRun={intervalRun.restart}
-          dismiss={() => setDeleteDialogDepositFeeId(null)}
+          dismiss={() => setDeleteDialogId(null)}
         />
       )}
     </>

@@ -49,7 +49,7 @@ function UpdateDialog(
     async (formValues: IFormProps) => {
       setLoading(true);
       const { name, value } = formValues;
-      const [errPB] = await goPromise(
+      const [err] = await goPromise(
         updateConfig({
           id: initialValues.id,
           name: name,
@@ -57,9 +57,9 @@ function UpdateDialog(
         })
       );
       setLoading(false);
-      if (errPB) {
-        if (_.has(errPB, "response.data.errors")) {
-          throw new SubmissionError(errPB.response.data.errors);
+      if (err) {
+        if (_.has(err, "response.data.errors")) {
+          throw new SubmissionError(err.response.data.errors);
         } else {
           setError("error");
         }

@@ -310,7 +310,6 @@ function Banner() {
                     />
                   </div>
                 </div>
-                {/* top action */}
                 <TopAction
                   intervalRun={intervalRun}
                   refreshDelay={refreshDelay}

@@ -1,4 +1,4 @@
 export * from "./actions";
-export * from "./method";
+export * from "./methods";
 export * from "./reducer";
 export * from "./types";

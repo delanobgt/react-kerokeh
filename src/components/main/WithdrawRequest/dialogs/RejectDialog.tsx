@@ -5,10 +5,7 @@ import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/BasicDialog";
-import {
-  approveWithdrawRequest,
-  rejectWithdrawRequest
-} from "src/store/withdraw-request";
+import { rejectWithdrawRequest } from "src/store/withdraw-request";
 import {
   reduxForm,
   Field,

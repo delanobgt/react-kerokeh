@@ -21,12 +21,6 @@ const reducer: Reducer<IAdminUserState, AdminUserActionType> = (
         adminUsers: _.mapKeys(adminUsers, "id")
       };
     }
-    case EAdminUserActionTypes.USER_DELETE: {
-      const { adminUserId } = action;
-      return {
-        adminUsers: _.omit(state.adminUsers, adminUserId)
-      };
-    }
     default: {
       return state;
     }

@@ -1,16 +1,12 @@
 import _ from "lodash";
 import React from "react";
-import { Button, CircularProgress, Typography } from "@material-ui/core";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { Button } from "@material-ui/core";
 
 import BasicDialog from "src/components/generic/BasicDialog";
-import { IProduct, getProductById } from "src/store/product";
 import { RootState } from "src/store";
 import { useSelector } from "react-redux";
 import { makeExpansion } from "src/components/generic/detail-dialog";
-import { goPromise } from "src/util/helper";
 import moment from "moment";
-import { FieldArray } from "redux-form";
 import { ITopUp } from "src/store/top-up";
 
 interface IComponentProps {

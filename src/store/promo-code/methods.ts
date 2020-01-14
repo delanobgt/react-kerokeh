@@ -1,5 +1,6 @@
 import celestineApi from "src/apis/celestine";
 import { IPromoCode, PPromoCode } from "./types";
+import { PRIMARY_ROUTE } from "./constants";
 
 export const createPromoCode = async (
   promoCode: PPromoCode,
@@ -15,7 +16,7 @@ export const createPromoCode = async (
   if (typeof promoCode.description === "string")
     formData.append("description", promoCode.description);
   formData.append("image", image);
-  const response = await celestineApi().post(`/admin/promo-code`, formData);
+  const response = await celestineApi().post(PRIMARY_ROUTE, formData);
   return response.data;
 };
 
@@ -36,12 +37,12 @@ export const updatePromoCode = async (
     formData.append("description", newPromoCode.description);
   if (image) formData.append("image", image);
   const response = await celestineApi().patch(
-    `/admin/promo-code/${oldPromoCode.id}`,
+    `${PRIMARY_ROUTE}/${oldPromoCode.id}`,
     formData
   );
   return response.data;
 };
 
 export const deletePromoCode = async (id: number): Promise<void> => {
-  await celestineApi().delete(`/admin/promo-code/${id}`);
+  await celestineApi().delete(`${PRIMARY_ROUTE}/${id}`);
 };

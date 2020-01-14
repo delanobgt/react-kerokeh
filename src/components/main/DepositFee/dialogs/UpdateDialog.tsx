@@ -82,7 +82,7 @@ function UpdateDialog(
         fullWidth
         bgClose
       >
-        <title>Update Product Brand</title>
+        <title>Update Deposit Fee</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>
             <Field

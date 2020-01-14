@@ -1,14 +1,15 @@
 import { IUser, IShippingAddress } from "./types";
 import celestineApi from "src/apis/celestine";
+import { PRIMARY_ROUTE, SECONDARY_ROUTE } from "./constants";
 
 export const getUserById = async (id: number): Promise<IUser> => {
-  const response = await celestineApi().get(`/admin/user/${id}`);
+  const response = await celestineApi().get(`${PRIMARY_ROUTE}/${id}`);
   const user = response.data;
   return user;
 };
 
 export const getShippingAddressesByUserId = async (user_id: number): Promise<IShippingAddress> => {
-  const response = await celestineApi().get(`/admin/shipping-address`, {
+  const response = await celestineApi().get(SECONDARY_ROUTE, {
     params: {
       user_id
     }

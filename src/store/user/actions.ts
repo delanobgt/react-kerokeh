@@ -8,6 +8,7 @@ import {
 } from "./types";
 import celestineApi from "src/apis/celestine";
 import { ISort } from "src/util/types";
+import { PRIMARY_ROUTE } from "./constants";
 
 export const getUsers = async (
   pagination: PUserPagination,
@@ -29,7 +30,7 @@ export const getUsers = async (
     },
     val => val
   );
-  const response = await celestineApi().get(`/admin/user?sort=${sort}`, {
+  const response = await celestineApi().get(`${PRIMARY_ROUTE}?sort=${sort}`, {
     params
   });
   const users = response.data.data;

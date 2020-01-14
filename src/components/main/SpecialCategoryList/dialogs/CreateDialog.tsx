@@ -28,10 +28,6 @@ import {
 } from "src/redux-form/renderers";
 import { createSpecialCategoryList } from "src/store/special-category-list";
 import {
-  getSpecialCategories,
-  ISpecialCategoryGetAction
-} from "src/store/special-category";
-import {
   getProductBrands,
   IProductBrandGetAction
 } from "src/store/product-brand";

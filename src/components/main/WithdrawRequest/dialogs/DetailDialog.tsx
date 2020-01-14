@@ -1,4 +1,3 @@
-import _ from "lodash";
 import React from "react";
 import {
   Button,
@@ -10,17 +9,11 @@ import {
 } from "@material-ui/core";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 
-import {
-  IUser,
-  getUserById,
-  IShippingAddress,
-  getShippingAddressesByUserId
-} from "src/store/user";
+import { IUser, getUserById } from "src/store/user";
 import BasicDialog from "src/components/generic/BasicDialog";
 import moment from "moment";
 import { goPromise } from "src/util/helper";
-import { statusLabelDict } from "../../Identification/constants";
-import { makeExpansion, MyDesc } from "src/components/generic/detail-dialog";
+import { makeExpansion } from "src/components/generic/detail-dialog";
 import {
   IWithdrawRequest,
   getWithdrawRequestById

@@ -86,8 +86,8 @@ function PromoCode() {
   const [createDialogOpen, setCreateDialogOpen] = React.useState<boolean>(
     false
   );
-  const [updateDialogPCId, setUpdateDialogPCId] = React.useState<number>(null);
-  const [deleteDialogPCId, setDeleteDialogPCId] = React.useState<number>(null);
+  const [updateDialogId, setUpdateDialogId] = React.useState<number>(null);
+  const [deleteDialogId, setDeleteDialogId] = React.useState<number>(null);
   const [detailDialogImageUrl, setDetailDialogImageUrl] = React.useState<
     string
   >("");
@@ -237,7 +237,7 @@ function PromoCode() {
           return (
             <div>
               <Button
-                onClick={() => setUpdateDialogPCId(original.id)}
+                onClick={() => setUpdateDialogId(original.id)}
                 color="primary"
                 variant="outlined"
               >
@@ -245,7 +245,7 @@ function PromoCode() {
               </Button>
               <br />
               <Button
-                onClick={() => setDeleteDialogPCId(original.id)}
+                onClick={() => setDeleteDialogId(original.id)}
                 color="primary"
                 variant="outlined"
                 style={{ marginTop: "1rem" }}
@@ -265,18 +265,18 @@ function PromoCode() {
     PPromoCode
   >({ expired_at: moment().format("YYYY-MM-DD") });
   React.useEffect(() => {
-    if (!updateDialogPCId)
+    if (!updateDialogId)
       return setUpdateInitialValues({
         expired_at: moment().format("YYYY-MM-DD")
       });
     const promoCode: IPromoCode = (_.find(
       promoCodes,
-      pc => ((pc as unknown) as IPromoCode).id === updateDialogPCId
+      pc => ((pc as unknown) as IPromoCode).id === updateDialogId
     ) as unknown) as IPromoCode;
     promoCode.active_status = Number(promoCode.active_status);
     promoCode.expired_at = moment(promoCode.expired_at).format("YYYY-MM-DD");
     setUpdateInitialValues(promoCode);
-  }, [promoCodes, updateDialogPCId, setUpdateInitialValues]);
+  }, [promoCodes, updateDialogId, setUpdateInitialValues]);
 
   return (
     <>
@@ -319,7 +319,6 @@ function PromoCode() {
                     />
                   </div>
                 </div>
-                {/* top action */}
                 <TopAction
                   intervalRun={intervalRun}
                   refreshDelay={refreshDelay}
@@ -347,19 +346,19 @@ function PromoCode() {
           initialValues={{ expired_at: moment().format("YYYY-MM-DD") }}
         />
       )}
-      {Boolean(updateDialogPCId) && (
+      {Boolean(updateDialogId) && (
         <UpdateDialog
-          promoCodeId={updateDialogPCId}
+          promoCodeId={updateDialogId}
           restartIntervalRun={intervalRun.restart}
-          dismiss={() => setUpdateDialogPCId(null)}
+          dismiss={() => setUpdateDialogId(null)}
           initialValues={updateInitialValues}
         />
       )}
-      {deleteDialogPCId && (
+      {deleteDialogId && (
         <DeleteDialog
-          promoCodeId={deleteDialogPCId}
+          promoCodeId={deleteDialogId}
           restartIntervalRun={intervalRun.restart}
-          dismiss={() => setDeleteDialogPCId(null)}
+          dismiss={() => setDeleteDialogId(null)}
         />
       )}
       {detailDialogImageUrl && (

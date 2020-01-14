@@ -5,9 +5,7 @@ import {
   CircularProgress,
   Typography,
   MenuItem,
-  IconButton,
-  FormControlLabel,
-  Switch
+  IconButton
 } from "@material-ui/core";
 import { Close as CloseIcon } from "@material-ui/icons";
 import {
@@ -21,11 +19,7 @@ import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/BasicDialog";
-import {
-  requiredValidator,
-  unsignedRealNumberValidator,
-  unsignedWholeNumberValidator
-} from "src/redux-form/validators";
+import { requiredValidator } from "src/redux-form/validators";
 import {
   renderTextField,
   renderSelectField,
@@ -35,7 +29,7 @@ import {
   renderSwitchField
 } from "src/redux-form/renderers";
 import { RenderFieldArrayFn } from "src/util/types";
-import { createProduct, updateProduct } from "src/store/product";
+import { updateProduct } from "src/store/product";
 import {
   getProductBrands,
   IProductBrandGetAction
@@ -131,7 +125,7 @@ function UpdateDialog(
         )}
       </div>
     ),
-    []
+    [loading]
   );
   const initialDetailImageFieldArray = React.useMemo(
     () => (
@@ -153,7 +147,6 @@ function UpdateDialog(
         ) : (
           fields
             .map((member: any, index: number) => {
-              const field = fields.get(index);
               return {
                 key: index,
                 component: (
@@ -188,7 +181,7 @@ function UpdateDialog(
         </Button>
       </div>
     ),
-    []
+    [loading]
   );
   const detailImageFieldArray = React.useMemo(
     () => (
@@ -263,7 +256,7 @@ function UpdateDialog(
         snackbar.showMessage("Product updated.");
       }
     },
-    [dismiss, restartIntervalRun, snackbar]
+    [dismiss, restartIntervalRun, snackbar, initialValues]
   );
 
   const handleClose = () => {

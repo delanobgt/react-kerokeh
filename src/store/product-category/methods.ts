@@ -2,12 +2,13 @@ import _ from "lodash";
 import celestineApi from "src/apis/celestine";
 import { IProductCategory, IProductSize } from "./types";
 import shallowDiff from "shallow-diff";
+import { PRIMARY_ROUTE, SECONDARY_ROUTE } from "./constants";
 
 export const createProductCategory = async (
   productCategory: IProductCategory
 ): Promise<IProductCategory> => {
   const response = await celestineApi().post(
-    `/admin/product-category`,
+    PRIMARY_ROUTE,
     productCategory
   );
   return response.data;
@@ -22,7 +23,7 @@ export const updateProductCategory = async (
     shallowDiff(oldProductCategory, newProductCategory).updated
   );
   const response = await celestineApi().patch(
-    `/admin/product-category/${newProductCategory.id}`,
+    `${PRIMARY_ROUTE}/${newProductCategory.id}`,
     diffProductCategory
   );
   return response.data;
@@ -32,7 +33,7 @@ export const getProductSizesByPCId = async (
   productCategoryId: number
 ): Promise<IProductSize[]> => {
   const response = await celestineApi().get(
-    `/admin/product-size?product_category_id=${productCategoryId}`
+    `${SECONDARY_ROUTE}?product_category_id=${productCategoryId}`
   );
   const productSizes = response.data.data;
   return productSizes;
@@ -42,7 +43,7 @@ export const createProductSize = async (
   productSize: IProductSize
 ): Promise<IProductSize> => {
   const response = await celestineApi().post(
-    `/admin/product-size`,
+    SECONDARY_ROUTE,
     productSize
   );
   return response.data;
@@ -52,7 +53,7 @@ export const updateProductSize = async (
   productSize: IProductSize
 ): Promise<IProductSize> => {
   const response = await celestineApi().patch(
-    `/admin/product-size/${productSize.id}`,
+    `${SECONDARY_ROUTE}/${productSize.id}`,
     productSize
   );
   return response.data;

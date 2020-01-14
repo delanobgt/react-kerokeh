@@ -14,9 +14,7 @@ import {
 import { signIn, ISignInAction } from "src/store/auth";
 import { goPromise } from "src/util/helper";
 import { renderTextField } from "src/redux-form/renderers";
-
-const required = (value: any): any =>
-  value || typeof value === "number" ? undefined : "Required";
+import { requiredValidator } from "src/redux-form/validators";
 
 interface IFormProps {
   username: string;
@@ -74,7 +72,7 @@ const Login = (
               type="text"
               component={renderTextField}
               label="Username"
-              validate={[required]}
+              validate={[requiredValidator]}
               disabled={loading}
             />
             <Field
@@ -82,7 +80,7 @@ const Login = (
               type="password"
               component={renderTextField}
               label="Password"
-              validate={[required]}
+              validate={[requiredValidator]}
               disabled={loading}
             />
             {error && (

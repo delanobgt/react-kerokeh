@@ -1,11 +1,10 @@
-import _ from "lodash";
 import moment from "moment";
 import celestineApi from "src/apis/celestine";
 import { IProduct, PProduct } from "./types";
-import shallowDiff from "shallow-diff";
+import { PRIMARY_ROUTE } from "./constants";
 
 export const getProductById = async (id: number): Promise<IProduct> => {
-  const response = await celestineApi().get(`/admin/product/${id}`);
+  const response = await celestineApi().get(`${PRIMARY_ROUTE}/${id}`);
   const product: IProduct = response.data;
   product.detail_image_urls = product.detail_image_url.split(",");
   return product;
@@ -35,7 +34,7 @@ export const createProduct = async (
   formData.append("product_category_id", String(product_category_id));
   formData.append("display_image", display_image);
   for (let image of detail_images) formData.append("detail_images[]", image);
-  const response = await celestineApi().post(`/admin/product`, formData);
+  const response = await celestineApi().post(PRIMARY_ROUTE, formData);
   return response.data;
 };
 
@@ -80,7 +79,7 @@ export const updateProduct = async (
   console.log(6);
 
   const response = await celestineApi().patch(
-    `/admin/product/${oldProductBrand.id}`,
+    `${PRIMARY_ROUTE}/${oldProductBrand.id}`,
     formData
   );
   console.log(response.data);
@@ -88,6 +87,6 @@ export const updateProduct = async (
 };
 
 export const deleteProduct = async (id: number): Promise<IProduct> => {
-  const response = await celestineApi().delete(`/admin/product/${id}`);
+  const response = await celestineApi().delete(`${PRIMARY_ROUTE}/${id}`);
   return response.data;
 };

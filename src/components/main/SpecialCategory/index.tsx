@@ -83,8 +83,8 @@ function SpecialCategory() {
   const [createDialogOpen, setCreateDialogOpen] = React.useState<boolean>(
     false
   );
-  const [updateDialogSCId, setUpdateDialogSCId] = React.useState<number>(null);
-  const [deleteDialogSCId, setDeleteDialogSCId] = React.useState<number>(null);
+  const [updateDialogId, setUpdateDialogId] = React.useState<number>(null);
+  const [deleteDialogId, setDeleteDialogId] = React.useState<number>(null);
   const dispatch = useDispatch();
 
   const specialCategoryRealTotal = useSelector<RootState, number>(
@@ -185,7 +185,7 @@ function SpecialCategory() {
                 View List
               </Button>
               <Button
-                onClick={() => setUpdateDialogSCId(original.id)}
+                onClick={() => setUpdateDialogId(original.id)}
                 color="primary"
                 variant="outlined"
                 style={{ marginLeft: "1rem" }}
@@ -193,7 +193,7 @@ function SpecialCategory() {
                 Update
               </Button>
               <Button
-                onClick={() => setDeleteDialogSCId(original.id)}
+                onClick={() => setDeleteDialogId(original.id)}
                 color="primary"
                 variant="outlined"
                 style={{ marginLeft: "1rem" }}
@@ -213,15 +213,15 @@ function SpecialCategory() {
     PSpecialCategory
   >({ name: "", priority: 0, published: 0 });
   React.useEffect(() => {
-    if (!updateDialogSCId)
+    if (!updateDialogId)
       return setUpdateInitialValues({ name: "", priority: 0, published: 0 });
     const specialCategory: ISpecialCategory = (_.find(
       specialCategories,
-      pc => ((pc as unknown) as ISpecialCategory).id === updateDialogSCId
+      pc => ((pc as unknown) as ISpecialCategory).id === updateDialogId
     ) as unknown) as ISpecialCategory;
     specialCategory.published = Number(specialCategory.published);
     setUpdateInitialValues(specialCategory);
-  }, [specialCategories, updateDialogSCId, setUpdateInitialValues]);
+  }, [specialCategories, updateDialogId, setUpdateInitialValues]);
 
   return (
     <>
@@ -292,19 +292,19 @@ function SpecialCategory() {
           dismiss={() => setCreateDialogOpen(null)}
         />
       )}
-      {Boolean(updateDialogSCId) && (
+      {Boolean(updateDialogId) && (
         <UpdateDialog
-          specialCategoryId={updateDialogSCId}
+          specialCategoryId={updateDialogId}
           restartIntervalRun={intervalRun.restart}
-          dismiss={() => setUpdateDialogSCId(null)}
+          dismiss={() => setUpdateDialogId(null)}
           initialValues={updateInitialValues}
         />
       )}
-      {deleteDialogSCId && (
+      {deleteDialogId && (
         <DeleteDialog
-          specialCategoryId={deleteDialogSCId}
+          specialCategoryId={deleteDialogId}
           restartIntervalRun={intervalRun.restart}
-          dismiss={() => setDeleteDialogSCId(null)}
+          dismiss={() => setDeleteDialogId(null)}
         />
       )}
     </>

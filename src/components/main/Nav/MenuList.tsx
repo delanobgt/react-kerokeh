@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React from "react";
 import {
   ListItemIcon,
@@ -7,9 +8,20 @@ import {
   Collapse
 } from "@material-ui/core";
 import {
-  PeopleAlt as PeopleAltIcon,
+  Dashboard as DashboardIcon,
+  Image as ImageIcon,
+  SettingsApplications as SettingsApplicationsIcon,
+  People as PeopleIcon,
+  AttachMoney as AttachMoneyIcon,
+  Style as StyleIcon,
+  MoneyOff as MoneyOffIcon,
   VpnKey as VpnKeyIcon,
-  ExitToApp as ExitToAppIcon
+  ExitToApp as ExitToAppIcon,
+  ExpandLess as ExpandLessIcon,
+  ExpandMore as ExpandMoreIcon,
+  Money as MoneyIcon,
+  VerticalAlignBottom as VerticalAlignBottomIcon,
+  VerticalAlignTop as VerticalAlignTopIcon
 } from "@material-ui/icons";
 import useReactRouter from "use-react-router";
 
@@ -23,34 +35,118 @@ interface IProps {
 interface IMenu {
   title: string;
   Icon: (props: any) => JSX.Element;
-  link: string;
+  link?: string;
+  subMenus?: IMenu[];
 }
 
 const menuList: IMenu[] = [
-  { title: "Dashboard", Icon: PeopleAltIcon, link: "/dashboard" },
-  { title: "Product", Icon: PeopleAltIcon, link: RoutePath.PRODUCT },
+  { title: "Dashboard", Icon: DashboardIcon, link: "/dashboard" },
   {
-    title: "Product Brand",
-    Icon: PeopleAltIcon,
-    link: RoutePath.PRODUCT_BRAND
+    title: "Banner",
+    Icon: ImageIcon,
+    link: RoutePath.BANNER
   },
   {
-    title: "Product Category",
-    Icon: PeopleAltIcon,
-    link: RoutePath.PRODUCT_CATEGORY
+    title: "Config",
+    Icon: SettingsApplicationsIcon,
+    link: RoutePath.CONFIG
   },
+  {
+    title: "Deposit Fee",
+    Icon: AttachMoneyIcon,
+    link: RoutePath.DEPOSIT_FEE
+  },
+  {
+    title: "Product",
+    Icon: StyleIcon,
+    subMenus: [
+      { title: "Product", Icon: StyleIcon, link: RoutePath.PRODUCT },
+      {
+        title: "Product Brand",
+        Icon: StyleIcon,
+        link: RoutePath.PRODUCT_BRAND
+      },
+      {
+        title: "Product Category",
+        Icon: StyleIcon,
+        link: RoutePath.PRODUCT_CATEGORY
+      }
+    ]
+  },
+  {
+    title: "Promo Code",
+    Icon: MoneyOffIcon,
+    link: RoutePath.PROMO_CODE
+  },
+  {
+    title: "Special Category",
+    Icon: PeopleIcon,
+    link: RoutePath.SPECIAL_CATEGORY
+  },
+  {
+    title: "User",
+    Icon: PeopleIcon,
+    subMenus: [
+      {
+        title: "User",
+        Icon: PeopleIcon,
+        link: RoutePath.USER
+      },
+      {
+        title: "Identification",
+        Icon: PeopleIcon,
+        link: RoutePath.IDENTIFICATION
+      }
+    ]
+  },
+  {
+    title: "Wallet",
+    Icon: MoneyIcon,
+    subMenus: [
+      {
+        title: "Withdraw Request",
+        Icon: VerticalAlignTopIcon,
+        link: RoutePath.WITHDRAW_REQUEST
+      },
+      {
+        title: "Top Up",
+        Icon: VerticalAlignBottomIcon,
+        link: RoutePath.TOP_UP
+      }
+    ]
+  },
+  { title: "Admin User", Icon: VpnKeyIcon, link: RoutePath.ADMIN_USER },
   { title: "Logout", Icon: ExitToAppIcon, link: RoutePath.LOGOUT }
 ];
 
 export default function MenuList({ setDrawerOpen }: IProps) {
   const { location } = useReactRouter();
 
-  return (
-    <List onClick={() => setDrawerOpen(false)}>
-      {menuList.map(({ title, Icon, link }) => {
+  const [navState, setNavState] = React.useState<Record<string, boolean>>({});
+  const toggleCollapse = React.useCallback(
+    stateName => {
+      console.log(navState, stateName, Boolean(stateName));
+      const depth = Number(stateName.split("#")[1]);
+      setNavState({
+        ..._.mapValues(navState, (value, key) =>
+          Number(key.split("#")[1]) >= depth ? false : value
+        ),
+        [stateName]: !Boolean(navState[stateName])
+      });
+    },
+    [navState, setNavState]
+  );
+  const renderMenu = React.useCallback(
+    (menu: IMenu, path: string, depth: number) => {
+      const { link, title, Icon, subMenus } = menu;
+      if (link) {
         return (
-          <Link to={link} key={title}>
-            <ListItem button selected={location.pathname === link}>
+          <Link key={title} to={link}>
+            <ListItem
+              button
+              selected={location.pathname === link}
+              onClick={() => setDrawerOpen(false)}
+            >
               <ListItemIcon>
                 <Icon />
               </ListItemIcon>
@@ -58,7 +154,44 @@ export default function MenuList({ setDrawerOpen }: IProps) {
             </ListItem>
           </Link>
         );
-      })}
-    </List>
+      } else if (subMenus) {
+        const stateName = `${path}/${title}#${depth}`;
+        return (
+          <div key={title}>
+            <ListItem button onClick={() => toggleCollapse(stateName)}>
+              <ListItemIcon>
+                <Icon />
+              </ListItemIcon>
+              <ListItemText primary={title} />
+              {Boolean(navState[stateName]) ? (
+                <ExpandLessIcon />
+              ) : (
+                <ExpandMoreIcon />
+              )}
+            </ListItem>
+
+            <Collapse
+              in={Boolean(navState[stateName])}
+              timeout="auto"
+              unmountOnExit
+              style={{ paddingLeft: `${2 * (depth + 1)}em` }}
+            >
+              <List component="div" disablePadding>
+                {menu.subMenus.map(subMenu =>
+                  renderMenu(subMenu, `${path}/${title}`, depth + 1)
+                )}
+              </List>
+            </Collapse>
+          </div>
+        );
+      }
+    },
+    [location.pathname, navState, setDrawerOpen, toggleCollapse]
   );
+
+  const navList = React.useMemo(() => {
+    return _.map(menuList, menu => renderMenu(menu, "", 0));
+  }, [renderMenu]);
+
+  return <List>{navList}</List>;
 }

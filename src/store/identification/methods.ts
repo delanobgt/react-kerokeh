@@ -1,10 +1,11 @@
 import celestineApi from "src/apis/celestine";
 import { IIdentification } from "./types";
+import { PRIMARY_ROUTE } from "../adminUser/constants";
 
 export const getIdentificationByUserId = async (
   userId: number
   ): Promise<IIdentification> => {
-  const response = await celestineApi().get(`/admin/identification/${userId}`);
+  const response = await celestineApi().get(`${PRIMARY_ROUTE}/${userId}`);
   const identification = response.data;
   return identification
 };
@@ -12,7 +13,7 @@ export const getIdentificationByUserId = async (
 export const acceptIdentificationById = async (
   id: number
   ): Promise<IIdentification> => {
-  const response = await celestineApi().post(`/admin/identification/${id}/approve`);
+  const response = await celestineApi().post(`${PRIMARY_ROUTE}/${id}/approve`);
   const identification = response.data;
   return identification
 };
@@ -20,7 +21,7 @@ export const acceptIdentificationById = async (
 export const rejectIdentificationById = async (
   id: number, rejected_reason: string
   ): Promise<IIdentification> => {
-  const response = await celestineApi().post(`/admin/identification/${id}/reject`, {
+  const response = await celestineApi().post(`${PRIMARY_ROUTE}/${id}/reject`, {
     rejected_reason
   });
   const identification = response.data;

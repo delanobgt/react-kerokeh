@@ -8,7 +8,6 @@ import {
   CircularProgress,
   Chip
 } from "@material-ui/core";
-import styled from "styled-components";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import moment from "moment";
@@ -23,15 +22,7 @@ import {
 import { statusLabelDict } from "../constants";
 import AcceptDialog from "./AcceptDialog";
 import RejectDialog from "./RejectDialog";
-import { MyDesc } from "src/components/generic/detail-dialog";
-
-const SingleEntry = styled.div`
-  display: flex;
-  margin-bottom: 0.5rem;
-`;
-const Label = styled(Typography)`
-  flex-basis: 175px;
-`;
+import { MyDesc, makeExpansion } from "src/components/generic/detail-dialog";
 
 interface IComponentProps {
   userId: number;
@@ -53,19 +44,12 @@ function DetailDialog(props: IComponentProps) {
   const { userId, restartIntervalRun, dismiss } = props;
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string>("");
-  const [user, setUser] = React.useState<IUser | null>(null);
-  const [
-    identification,
-    setIdentification
-  ] = React.useState<IIdentification | null>(null);
-  const [
-    acceptDialogIdentificationId,
-    setAcceptDialogIdentificationId
-  ] = React.useState<number | null>(null);
-  const [
-    rejectDialogIdentificationId,
-    setRejectDialogIdentificationId
-  ] = React.useState<number | null>(null);
+  const [user, setUser] = React.useState<IUser>(null);
+  const [identification, setIdentification] = React.useState<IIdentification>(
+    null
+  );
+  const [acceptDialogId, setAcceptDialogId] = React.useState<number>(null);
+  const [rejectDialogId, setRejectDialogId] = React.useState<number>(null);
 
   // initial fetch
   const fetch = React.useCallback(async () => {
@@ -95,41 +79,6 @@ function DetailDialog(props: IComponentProps) {
 
   const handleClose = () => {
     dismiss();
-  };
-
-  const makeEntry = (e: FieldEntry) => (
-    <SingleEntry key={e.label}>
-      <Label>{e.label}</Label>
-      {["string", "number"].includes(typeof e.value) ? (
-        <Typography>{e.value}</Typography>
-      ) : (
-        e.value
-      )}
-    </SingleEntry>
-  );
-
-  const makeExpansion = (e: ExpansionEntry, expanded?: boolean) => {
-    const props = {
-      expanded
-    };
-    return (
-      <ExpansionPanel {...props}>
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>
-            <strong>{e.title}</strong>
-          </Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          {!e.entries.length ? (
-            <Typography variant="subtitle1">No data.</Typography>
-          ) : (
-            <div style={{ width: "100%" }}>
-              {e.entries.map(e => makeEntry(e))}
-            </div>
-          )}
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-    );
   };
 
   const identificationEntries = React.useMemo(() => {
@@ -201,7 +150,7 @@ function DetailDialog(props: IComponentProps) {
         <section>
           {loading ? (
             <div style={{ textAlign: "center" }}>
-              <CircularProgress size={24} /> Loading identification...
+              <CircularProgress size={24} /> Loading...
             </div>
           ) : error ? (
             <Typography variant="subtitle1" color="secondary">
@@ -238,9 +187,7 @@ function DetailDialog(props: IComponentProps) {
                         <Button
                           variant="outlined"
                           color="secondary"
-                          onClick={() =>
-                            setRejectDialogIdentificationId(identification.id)
-                          }
+                          onClick={() => setRejectDialogId(identification.id)}
                         >
                           Reject
                         </Button>
@@ -248,9 +195,7 @@ function DetailDialog(props: IComponentProps) {
                           variant="outlined"
                           color="primary"
                           style={{ marginLeft: "0.5rem" }}
-                          onClick={() =>
-                            setAcceptDialogIdentificationId(identification.id)
-                          }
+                          onClick={() => setAcceptDialogId(identification.id)}
                         >
                           Accept
                         </Button>
@@ -310,20 +255,20 @@ function DetailDialog(props: IComponentProps) {
           </div>
         </section>
       </BasicDialog>
-      {Boolean(acceptDialogIdentificationId) && (
+      {Boolean(acceptDialogId) && (
         <AcceptDialog
           fetch={fetch}
           restartIntervalRun={restartIntervalRun}
-          identificationId={acceptDialogIdentificationId}
-          dismiss={() => setAcceptDialogIdentificationId(null)}
+          identificationId={acceptDialogId}
+          dismiss={() => setAcceptDialogId(null)}
         />
       )}
-      {Boolean(rejectDialogIdentificationId) && (
+      {Boolean(rejectDialogId) && (
         <RejectDialog
           fetch={fetch}
           restartIntervalRun={restartIntervalRun}
-          identificationId={rejectDialogIdentificationId}
-          dismiss={() => setRejectDialogIdentificationId(null)}
+          identificationId={rejectDialogId}
+          dismiss={() => setRejectDialogId(null)}
         />
       )}
     </>

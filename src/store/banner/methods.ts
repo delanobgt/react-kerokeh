@@ -1,10 +1,11 @@
 import celestineApi from "src/apis/celestine";
 import { IBanner, PBanner } from "./types";
+import { PRIMARY_ROUTE } from "./constants";
 
 export const getBannerById = async (
   id:number
 ): Promise<IBanner> => {
-  const response = await celestineApi().get(`/admin/banner/${id}`);
+  const response = await celestineApi().get(`${PRIMARY_ROUTE}/${id}`);
   return response.data;
 };
 
@@ -20,7 +21,7 @@ export const createBanner = async (
   formData.append("is_active", String(Boolean(banner.is_active)));
   formData.append("expired_at", String(banner.expired_at));
   formData.append("image", image);
-  const response = await celestineApi().post(`/admin/banner`, formData);
+  const response = await celestineApi().post(PRIMARY_ROUTE, formData);
   return response.data;
 };
 
@@ -38,12 +39,12 @@ export const updateBanner = async (
   formData.append("expired_at", String(newBanner.expired_at));
   if (image) formData.append("image", image);
   const response = await celestineApi().patch(
-    `/admin/banner/${oldBanner.id}`,
+    `${PRIMARY_ROUTE}/${oldBanner.id}`,
     formData
   );
   return response.data;
 };
 
 export const deleteBanner = async (id: number): Promise<void> => {
-  await celestineApi().delete(`/admin/banner/${id}`);
+  await celestineApi().delete(`${PRIMARY_ROUTE}/${id}`);
 };

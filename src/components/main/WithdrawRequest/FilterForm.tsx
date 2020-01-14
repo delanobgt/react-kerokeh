@@ -1,7 +1,6 @@
 import React from "react";
-import { TextField, Typography, MenuItem } from "@material-ui/core";
+import { TextField, Typography } from "@material-ui/core";
 import styled from "styled-components";
-import BasicSelect from "src/components/generic/BasicSelect";
 import { PWithdrawRequestFilter } from "src/store/withdraw-request";
 
 interface IComponentProps {

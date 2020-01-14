@@ -8,6 +8,7 @@ import {
 } from "./types";
 import celestineApi from "src/apis/celestine";
 import { ISort } from "src/util/types";
+import { PRIMARY_ROUTE } from "./constants";
 
 export const getPromoCodes = async (
   pagination: PPromoCodePagination,
@@ -19,7 +20,7 @@ export const getPromoCodes = async (
     .join(",")
     .value();
   const params = _.pickBy({ ...pagination, ...filter }, val => val);
-  const response = await celestineApi().get(`/admin/promo-code?sort=${sort}`, {
+  const response = await celestineApi().get(`${PRIMARY_ROUTE}?sort=${sort}`, {
     params
   });
   const promoCodes = response.data.data;

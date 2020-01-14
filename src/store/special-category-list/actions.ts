@@ -8,6 +8,7 @@ import {
 } from "./types";
 import celestineApi from "src/apis/celestine";
 import { ISort } from "src/util/types";
+import { PRIMARY_ROUTE } from "./constants";
 
 export const getSpecialCategoryLists = async (
   pagination: PSpecialCategoryListPagination,
@@ -20,7 +21,7 @@ export const getSpecialCategoryLists = async (
     .value();
   const params = _.pickBy({ ...pagination, ...filter }, val => val);
   const response = await celestineApi().get(
-    `/admin/special-category-list?sort=${sort}`,
+    `${PRIMARY_ROUTE}?sort=${sort}`,
     {
       params
     }

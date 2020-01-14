@@ -9,7 +9,7 @@ interface IComponentProps {
   dismiss: () => void;
 }
 
-function DeleteDialog(props: IComponentProps) {
+function DetailImageDialog(props: IComponentProps) {
   const { imageUrl, dismiss } = props;
 
   const handleClose = () => {
@@ -43,4 +43,4 @@ function DeleteDialog(props: IComponentProps) {
   );
 }
 
-export default DeleteDialog;
+export default DetailImageDialog;

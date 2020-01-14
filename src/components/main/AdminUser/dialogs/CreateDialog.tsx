@@ -81,7 +81,7 @@ function CreateDialog(
         fullWidth
         bgClose
       >
-        <title>Create New Admin User</title>
+        <title>Create Admin User</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>
             <Field
@@ -131,5 +131,5 @@ function CreateDialog(
 }
 
 export default reduxForm<IFormProps, IComponentProps>({
-  form: "createUserDialogForm"
+  form: "createAdminUserDialogForm"
 })(CreateDialog);

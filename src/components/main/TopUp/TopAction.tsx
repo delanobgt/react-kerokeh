@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import useIntervalRun from "src/hooks/useIntervalRun";
 import IntervalRunStatus from "src/components/generic/IntervalRunStatus";
-import { Button } from "@material-ui/core";
 
 interface IComponentProps {
   intervalRun: ReturnType<typeof useIntervalRun>;

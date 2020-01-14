@@ -19,11 +19,7 @@ import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/BasicDialog";
-import {
-  requiredValidator,
-  unsignedRealNumberValidator,
-  unsignedWholeNumberValidator
-} from "src/redux-form/validators";
+import { requiredValidator } from "src/redux-form/validators";
 import {
   renderTextField,
   renderSelectField,
@@ -88,7 +84,6 @@ function CreateDialog(
         ) : (
           fields
             .map((member: any, index: number) => {
-              const field = fields.get(index);
               return {
                 key: index,
                 component: (
@@ -123,7 +118,7 @@ function CreateDialog(
         </Button>
       </div>
     ),
-    []
+    [loading]
   );
 
   const fieldArray = React.useMemo(

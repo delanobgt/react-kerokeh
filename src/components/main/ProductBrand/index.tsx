@@ -32,8 +32,7 @@ import {
   PProductBrandFilter,
   IProductBrand,
   getProductBrands,
-  IProductBrandGetAction,
-  PProductBrand
+  IProductBrandGetAction
 } from "src/store/product-brand";
 import { TInitialValues } from "./types";
 
@@ -84,7 +83,7 @@ function ProductBrand() {
   const [createDialogOpen, setCreateDialogOpen] = React.useState<boolean>(
     false
   );
-  const [updateDialogPBId, setUpdateDialogPBId] = React.useState<number>(null);
+  const [updateDialogId, setUpdateDialogId] = React.useState<number>(null);
   const dispatch = useDispatch();
 
   const productBrandRealTotal = useSelector<RootState, number>(
@@ -111,6 +110,8 @@ function ProductBrand() {
     );
     if (err) {
       throw err;
+    } else if (errParent) {
+      throw errParent;
     } else {
       dispatch(res);
       setProductBrandsDictId(_.mapKeys(resParent.productBrands, "id"));
@@ -198,7 +199,7 @@ function ProductBrand() {
           return (
             <div>
               <Button
-                onClick={() => setUpdateDialogPBId(original.id)}
+                onClick={() => setUpdateDialogId(original.id)}
                 color="primary"
                 variant="outlined"
               >
@@ -217,7 +218,7 @@ function ProductBrand() {
     TInitialValues
   >({ name: "", slug: "", parent: { label: "No Parent", value: 0 } });
   React.useEffect(() => {
-    if (!updateDialogPBId)
+    if (!updateDialogId)
       return setUpdateInitialValues({
         name: "",
         slug: "",
@@ -228,7 +229,7 @@ function ProductBrand() {
       });
     const productBrand: IProductBrand = (_.find(
       productBrands,
-      pc => ((pc as unknown) as IProductBrand).id === updateDialogPBId
+      pc => ((pc as unknown) as IProductBrand).id === updateDialogId
     ) as unknown) as IProductBrand;
     setUpdateInitialValues({
       ...productBrand,
@@ -245,7 +246,7 @@ function ProductBrand() {
     });
   }, [
     productBrands,
-    updateDialogPBId,
+    updateDialogId,
     productBrandsDictId,
     setUpdateInitialValues
   ]);
@@ -318,11 +319,11 @@ function ProductBrand() {
           dismiss={() => setCreateDialogOpen(null)}
         />
       )}
-      {Boolean(updateDialogPBId) && (
+      {Boolean(updateDialogId) && (
         <UpdateDialog
-          productBrandId={updateDialogPBId}
+          productBrandId={updateDialogId}
           restartIntervalRun={intervalRun.restart}
-          dismiss={() => setUpdateDialogPBId(null)}
+          dismiss={() => setUpdateDialogId(null)}
           initialValues={updateInitialValues}
         />
       )}

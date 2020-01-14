@@ -19,7 +19,6 @@ export default (props: IComponentProps) => {
   return (
     <RootDiv>
       <div />
-      {/* display auto-updating status */}
       <IntervalRunStatus
         intervalRun={props.intervalRun}
         refreshDelay={props.refreshDelay}

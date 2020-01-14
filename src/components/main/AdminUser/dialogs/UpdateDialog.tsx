@@ -135,6 +135,6 @@ function UpdateDialog(
 }
 
 export default reduxForm<IFormProps, IComponentProps>({
-  form: "updateUserDialogForm",
+  form: "updateAdminUserDialogForm",
   enableReinitialize: true
 })(UpdateDialog);

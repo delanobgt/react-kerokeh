@@ -70,10 +70,9 @@ function Identifications() {
   const identifications = useSelector<RootState, IIdentification[]>(
     state => state.identification.identifications
   );
-  const [
-    detailDialogIdentificationUserId,
-    setDetailDialogIdentificationUserId
-  ] = React.useState<number | null>(null);
+  const [detailDialogId, setDetailDialogId] = React.useState<number | null>(
+    null
+  );
   const dispatch = useDispatch();
 
   const { location } = useReactRouter();
@@ -228,9 +227,7 @@ function Identifications() {
           return (
             <div>
               <Button
-                onClick={() =>
-                  setDetailDialogIdentificationUserId(original.user_id)
-                }
+                onClick={() => setDetailDialogId(original.user_id)}
                 color="primary"
                 variant="outlined"
               >
@@ -285,7 +282,6 @@ function Identifications() {
                     />
                   </div>
                 </div>
-                {/* top action */}
                 <TopAction
                   intervalRun={intervalRun}
                   refreshDelay={refreshDelay}
@@ -304,11 +300,11 @@ function Identifications() {
           </MyPaper>
         </Grid>
       </Grid>
-      {Boolean(detailDialogIdentificationUserId) && (
+      {Boolean(detailDialogId) && (
         <DetailDialog
-          userId={detailDialogIdentificationUserId}
+          userId={detailDialogId}
           restartIntervalRun={restartIntervalRun}
-          dismiss={() => setDetailDialogIdentificationUserId(null)}
+          dismiss={() => setDetailDialogId(null)}
         />
       )}
     </>

@@ -94,16 +94,16 @@ function Config() {
   const fetch = React.useCallback(async () => {
     setError("");
     setLoading(true);
-    const [errDF, resDF] = await goPromise<IConfigGetAction>(
+    const [err, res] = await goPromise<IConfigGetAction>(
       getConfigs({ offset: 0, limit: 10 }, {}, [])
     );
     setLoading(false);
 
-    if (errDF) {
-      console.log({ errDF });
+    if (err) {
+      console.log({ err });
       setError("error");
     } else {
-      dispatch(resDF);
+      dispatch(res);
       setIntervalRunAlive(true);
     }
   }, [dispatch, setIntervalRunAlive]);

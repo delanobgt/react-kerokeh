@@ -9,6 +9,7 @@ import {
 } from "./types";
 import celestineApi from "src/apis/celestine";
 import { ISort } from "src/util/types";
+import { PRIMARY_ROUTE } from "./constants";
 
 export const getProducts = async (
   pagination: PProductPagination,
@@ -20,7 +21,7 @@ export const getProducts = async (
     .join(",")
     .value();
   const params = _.pickBy({ ...pagination, ...filter }, val => val);
-  const response = await celestineApi().get(`/admin/product?sort=${sort}`, {
+  const response = await celestineApi().get(`${PRIMARY_ROUTE}?sort=${sort}`, {
     params
   });
   const products: IProduct[] = response.data.data;

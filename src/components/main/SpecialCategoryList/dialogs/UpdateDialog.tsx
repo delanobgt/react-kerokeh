@@ -26,15 +26,7 @@ import {
   renderImageField,
   renderAsyncAutoSuggestField
 } from "src/redux-form/renderers";
-import {
-  createSpecialCategoryList,
-  PSpecialCategoryList,
-  updateSpecialCategoryList
-} from "src/store/special-category-list";
-import {
-  getSpecialCategories,
-  ISpecialCategoryGetAction
-} from "src/store/special-category";
+import { updateSpecialCategoryList } from "src/store/special-category-list";
 import {
   getProductBrands,
   IProductBrandGetAction

@@ -18,7 +18,6 @@ import {
   renderAutoSuggestField
 } from "src/redux-form/renderers";
 import {
-  PProductBrand,
   IProductBrand,
   updateProductBrand,
   getProductBrands,

@@ -74,7 +74,7 @@ function CreateDialog(
         fullWidth
         bgClose
       >
-        <title>Create New Deposit Fee</title>
+        <title>Create Deposit Fee</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>
             <>

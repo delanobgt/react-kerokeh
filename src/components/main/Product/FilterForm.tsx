@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField, Typography, MenuItem } from "@material-ui/core";
+import { TextField, Typography } from "@material-ui/core";
 import styled from "styled-components";
 import { PProductFilter } from "src/store/product";
 

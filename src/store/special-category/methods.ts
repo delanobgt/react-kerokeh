@@ -2,17 +2,18 @@ import _ from "lodash";
 import celestineApi from "src/apis/celestine";
 import { ISpecialCategory, PSpecialCategory } from "./types";
 import shallowDiff from "shallow-diff";
+import { PRIMARY_ROUTE } from "./constants";
 
 export const getSpecialCategoryById = async (id:number|string): Promise<ISpecialCategory> => {
   const response = await celestineApi().get(
-    `/admin/special-category/${id}`
+    `${PRIMARY_ROUTE}/${id}`
   );
   return response.data;
 };
 
 export const createSpecialCategory = async (specialCategory: PSpecialCategory): Promise<ISpecialCategory> => {
   const response = await celestineApi().post(
-    `/admin/special-category`,
+    PRIMARY_ROUTE,
     specialCategory
   );
   return response.data;
@@ -27,13 +28,13 @@ export const updateSpecialCategory = async (
     shallowDiff(oldSpecialCategory, newSpecialCategory).updated
   );
   const response = await celestineApi().patch(
-    `/admin/special-category/${oldSpecialCategory.id}`,
+    `${PRIMARY_ROUTE}/${oldSpecialCategory.id}`,
     diffSpecialCategory
   );
   return response.data;
 };
 
 export const deleteSpecialCategory = async (id: number): Promise<void> => {
-  await celestineApi().delete(`/admin/special-category/${id}`);
+  await celestineApi().delete(`${PRIMARY_ROUTE}/${id}`);
 };
 

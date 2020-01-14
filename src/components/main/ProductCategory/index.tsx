@@ -84,7 +84,7 @@ function ProductCategory() {
   const [createDialogOpen, setCreateDialogOpen] = React.useState<boolean>(
     false
   );
-  const [updateDialogPCId, setUpdateDialogPCId] = React.useState<number>(null);
+  const [updateDialogId, setUpdateDialogId] = React.useState<number>(null);
   const dispatch = useDispatch();
 
   const productCategoryRealTotal = useSelector<RootState, number>(
@@ -173,7 +173,7 @@ function ProductCategory() {
           return (
             <div>
               <Button
-                onClick={() => setUpdateDialogPCId(original.id)}
+                onClick={() => setUpdateDialogId(original.id)}
                 color="primary"
                 variant="outlined"
               >
@@ -193,19 +193,19 @@ function ProductCategory() {
   >({ name: "", slug: "", productSizes: [] });
   React.useEffect(() => {
     (async () => {
-      if (!updateDialogPCId)
+      if (!updateDialogId)
         return setUpdateInitialValues({ name: "", slug: "", productSizes: [] });
       const productCategory: IProductCategory = (_.find(
         productCategories,
-        pc => ((pc as unknown) as IProductCategory).id === updateDialogPCId
+        pc => ((pc as unknown) as IProductCategory).id === updateDialogId
       ) as unknown) as IProductCategory;
-      const productSizes = await getProductSizesByPCId(updateDialogPCId);
+      const productSizes = await getProductSizesByPCId(updateDialogId);
       setUpdateInitialValues({
         ...productCategory,
         productSizes
       });
     })();
-  }, [productCategories, updateDialogPCId, setUpdateInitialValues]);
+  }, [productCategories, updateDialogId, setUpdateInitialValues]);
 
   return (
     <>
@@ -275,11 +275,11 @@ function ProductCategory() {
           dismiss={() => setCreateDialogOpen(null)}
         />
       )}
-      {Boolean(updateDialogPCId) && (
+      {Boolean(updateDialogId) && (
         <UpdateDialog
-          productCategoryId={updateDialogPCId}
+          productCategoryId={updateDialogId}
           restartIntervalRun={intervalRun.restart}
-          dismiss={() => setUpdateDialogPCId(null)}
+          dismiss={() => setUpdateDialogId(null)}
           initialValues={updateInitialValues}
         />
       )}

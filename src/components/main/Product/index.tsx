@@ -36,8 +36,7 @@ import {
   ProductSortField,
   IProduct,
   getProducts,
-  IProductGetAction,
-  PProduct
+  IProductGetAction
 } from "src/store/product";
 import { TInitialValues } from "./types";
 
@@ -330,7 +329,6 @@ function Product() {
                     />
                   </div>
                 </div>
-                {/* top action */}
                 <TopAction
                   intervalRun={intervalRun}
                   refreshDelay={refreshDelay}

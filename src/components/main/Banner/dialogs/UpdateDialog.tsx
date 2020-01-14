@@ -16,11 +16,7 @@ import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/BasicDialog";
-import {
-  requiredValidator,
-  unsignedRealNumberValidator,
-  unsignedWholeNumberValidator
-} from "src/redux-form/validators";
+import { requiredValidator } from "src/redux-form/validators";
 import {
   renderTextField,
   renderSelectField,

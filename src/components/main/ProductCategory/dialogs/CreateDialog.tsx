@@ -74,7 +74,7 @@ function CreateDialog(
         fullWidth
         bgClose
       >
-        <title>Create New Product Category</title>
+        <title>Create Product Category</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>
             <Field
