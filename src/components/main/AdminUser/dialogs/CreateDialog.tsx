@@ -91,6 +91,7 @@ function CreateDialog(
               component={renderTextField}
               validate={[requiredValidator]}
               disabled={loading}
+              autoComplete="off"
             />
             <Field
               name="password"
@@ -99,6 +100,7 @@ function CreateDialog(
               component={renderTextField}
               validate={[requiredValidator]}
               disabled={loading}
+              autoComplete="off"
             />
             <Field
               name="role_id"
@@ -120,7 +122,7 @@ function CreateDialog(
                 Cancel
               </Button>
               <Button type="submit" color="primary" disabled={loading}>
-                {loading ? <CircularProgress size={24} /> : "Submit"}
+                {loading ? <CircularProgress size={24} /> : "Create"}
               </Button>
             </div>
           </form>

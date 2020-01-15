@@ -1,7 +1,7 @@
 import _ from "lodash";
 import React from "react";
 import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
-import { VpnKey as TitleIcon } from "@material-ui/icons";
+import { VerticalAlignBottom as TitleIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
@@ -33,17 +33,6 @@ import {
 } from "src/components/generic/TableGenerics";
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-    display: "block"
-  },
-  topAction: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingLeft: theme.spacing(2)
-  },
   filterAndSortForm: {
     marginBottom: "1rem",
     display: "flex",
@@ -203,7 +192,9 @@ function TopUp() {
             <TableInfoWrapper>
               <TableTitle>
                 <Typography variant="h6">Top Ups</Typography>
-                <TitleIcon style={{ marginLeft: "0.5rem" }} />
+                <TitleIcon
+                  style={{ marginLeft: "0.5rem", color: "cornflowerblue" }}
+                />
               </TableTitle>
               <Typography variant="subtitle1">List of all top ups</Typography>
             </TableInfoWrapper>

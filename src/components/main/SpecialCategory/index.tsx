@@ -1,11 +1,12 @@
 import _ from "lodash";
 import React from "react";
 import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
-import { VpnKey as TitleIcon } from "@material-ui/icons";
+import { Bookmark as TitleIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
 
+import { RoutePath } from "src/Router/routes";
 import Table, {
   OnPaginationChangeFn
 } from "src/components/generic/ReactTableSSR";
@@ -35,11 +36,6 @@ import {
 } from "src/components/generic/TableGenerics";
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-    display: "block"
-  },
   filterAndSortForm: {
     display: "flex",
     paddingLeft: theme.spacing(2)
@@ -165,7 +161,7 @@ function SpecialCategory() {
             <div>
               <Button
                 target="_blank"
-                href="google.com"
+                href={`${RoutePath.SPECIAL_CATEGORY_LIST}?special_category_id=${original.id}`}
                 color="primary"
                 variant="outlined"
               >
@@ -220,7 +216,9 @@ function SpecialCategory() {
             <TableInfoWrapper>
               <TableTitle>
                 <Typography variant="h6">Special Categories</Typography>
-                <TitleIcon style={{ marginLeft: "0.5rem" }} />
+                <TitleIcon
+                  style={{ marginLeft: "0.5rem", color: "cornflowerblue" }}
+                />
               </TableTitle>
               <Typography variant="subtitle1">
                 List of all promo codes

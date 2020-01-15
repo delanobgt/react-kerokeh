@@ -40,6 +40,9 @@ interface IProductFilter {
   name: string;
   slug: string;
   code: string;
+  gender: string;
+  color: string;
+  is_active: string;
 }
 export type PProductFilter = Partial<IProductFilter>;
 

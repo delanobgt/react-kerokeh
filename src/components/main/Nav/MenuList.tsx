@@ -8,6 +8,7 @@ import {
   Collapse
 } from "@material-ui/core";
 import {
+  Bookmark as BookmarkIcon,
   Dashboard as DashboardIcon,
   Image as ImageIcon,
   SettingsApplications as SettingsApplicationsIcon,
@@ -80,7 +81,7 @@ const menuList: IMenu[] = [
   },
   {
     title: "Special Category",
-    Icon: PeopleIcon,
+    Icon: BookmarkIcon,
     link: RoutePath.SPECIAL_CATEGORY
   },
   {
@@ -121,6 +122,7 @@ const menuList: IMenu[] = [
 
 export default function MenuList({ setDrawerOpen }: IProps) {
   const { location } = useReactRouter();
+  const PADDING_MULTIPLIER = 1.5;
 
   const [navState, setNavState] = React.useState<Record<string, boolean>>({});
   const toggleCollapse = React.useCallback(
@@ -146,6 +148,7 @@ export default function MenuList({ setDrawerOpen }: IProps) {
               button
               selected={location.pathname === link}
               onClick={() => setDrawerOpen(false)}
+              style={{ paddingLeft: `${PADDING_MULTIPLIER * (depth + 1)}em` }}
             >
               <ListItemIcon>
                 <Icon />
@@ -158,7 +161,11 @@ export default function MenuList({ setDrawerOpen }: IProps) {
         const stateName = `${path}/${title}#${depth}`;
         return (
           <div key={title}>
-            <ListItem button onClick={() => toggleCollapse(stateName)}>
+            <ListItem
+              button
+              onClick={() => toggleCollapse(stateName)}
+              style={{ paddingLeft: `${PADDING_MULTIPLIER * (depth + 1)}em` }}
+            >
               <ListItemIcon>
                 <Icon />
               </ListItemIcon>
@@ -170,12 +177,7 @@ export default function MenuList({ setDrawerOpen }: IProps) {
               )}
             </ListItem>
 
-            <Collapse
-              in={Boolean(navState[stateName])}
-              timeout="auto"
-              unmountOnExit
-              style={{ paddingLeft: `${2 * (depth + 1)}em` }}
-            >
+            <Collapse in={Boolean(navState[stateName])} timeout="auto">
               <List component="div" disablePadding>
                 {menu.subMenus.map(subMenu =>
                   renderMenu(subMenu, `${path}/${title}`, depth + 1)

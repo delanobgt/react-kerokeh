@@ -43,6 +43,7 @@ export default function TemporaryDrawer(props: IProps) {
     <Drawer
       anchor="left"
       open={drawerOpen}
+      keepMounted
       onClose={() => setDrawerOpen(false)}
     >
       {sideList}

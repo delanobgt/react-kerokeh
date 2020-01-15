@@ -1,7 +1,13 @@
 import _ from "lodash";
 import React from "react";
-import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
-import { VpnKey as TitleIcon } from "@material-ui/icons";
+import {
+  CircularProgress,
+  Typography,
+  Grid,
+  Button,
+  Chip
+} from "@material-ui/core";
+import { VerticalAlignTop as TitleIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
@@ -30,13 +36,9 @@ import {
   TableInfoWrapper,
   TableTitle
 } from "src/components/generic/TableGenerics";
+import { statusLabelDict } from "./constants";
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-    display: "block"
-  },
   filterAndSortForm: {
     marginBottom: "1rem",
     display: "flex",
@@ -142,6 +144,7 @@ function WithdrawRequest() {
     },
     [updatePagination]
   );
+
   const columns: Column<IWithdrawRequest>[] = React.useMemo(
     () => [
       {
@@ -150,11 +153,17 @@ function WithdrawRequest() {
       },
       {
         Header: "Amount",
-        accessor: row => Boolean(console.log(row)) && row.amount
+        accessor: row => "Rp. " + Number(row.amount).toLocaleString("de-DE")
       },
       {
         Header: "Status",
-        accessor: row => _.startCase(row.status)
+        accessor: row => row.status,
+        Cell: ({ row: { original } }) => (
+          <Chip
+            style={{ background: statusLabelDict[original.status].color }}
+            label={statusLabelDict[original.status].label}
+          />
+        )
       },
       {
         Header: "Actions",
@@ -187,7 +196,9 @@ function WithdrawRequest() {
             <TableInfoWrapper>
               <TableTitle>
                 <Typography variant="h6">Withdraw Requests</Typography>
-                <TitleIcon style={{ marginLeft: "0.5rem" }} />
+                <TitleIcon
+                  style={{ marginLeft: "0.5rem", color: "cornflowerblue" }}
+                />
               </TableTitle>
               <Typography variant="subtitle1">
                 List of all withdraw requests
@@ -198,7 +209,7 @@ function WithdrawRequest() {
 
             {loading ? (
               <div style={{ textAlign: "center" }}>
-                <CircularProgress size={24} /> Loading user...
+                <CircularProgress size={24} /> Loading...
               </div>
             ) : error ? (
               <Typography variant="subtitle1" color="secondary">

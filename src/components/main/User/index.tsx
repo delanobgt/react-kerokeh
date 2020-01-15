@@ -1,7 +1,7 @@
 import _ from "lodash";
 import React from "react";
 import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
-import { VpnKey as TitleIcon } from "@material-ui/icons";
+import { People as TitleIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
@@ -184,7 +184,9 @@ function Users() {
             <TableInfoWrapper>
               <TableTitle>
                 <Typography variant="h6">Users</Typography>
-                <TitleIcon style={{ marginLeft: "0.5rem" }} />
+                <TitleIcon
+                  style={{ marginLeft: "0.5rem", color: "cornflowerblue" }}
+                />
               </TableTitle>
               <Typography variant="subtitle1">List of all users</Typography>
             </TableInfoWrapper>

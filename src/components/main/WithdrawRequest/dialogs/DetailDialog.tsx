@@ -5,7 +5,8 @@ import {
   CircularProgress,
   ExpansionPanel,
   ExpansionPanelSummary,
-  ExpansionPanelDetails
+  ExpansionPanelDetails,
+  Chip
 } from "@material-ui/core";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 
@@ -20,6 +21,7 @@ import {
 } from "src/store/withdraw-request";
 import ApproveDialog from "./ApproveDialog";
 import RejectDialog from "./RejectDialog";
+import { statusLabelDict } from "../constants";
 
 interface IComponentProps {
   withdrawRequestId: number;
@@ -46,7 +48,6 @@ function DetailDialog(props: IComponentProps) {
     const [errWithdrawRequest, withdrawRequest] = await goPromise<
       IWithdrawRequest
     >(getWithdrawRequestById(withdrawRequestId));
-    console.log({ withdrawRequest });
     const [errUser, user] = await goPromise<IUser>(
       getUserById(withdrawRequest.user_id)
     );
@@ -78,12 +79,26 @@ function DetailDialog(props: IComponentProps) {
         label: "Created At",
         value: moment(withdrawRequest.created_at).format("D MMMM YYYY")
       },
-      { label: "Status", value: withdrawRequest.status || "-" }
+      {
+        label: "Status",
+        value: (
+          <Chip
+            style={{
+              background: statusLabelDict[withdrawRequest.status].color
+            }}
+            label={statusLabelDict[withdrawRequest.status].label}
+          />
+        )
+      }
     ];
     if (withdrawRequest.rejected)
       entries.push({
         label: "Rejected Reason",
-        value: withdrawRequest.rejected_reason || "-"
+        value: (
+          <Typography style={{ color: "red" }}>
+            {withdrawRequest.rejected_reason}
+          </Typography>
+        )
       });
     return entries;
   }, [withdrawRequest]);

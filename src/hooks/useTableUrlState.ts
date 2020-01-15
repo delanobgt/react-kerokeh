@@ -16,6 +16,7 @@ export default function<Filter, Pagination, SortField>(
   );
   const [sorts, setSorts] = React.useState<ISort<SortField>[]>([]);
 
+  // push initial state to history
   React.useEffect(() => {
     const parsed = queryString.parse(location.search);
     const query = queryString.stringify({
@@ -54,7 +55,8 @@ export default function<Filter, Pagination, SortField>(
       const parsed = queryString.parse(location.search);
       const query = queryString.stringify({
         ...parsed,
-        ..._filter
+        ..._filter,
+        offset: 0
       });
       history.push({ pathname: location.pathname, search: query });
     },

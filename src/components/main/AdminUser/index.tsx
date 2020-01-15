@@ -145,7 +145,9 @@ function AdminUsers() {
             <TableInfoWrapper>
               <TableTitle>
                 <Typography variant="h6">Admin Users</Typography>
-                <TitleIcon style={{ marginLeft: "0.5rem" }} />
+                <TitleIcon
+                  style={{ marginLeft: "0.5rem", color: "cornflowerblue" }}
+                />
               </TableTitle>
               <Typography variant="subtitle1">
                 List of all admin users

@@ -2,7 +2,7 @@ import _ from "lodash";
 import React from "react";
 import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { VpnKey as TitleIcon } from "@material-ui/icons";
+import { SettingsApplications as TitleIcon } from "@material-ui/icons";
 import { Column } from "react-table";
 
 import Table, {
@@ -174,7 +174,9 @@ function Config() {
             <TableInfoWrapper>
               <TableTitle>
                 <Typography variant="h6">Configs</Typography>
-                <TitleIcon style={{ marginLeft: "0.5rem" }} />
+                <TitleIcon
+                  style={{ marginLeft: "0.5rem", color: "cornflowerblue" }}
+                />
               </TableTitle>
               <Typography variant="subtitle1">List of all configs</Typography>
             </TableInfoWrapper>

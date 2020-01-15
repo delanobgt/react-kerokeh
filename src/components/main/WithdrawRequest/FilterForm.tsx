@@ -1,7 +1,8 @@
 import React from "react";
-import { TextField, Typography } from "@material-ui/core";
+import { TextField, Typography, MenuItem } from "@material-ui/core";
 import styled from "styled-components";
 import { PWithdrawRequestFilter } from "src/store/withdraw-request";
+import BasicSelect from "src/components/generic/BasicSelect";
 
 interface IComponentProps {
   filter: PWithdrawRequestFilter;
@@ -28,11 +29,17 @@ function FilterForm(props: IComponentProps) {
       </Div>
 
       <Div>
-        <TextField
+        <BasicSelect
+          style={{ width: "8em" }}
           label="Status"
           value={filter.status || ""}
-          onChange={e => updateFilter({ status: e.target.value })}
-        />
+          onChange={(value: string) => updateFilter({ status: value })}
+        >
+          <MenuItem value="">No Filter</MenuItem>
+          <MenuItem value="pending">Pending</MenuItem>
+          <MenuItem value="success">Success</MenuItem>
+          <MenuItem value="rejected">Rejected</MenuItem>
+        </BasicSelect>
       </Div>
     </div>
   );

@@ -208,7 +208,7 @@ function CreateDialog(
         fullWidth
         bgClose
       >
-        <title>Create New Product</title>
+        <title>Create Product</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>
             <>
@@ -307,11 +307,12 @@ function CreateDialog(
                 validate={[requiredValidator]}
                 disabled={loading}
               >
-                <MenuItem value={0}>0</MenuItem>
-                <MenuItem value={1}>1</MenuItem>
-                <MenuItem value={2}>2</MenuItem>
-                <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={4}>4</MenuItem>
+                <MenuItem value={0}>Men</MenuItem>
+                <MenuItem value={1}>Women</MenuItem>
+                <MenuItem value={2}>Youth</MenuItem>
+                <MenuItem value={3}>Infant</MenuItem>
+                <MenuItem value={4}>Indefinable</MenuItem>
+                <MenuItem value={5}>Unisex</MenuItem>
               </Field>
               <Field
                 name="display_image"

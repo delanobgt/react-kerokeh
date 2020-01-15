@@ -123,6 +123,9 @@ export const renderAutoSuggestField: RenderAutoSuggestFieldFn = ({
   return (
     <div>
       <div>
+        <Typography variant="subtitle2" style={{ marginLeft: "0.7rem" }}>
+          {label}
+        </Typography>
         <ReactSelect
           {...rest}
           {...input}
@@ -151,6 +154,9 @@ export const renderAsyncAutoSuggestField: RenderAsyncAutoSuggestFieldFn = ({
   return (
     <div>
       <div>
+        <Typography variant="subtitle2" style={{ marginLeft: "0.7rem" }}>
+          {label}
+        </Typography>
         <AsyncReactSelect
           {...rest}
           {...input}

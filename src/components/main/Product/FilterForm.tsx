@@ -1,7 +1,8 @@
 import React from "react";
-import { TextField, Typography } from "@material-ui/core";
+import { TextField, Typography, MenuItem } from "@material-ui/core";
 import styled from "styled-components";
 import { PProductFilter } from "src/store/product";
+import BasicSelect from "src/components/generic/BasicSelect";
 
 interface IComponentProps {
   filter: PProductFilter;
@@ -49,6 +50,44 @@ function FilterForm(props: IComponentProps) {
           value={filter.code || ""}
           onChange={e => updateFilter({ code: e.target.value })}
         />
+      </Div>
+
+      <Div>
+        <TextField
+          label="Color"
+          value={filter.color || ""}
+          onChange={e => updateFilter({ color: e.target.value })}
+        />
+      </Div>
+
+      <Div>
+        <BasicSelect
+          style={{ width: "8em" }}
+          label="Gender"
+          value={filter.gender || ""}
+          onChange={(value: string) => updateFilter({ gender: value })}
+        >
+          <MenuItem value="">No Filter</MenuItem>
+          <MenuItem value={0}>Men</MenuItem>
+          <MenuItem value={1}>Women</MenuItem>
+          <MenuItem value={2}>Youth</MenuItem>
+          <MenuItem value={3}>Infant</MenuItem>
+          <MenuItem value={4}>Indefinable</MenuItem>
+          <MenuItem value={5}>Unisex</MenuItem>
+        </BasicSelect>
+      </Div>
+
+      <Div>
+        <BasicSelect
+          style={{ width: "8em" }}
+          label="Is Active"
+          value={filter.is_active || ""}
+          onChange={(value: string) => updateFilter({ is_active: value })}
+        >
+          <MenuItem value="">No Filter</MenuItem>
+          <MenuItem value="true">Active</MenuItem>
+          <MenuItem value="false">Inactive</MenuItem>
+        </BasicSelect>
       </Div>
     </div>
   );

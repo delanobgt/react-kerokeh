@@ -7,7 +7,7 @@ import {
   Button,
   Chip
 } from "@material-ui/core";
-import { VpnKey as TitleIcon } from "@material-ui/icons";
+import { People as TitleIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
@@ -238,7 +238,9 @@ function Identifications() {
             <TableInfoWrapper>
               <TableTitle>
                 <Typography variant="h6">Identifications</Typography>
-                <TitleIcon style={{ marginLeft: "0.5rem" }} />
+                <TitleIcon
+                  style={{ marginLeft: "0.5rem", color: "cornflowerblue" }}
+                />
               </TableTitle>
               <Typography variant="subtitle1">
                 List of all identifications
