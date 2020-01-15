@@ -2,6 +2,7 @@ import _ from "lodash";
 import React from "react";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { useSelector } from "react-redux";
+import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { deleteAdminUser } from "src/store/adminUser";
 import { goPromise } from "src/util/helper";
@@ -17,6 +18,7 @@ interface IComponentProps {
 function DeleteDialog(props: IComponentProps) {
   const { userId, restartIntervalRun, dismiss } = props;
 
+  const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
 
@@ -29,6 +31,7 @@ function DeleteDialog(props: IComponentProps) {
     } else {
       restartIntervalRun();
       dismiss();
+      snackbar.showMessage("Admin User deleted.");
     }
   };
 

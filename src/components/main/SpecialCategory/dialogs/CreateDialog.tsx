@@ -71,9 +71,9 @@ function CreateDialog(
     [dismiss, restartIntervalRun, snackbar]
   );
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   return (
     <div>

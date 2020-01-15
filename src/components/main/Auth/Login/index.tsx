@@ -10,6 +10,7 @@ import {
   Button,
   Typography
 } from "@material-ui/core";
+import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { signIn, ISignInAction } from "src/store/auth";
 import { goPromise } from "src/util/helper";
@@ -31,6 +32,8 @@ const Login = (
   props: IComponentProps & InjectedFormProps<IFormProps, IComponentProps>
 ) => {
   const { handleSubmit } = props;
+
+  const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
   const dispatch = useDispatch();
@@ -41,12 +44,13 @@ const Login = (
   }) => {
     setLoading(true);
     const [err, res] = await goPromise<ISignInAction>(signIn(credentials));
+    setLoading(false);
     if (err) {
       setError(_.get(err, "response.data.errors", "Check your connection."));
     } else {
       dispatch(res);
+      snackbar.showMessage("Logged In successfully.");
     }
-    setLoading(false);
   };
 
   return (

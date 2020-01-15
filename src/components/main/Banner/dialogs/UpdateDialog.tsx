@@ -73,7 +73,7 @@ function UpdateDialog(
       } else {
         restartIntervalRun();
         dismiss();
-        snackbar.showMessage("Promo Code updated.");
+        snackbar.showMessage("Banner updated.");
       }
     },
     [dismiss, restartIntervalRun, snackbar, initialValues]

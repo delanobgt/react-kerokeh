@@ -104,9 +104,9 @@ function UpdateDialog(
     [dismiss, restartIntervalRun, initialValues, snackbar]
   );
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   const productBrandPromiseOptions = React.useCallback(
     (inputValue: string) =>

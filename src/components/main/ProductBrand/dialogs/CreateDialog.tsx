@@ -96,7 +96,7 @@ function CreateDialog(
       } else {
         restartIntervalRun();
         dismiss();
-        snackbar.showMessage("Product Category created.");
+        snackbar.showMessage("Product Brand created.");
       }
     },
     [dismiss, restartIntervalRun, snackbar]

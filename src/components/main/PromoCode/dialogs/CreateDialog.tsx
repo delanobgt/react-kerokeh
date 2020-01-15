@@ -93,7 +93,7 @@ function CreateDialog(
         fullWidth
         bgClose
       >
-        <title>Create New Promo Code</title>
+        <title>Create Promo Code</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>
             <>

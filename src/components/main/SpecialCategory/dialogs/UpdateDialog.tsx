@@ -81,9 +81,9 @@ function UpdateDialog(
     [dismiss, restartIntervalRun, initialValues, snackbar]
   );
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   return (
     <div>

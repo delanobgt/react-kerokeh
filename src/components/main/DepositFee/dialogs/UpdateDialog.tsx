@@ -63,7 +63,7 @@ function UpdateDialog(
       } else {
         restartIntervalRun();
         dismiss();
-        snackbar.showMessage("Product Brand updated.");
+        snackbar.showMessage("Deposit Fee updated.");
       }
     },
     [dismiss, restartIntervalRun, initialValues, snackbar]

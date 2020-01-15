@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
+import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/BasicDialog";
@@ -14,6 +15,7 @@ interface IComponentProps {
 function DeleteDialog(props: IComponentProps) {
   const { promoCodeId, restartIntervalRun, dismiss } = props;
 
+  const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
 
@@ -26,6 +28,7 @@ function DeleteDialog(props: IComponentProps) {
     } else {
       restartIntervalRun();
       dismiss();
+      snackbar.showMessage("Promo Code deleted.");
     }
   };
 

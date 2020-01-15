@@ -16,9 +16,9 @@ interface IComponentProps {
 function ApproveDialog(props: IComponentProps) {
   const { withdrawRequestId, restartIntervalRun, fetch, dismiss } = props;
 
+  const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
-  const snackbar = useSnackbar();
 
   const handleApprove = React.useCallback(async () => {
     setLoading(true);

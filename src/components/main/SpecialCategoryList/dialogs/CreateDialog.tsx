@@ -104,9 +104,9 @@ function CreateDialog(
     [dismiss, restartIntervalRun, snackbar, specialCategoryId]
   );
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   const productBrandPromiseOptions = React.useCallback(
     (inputValue: string) =>

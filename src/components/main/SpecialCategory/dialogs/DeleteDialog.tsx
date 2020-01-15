@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
+import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/BasicDialog";
@@ -14,10 +15,11 @@ interface IComponentProps {
 function DeleteDialog(props: IComponentProps) {
   const { specialCategoryId, restartIntervalRun, dismiss } = props;
 
+  const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
 
-  const handleDelete = async () => {
+  const handleDelete = React.useCallback(async () => {
     setLoading(true);
     const [err] = await goPromise(deleteSpecialCategory(specialCategoryId));
     setLoading(false);
@@ -26,12 +28,13 @@ function DeleteDialog(props: IComponentProps) {
     } else {
       restartIntervalRun();
       dismiss();
+      snackbar.showMessage("Special Category deleted.");
     }
-  };
+  }, [dismiss, restartIntervalRun, specialCategoryId, snackbar]);
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   return (
     <div>
