@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "npm": "6.4.1",
+    "yarn": "1.17.3",
     "node": "10.15.3"
   },
   "dependencies": {
@@ -48,6 +48,7 @@
     "react-zoom-pan-pinch": "^1.4.5",
     "redux": "^4.0.4",
     "redux-form": "^8.2.6",
+    "serve": "^11.3.0",
     "shallow-diff": "^0.0.5",
     "styled-components": "^4.4.1",
     "typescript": "3.7.2",
@@ -57,10 +58,10 @@
     "babel-plugin-import": "^1.12.2"
   },
   "scripts": {
-    "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "react-scripts start",
+    "heroku-postbuild": "yarn run build",
+    "start": "serve -s build"
   },
   "eslintConfig": {
     "extends": "react-app"
