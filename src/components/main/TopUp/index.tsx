@@ -1,15 +1,7 @@
 import _ from "lodash";
 import React from "react";
-import {
-  CircularProgress,
-  Paper,
-  Toolbar,
-  Typography,
-  Grid,
-  Button
-} from "@material-ui/core";
-import clsx from "clsx";
-import styled from "styled-components";
+import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
+import { VpnKey as TitleIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
@@ -34,6 +26,11 @@ import {
 import SortForm from "src/components/generic/SortForm";
 import FilterForm from "./FilterForm";
 import moment from "moment";
+import {
+  TablePaper,
+  TableInfoWrapper,
+  TableTitle
+} from "src/components/generic/TableGenerics";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -54,10 +51,6 @@ const useStyles = makeStyles(theme => ({
     // justifyContent: "space-between"
   }
 }));
-
-const MyPaper = styled(Paper)`
-  padding: 1.5em;
-`;
 
 function TopUp() {
   const refreshDelay = 5000;
@@ -206,11 +199,14 @@ function TopUp() {
       <br />
       <Grid container justify="center">
         <Grid item xs={11} sm={11} md={11} lg={10}>
-          <MyPaper elevation={3}>
-            <Toolbar className={clsx(classes.root)}>
-              <Typography variant="h6">Top Ups</Typography>
+          <TablePaper elevation={3}>
+            <TableInfoWrapper>
+              <TableTitle>
+                <Typography variant="h6">Top Ups</Typography>
+                <TitleIcon style={{ marginLeft: "0.5rem" }} />
+              </TableTitle>
               <Typography variant="subtitle1">List of all top ups</Typography>
-            </Toolbar>
+            </TableInfoWrapper>
             <br />
             <br />
 
@@ -255,7 +251,7 @@ function TopUp() {
                 />
               </>
             ) : null}
-          </MyPaper>
+          </TablePaper>
         </Grid>
       </Grid>
       {Boolean(detailDialogId) && (

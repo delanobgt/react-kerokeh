@@ -7,8 +7,7 @@ import {
   TableHead,
   TableRow,
   TablePagination,
-  TableSortLabel,
-  Typography
+  TableSortLabel
 } from "@material-ui/core";
 
 interface IComponentProps {
@@ -152,10 +151,6 @@ function ReactTableSSR({
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
-      <br />
-      <Typography variant="subtitle1" align="center">
-        <em>Tips</em>: Hold <strong>Shift</strong> to do multi-sort
-      </Typography>
     </>
   );
 }

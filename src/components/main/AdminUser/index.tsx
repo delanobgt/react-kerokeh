@@ -2,18 +2,17 @@ import _ from "lodash";
 import React from "react";
 import {
   CircularProgress,
-  Paper,
-  Toolbar,
   Typography,
   IconButton,
   Grid
 } from "@material-ui/core";
-import clsx from "clsx";
-import styled from "styled-components";
-import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
-import { Edit as EditIcon, Delete as DeleteIcon } from "@material-ui/icons";
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  VpnKey as TitleIcon
+} from "@material-ui/icons";
 
 import { makeDefaultFilterUI } from "src/components/generic/table-filters/DefaultFilter";
 import Table from "src/components/generic/ReactTable";
@@ -30,33 +29,21 @@ import UpdateDialog from "./dialogs/UpdateDialog";
 import DeleteDialog from "./dialogs/DeleteDialog";
 import useIntervalRun from "src/hooks/useIntervalRun";
 import TopAction from "./TopAction";
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-    display: "block"
-  }
-}));
-
-const MyPaper = styled(Paper)`
-  padding: 1.5em;
-`;
+import {
+  TablePaper,
+  TableTitle,
+  TableInfoWrapper
+} from "src/components/generic/TableGenerics";
 
 function AdminUsers() {
   const refreshDelay = 5000;
-  const classes = useStyles({});
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
   const [createDialogOpen, setCreateDialogOpen] = React.useState<boolean>(
     false
   );
-  const [updateDialogUserId, setUpdateDialogUserId] = React.useState<number>(
-    null
-  );
-  const [deleteDialogUserId, setDeleteDialogUserId] = React.useState<number>(
-    null
-  );
+  const [updateDialogId, setUpdateDialogId] = React.useState<number>(null);
+  const [deleteDialogId, setDeleteDialogId] = React.useState<number>(null);
   const dispatch = useDispatch();
   const _adminUsers = useSelector<RootState, Record<string, IAdminUser>>(
     state => state.adminUser.adminUsers
@@ -96,14 +83,14 @@ function AdminUsers() {
   }, [fetch]);
 
   const updateInitialValues = React.useMemo((): INewAdminUser => {
-    if (!updateDialogUserId) return { username: "", password: "", role_id: 1 };
-    const _adminUser: IAdminUser = _adminUsers[updateDialogUserId];
+    if (!updateDialogId) return { username: "", password: "", role_id: 1 };
+    const _adminUser: IAdminUser = _adminUsers[updateDialogId];
     return {
       username: _adminUser.username,
       password: "",
       role_id: _adminUser.role.id
     };
-  }, [_adminUsers, updateDialogUserId]);
+  }, [_adminUsers, updateDialogId]);
 
   const columns: Column<IAdminUser>[] = React.useMemo(
     () => [
@@ -131,12 +118,12 @@ function AdminUsers() {
           return (
             <div>
               <IconButton
-                onClick={() => setUpdateDialogUserId(original.id)}
+                onClick={() => setUpdateDialogId(original.id)}
                 className="mr-3"
               >
                 <EditIcon />
               </IconButton>
-              <IconButton onClick={() => setDeleteDialogUserId(original.id)}>
+              <IconButton onClick={() => setDeleteDialogId(original.id)}>
                 <DeleteIcon />
               </IconButton>
             </div>
@@ -154,13 +141,16 @@ function AdminUsers() {
       <br />
       <Grid container justify="center">
         <Grid item xs={11} sm={11} md={11} lg={10}>
-          <MyPaper elevation={3}>
-            <Toolbar className={clsx(classes.root)}>
-              <Typography variant="h6">Admin Users</Typography>
+          <TablePaper elevation={3}>
+            <TableInfoWrapper>
+              <TableTitle>
+                <Typography variant="h6">Admin Users</Typography>
+                <TitleIcon style={{ marginLeft: "0.5rem" }} />
+              </TableTitle>
               <Typography variant="subtitle1">
                 List of all admin users
               </Typography>
-            </Toolbar>
+            </TableInfoWrapper>
             <br />
             <br />
 
@@ -187,7 +177,7 @@ function AdminUsers() {
                 .
               </Typography>
             )}
-          </MyPaper>
+          </TablePaper>
         </Grid>
       </Grid>
       {createDialogOpen && (
@@ -197,19 +187,19 @@ function AdminUsers() {
           dismiss={() => setCreateDialogOpen(false)}
         />
       )}
-      {updateDialogUserId && (
+      {updateDialogId && (
         <UpdateDialog
-          userId={updateDialogUserId}
+          userId={updateDialogId}
           restartIntervalRun={intervalRun.restart}
-          dismiss={() => setUpdateDialogUserId(null)}
+          dismiss={() => setUpdateDialogId(null)}
           initialValues={updateInitialValues}
         />
       )}
-      {deleteDialogUserId && (
+      {deleteDialogId && (
         <DeleteDialog
-          userId={deleteDialogUserId}
+          userId={deleteDialogId}
           restartIntervalRun={intervalRun.restart}
-          dismiss={() => setDeleteDialogUserId(null)}
+          dismiss={() => setDeleteDialogId(null)}
         />
       )}
     </>

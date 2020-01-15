@@ -1,15 +1,7 @@
 import _ from "lodash";
 import React from "react";
-import {
-  CircularProgress,
-  Paper,
-  Toolbar,
-  Typography,
-  Grid,
-  Button
-} from "@material-ui/core";
-import clsx from "clsx";
-import styled from "styled-components";
+import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
+import { VpnKey as TitleIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
@@ -36,19 +28,13 @@ import {
   getProductSizesByPCId
 } from "src/store/product-category";
 import UpdateDialog from "./dialogs/UpdateDialog";
+import {
+  TablePaper,
+  TableInfoWrapper,
+  TableTitle
+} from "src/components/generic/TableGenerics";
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-    display: "block"
-  },
-  topAction: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingLeft: theme.spacing(2)
-  },
   filterAndSortForm: {
     marginBottom: "1rem",
     display: "flex",
@@ -56,10 +42,6 @@ const useStyles = makeStyles(theme => ({
     // justifyContent: "space-between"
   }
 }));
-
-const MyPaper = styled(Paper)`
-  padding: 1.5em;
-`;
 
 function ProductCategory() {
   const refreshDelay = 5000;
@@ -184,7 +166,7 @@ function ProductCategory() {
         }
       }
     ],
-    []
+    [setUpdateDialogId]
   );
 
   // set updateInitialValues
@@ -213,13 +195,16 @@ function ProductCategory() {
       <br />
       <Grid container justify="center">
         <Grid item xs={11} sm={11} md={11} lg={10}>
-          <MyPaper elevation={3}>
-            <Toolbar className={clsx(classes.root)}>
-              <Typography variant="h6">Product Categories</Typography>
+          <TablePaper elevation={3}>
+            <TableInfoWrapper>
+              <TableTitle>
+                <Typography variant="h6">Product Categories</Typography>
+                <TitleIcon style={{ marginLeft: "0.5rem" }} />
+              </TableTitle>
               <Typography variant="subtitle1">
                 List of all product categories
               </Typography>
-            </Toolbar>
+            </TableInfoWrapper>
             <br />
             <br />
 
@@ -265,7 +250,7 @@ function ProductCategory() {
                 />
               </>
             ) : null}
-          </MyPaper>
+          </TablePaper>
         </Grid>
       </Grid>
       {Boolean(createDialogOpen) && (

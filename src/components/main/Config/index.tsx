@@ -1,17 +1,8 @@
 import _ from "lodash";
 import React from "react";
-import {
-  CircularProgress,
-  Paper,
-  Toolbar,
-  Typography,
-  Grid,
-  Button
-} from "@material-ui/core";
-import clsx from "clsx";
-import styled from "styled-components";
-import { makeStyles } from "@material-ui/core/styles";
+import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
+import { VpnKey as TitleIcon } from "@material-ui/icons";
 import { Column } from "react-table";
 
 import Table, {
@@ -32,28 +23,14 @@ import {
   getConfigs,
   PConfig
 } from "src/store/config";
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-    display: "block"
-  },
-  topAction: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingLeft: theme.spacing(2)
-  }
-}));
-
-const MyPaper = styled(Paper)`
-  padding: 1.5em;
-`;
+import {
+  TablePaper,
+  TableInfoWrapper,
+  TableTitle
+} from "src/components/generic/TableGenerics";
 
 function Config() {
   const refreshDelay = 5000;
-  const classes = useStyles({});
   const { filter, pagination, sorts, updatePagination } = useTableUrlState<
     PConfigFilter,
     PConfigPagination,
@@ -193,11 +170,14 @@ function Config() {
       <br />
       <Grid container justify="center">
         <Grid item xs={11} sm={11} md={11} lg={10}>
-          <MyPaper elevation={3}>
-            <Toolbar className={clsx(classes.root)}>
-              <Typography variant="h6">Configs</Typography>
+          <TablePaper elevation={3}>
+            <TableInfoWrapper>
+              <TableTitle>
+                <Typography variant="h6">Configs</Typography>
+                <TitleIcon style={{ marginLeft: "0.5rem" }} />
+              </TableTitle>
               <Typography variant="subtitle1">List of all configs</Typography>
-            </Toolbar>
+            </TableInfoWrapper>
             <br />
             <br />
 
@@ -231,7 +211,7 @@ function Config() {
                 />
               </>
             ) : null}
-          </MyPaper>
+          </TablePaper>
         </Grid>
       </Grid>
       {Boolean(updateDialogConfigId) && (

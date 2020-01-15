@@ -1,15 +1,7 @@
 import _ from "lodash";
 import React from "react";
-import {
-  CircularProgress,
-  Paper,
-  Toolbar,
-  Typography,
-  Grid,
-  Button
-} from "@material-ui/core";
-import clsx from "clsx";
-import styled from "styled-components";
+import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
+import { VpnKey as TitleIcon } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
@@ -43,29 +35,19 @@ import {
   ISpecialCategory,
   getSpecialCategoryById
 } from "src/store/special-category";
+import {
+  TablePaper,
+  TableInfoWrapper,
+  TableTitle
+} from "src/components/generic/TableGenerics";
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-    display: "block"
-  },
-  topAction: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingLeft: theme.spacing(2)
-  },
   filterAndSortForm: {
     display: "flex",
     paddingLeft: theme.spacing(2)
     // justifyContent: "space-between"
   }
 }));
-
-const MyPaper = styled(Paper)`
-  padding: 1.5em;
-`;
 
 function SpecialCategoryList() {
   const refreshDelay = 5000;
@@ -295,16 +277,21 @@ function SpecialCategoryList() {
       <br />
       <Grid container justify="center">
         <Grid item xs={11} sm={11} md={11} lg={10}>
-          <MyPaper elevation={3}>
-            <Toolbar className={clsx(classes.root)}>
-              <Typography variant="h6">
-                Special Category List for{" "}
-                {!currentSpecialCategory ? "..." : currentSpecialCategory.name}
-              </Typography>
+          <TablePaper elevation={3}>
+            <TableInfoWrapper>
+              <TableTitle>
+                <Typography variant="h6">
+                  Special Category List for{" "}
+                  {!currentSpecialCategory
+                    ? "..."
+                    : currentSpecialCategory.name}
+                </Typography>
+                <TitleIcon style={{ marginLeft: "0.5rem" }} />
+              </TableTitle>
               <Typography variant="subtitle1">
                 List of all special category lists
               </Typography>
-            </Toolbar>
+            </TableInfoWrapper>
             <br />
             <br />
 
@@ -355,7 +342,7 @@ function SpecialCategoryList() {
                 />
               </>
             ) : null}
-          </MyPaper>
+          </TablePaper>
         </Grid>
       </Grid>
       {Boolean(createDialogOpen) && (
