@@ -1,4 +1,4 @@
 Todo:
 
-1. Recursively generated sidebar menu
+1. continue query string from login page
 2. Homemade Snackbar Provider
