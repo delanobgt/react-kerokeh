@@ -185,7 +185,7 @@ function Config() {
 
             {loading ? (
               <div style={{ textAlign: "center" }}>
-                <CircularProgress size={24} /> Loading user...
+                <CircularProgress size={24} /> Loading...
               </div>
             ) : error ? (
               <Typography variant="subtitle1" color="secondary">
