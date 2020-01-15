@@ -5,6 +5,7 @@ import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import HttpsRedirect from "react-https-redirect";
+import { SnackbarProvider } from "material-ui-snackbar-provider";
 
 import { rootReducer } from "src/store";
 import Router from "src/Router";
@@ -25,13 +26,15 @@ const myTheme = createMuiTheme({
 });
 
 ReactDOM.render(
-  <Provider store={store}>
-    <MuiThemeProvider theme={myTheme}>
-      <HttpsRedirect>
-        <Router />
-      </HttpsRedirect>
-    </MuiThemeProvider>
-  </Provider>,
+  <SnackbarProvider SnackbarProps={{ autoHideDuration: 2000 }}>
+    <Provider store={store}>
+      <MuiThemeProvider theme={myTheme}>
+        <HttpsRedirect>
+          <Router />
+        </HttpsRedirect>
+      </MuiThemeProvider>
+    </Provider>
+  </SnackbarProvider>,
   document.getElementById("root")
 );
 

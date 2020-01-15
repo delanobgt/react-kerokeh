@@ -10,7 +10,6 @@ import {
 import { Typography, CircularProgress } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { SnackbarProvider } from "material-ui-snackbar-provider";
 
 import Nav from "src/components/main/Nav";
 import Login from "src/components/main/Auth/Login";
@@ -209,20 +208,18 @@ const App = () => {
   const token = useSelector<RootState, string>(state => state.auth.token);
 
   return (
-    <SnackbarProvider SnackbarProps={{ autoHideDuration: 2000 }}>
-      <Router>
-        {!token ? (
-          <Switch>
-            <Route path={RoutePath.LOGIN}>
-              <Login />
-            </Route>
-            <Route path="*">{() => <Redirect to={RoutePath.LOGIN} />}</Route>
-          </Switch>
-        ) : (
-          <AdminRoutes />
-        )}
-      </Router>
-    </SnackbarProvider>
+    <Router>
+      {!token ? (
+        <Switch>
+          <Route path={RoutePath.LOGIN}>
+            <Login />
+          </Route>
+          <Route path="*">{() => <Redirect to={RoutePath.LOGIN} />}</Route>
+        </Switch>
+      ) : (
+        <AdminRoutes />
+      )}
+    </Router>
   );
 };
 
