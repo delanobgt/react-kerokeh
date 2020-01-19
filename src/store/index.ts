@@ -3,6 +3,7 @@ import { reducer as formReducer } from "redux-form";
 import { adminUserReducer } from "./adminUser";
 import { authReducer } from "./auth";
 import { bannerReducer } from "./banner";
+import { bnibTransactionReducer } from "./bnib-transaction";
 import { configReducer } from "./config";
 import { depositFeeReducer } from "./deposit-fee";
 import { identificationReducer } from "./identification";
@@ -23,6 +24,7 @@ export const rootReducer = combineReducers({
   adminUser: adminUserReducer,
   auth: authReducer,
   banner: bannerReducer,
+  bnibTransaction: bnibTransactionReducer,
   depositFee: depositFeeReducer,
   config: configReducer,
   form: formReducer,

@@ -14,7 +14,9 @@ export const SingleEntry = styled.div`
 `;
 
 export const Label = styled(Typography)`
-  flex-basis: 175px;
+  min-width: 180px;
+  flex-basis: 180px;
+  width: 180px;
 `;
 
 export const MyDesc = styled(Typography)`

@@ -1,5 +1,6 @@
 export enum RoutePath {
   ADMIN_USER = "/admin_user",
+  BNIB_TRANSACTION = "/bnib_transaction",
   BANNER = "/banner",
   CONFIG = "/config",
   DASHBOARD = "/dashboard",

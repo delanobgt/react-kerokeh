@@ -9,6 +9,7 @@ import {
 } from "@material-ui/core";
 import {
   Bookmark as BookmarkIcon,
+  Receipt as ReceiptIcon,
   Dashboard as DashboardIcon,
   Image as ImageIcon,
   SettingsApplications as SettingsApplicationsIcon,
@@ -46,6 +47,11 @@ const menuList: IMenu[] = [
     title: "Banner",
     Icon: ImageIcon,
     link: RoutePath.BANNER
+  },
+  {
+    title: "BNIB Transaction",
+    Icon: ReceiptIcon,
+    link: RoutePath.BNIB_TRANSACTION
   },
   {
     title: "Config",
