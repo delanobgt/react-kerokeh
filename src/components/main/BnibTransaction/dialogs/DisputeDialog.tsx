@@ -88,7 +88,7 @@ function DisputeDialog(props: IComponentProps) {
               disabled={reason === "" || loading}
               onClick={() => submit()}
             >
-              {loading ? <CircularProgress size={24} /> : "Reject"}
+              {loading ? <CircularProgress size={24} /> : "Dispute"}
             </Button>
           </div>
         </section>

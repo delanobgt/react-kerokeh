@@ -82,7 +82,7 @@ export default function(props: IProps) {
                 onClick={() => setDisputedDialogOpen(true)}
                 disabled={arrivedLoading}
               >
-                {arrivedLoading ? <CircularProgress size={24} /> : "ARRIVED"}
+                DISPUTE
               </Button>
 
               <Button
@@ -90,6 +90,7 @@ export default function(props: IProps) {
                 color="primary"
                 onClick={() => setArrivedConfirmDialogOpen(true)}
                 disabled={arrivedLoading}
+                style={{ marginLeft: "1rem" }}
               >
                 {arrivedLoading ? <CircularProgress size={24} /> : "ARRIVED"}
               </Button>

@@ -11,7 +11,9 @@ import {
 import {
   BnibTransactionStatus,
   IBnibTransaction,
-  legitCheckBnibTransactionByCode
+  legitCheckBnibTransactionByCode,
+  ILegitCheck,
+  createLegitCheck
 } from "src/store/bnib-transaction";
 import ConfirmDialog from "src/components/generic/ConfirmDialog";
 import { goPromise } from "src/util/helper";
@@ -19,6 +21,7 @@ import BasicSelect from "src/components/generic/BasicSelect";
 
 interface IComponentProps {
   orderNo: number;
+  legitCheck: ILegitCheck;
   accessLogFakeItem: any;
   accessLogIndefineableItem: any;
   accessLogAuthenticItem: any;
@@ -29,6 +32,7 @@ interface IComponentProps {
 function LegitCheck(props: IComponentProps) {
   const {
     orderNo,
+    legitCheck,
     accessLogFakeItem,
     accessLogIndefineableItem,
     accessLogAuthenticItem,
@@ -41,6 +45,22 @@ function LegitCheck(props: IComponentProps) {
     false
   );
   const [result, setResult] = React.useState<string>("");
+
+  const pleaseCreateLegitCheck = React.useCallback(async () => {
+    setError("");
+    setLoading(true);
+    const [err] = await goPromise<void>(createLegitCheck(transaction.id));
+    setLoading(false);
+
+    if (err) {
+      console.log(err);
+      setError(
+        "Something went wrong. Maybe other admin has taken action on this transaction."
+      );
+    } else {
+      onAfterSubmit();
+    }
+  }, [onAfterSubmit, transaction.id]);
 
   const confirmDialogYesCallback = React.useCallback(
     async dismiss => {
@@ -104,41 +124,66 @@ function LegitCheck(props: IComponentProps) {
               )
             </Typography>
           ) : transaction.status === BnibTransactionStatus.LegitChecking ? (
-            <div>
-              <Typography variant="subtitle1">
-                What is the Legit Check result ?
-              </Typography>
+            legitCheck ? (
               <div>
-                <BasicSelect
-                  style={{ width: "10rem" }}
-                  label="Result"
-                  value={result}
-                  onChange={(value: string) => {
-                    setResult(value);
-                  }}
+                <Typography variant="subtitle1">
+                  What is the Legit Check result ?
+                </Typography>
+                <div>
+                  <BasicSelect
+                    style={{ width: "10rem" }}
+                    label="Result"
+                    value={result}
+                    onChange={(value: string) => {
+                      setResult(value);
+                    }}
+                  >
+                    <MenuItem value=""></MenuItem>
+                    <MenuItem value="authentic">Authentic</MenuItem>
+                    <MenuItem value="indefinable">Indefinable</MenuItem>
+                    <MenuItem value="fake">Fake</MenuItem>
+                  </BasicSelect>
+                  {Boolean(error) && (
+                    <Typography variant="subtitle2" style={{ color: "red" }}>
+                      {error}
+                    </Typography>
+                  )}
+                </div>
+                <br />
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  type="submit"
+                  disabled={loading || result === "" || !Boolean(legitCheck)}
+                  onClick={() => setConfirmDialogOpen(true)}
                 >
-                  <MenuItem value=""></MenuItem>
-                  <MenuItem value="authentic">Authentic</MenuItem>
-                  <MenuItem value="indefinable">Indefinable</MenuItem>
-                  <MenuItem value="fake">Fake</MenuItem>
-                </BasicSelect>
-                {Boolean(error) && (
-                  <Typography variant="subtitle2" style={{ color: "red" }}>
-                    {error}
-                  </Typography>
-                )}
+                  {loading ? <CircularProgress size={24} /> : "SAVE"}
+                </Button>
               </div>
-              <br />
-              <Button
-                variant="outlined"
-                color="primary"
-                type="submit"
-                disabled={loading || result === ""}
-                onClick={() => setConfirmDialogOpen(true)}
-              >
-                {loading ? <CircularProgress size={24} /> : "SAVE"}
-              </Button>
-            </div>
+            ) : (
+              <div>
+                <Typography variant="subtitle1">
+                  It's Legit Check time!
+                </Typography>
+                <div>
+                  {Boolean(error) && (
+                    <Typography variant="subtitle2" style={{ color: "red" }}>
+                      {error}
+                    </Typography>
+                  )}
+                </div>
+                <br />
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  type="submit"
+                  disabled={loading}
+                  onClick={() => pleaseCreateLegitCheck()}
+                >
+                  {loading ? <CircularProgress size={24} /> : "Do Legit Check"}
+                </Button>
+              </div>
+            )
           ) : null}
         </ContentDiv>
       </Div>

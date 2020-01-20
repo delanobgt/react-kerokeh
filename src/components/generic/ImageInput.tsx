@@ -69,7 +69,6 @@ export default function(props: IComponentProps) {
         newErrors.push("file size exceeded");
       }
       setErrors(newErrors);
-      console.log(file);
 
       if (!newErrors.length) onChange(file);
     },

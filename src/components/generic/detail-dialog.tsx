@@ -34,8 +34,8 @@ export interface ExpansionEntry {
   entries: FieldEntry[];
 }
 
-export const makeEntry = (e: FieldEntry) => (
-  <SingleEntry key={e.label}>
+export const makeEntry = (e: FieldEntry, key: number) => (
+  <SingleEntry key={key}>
     <Label>{e.label}</Label>
     {["string", "number"].includes(typeof e.value) ? (
       <Typography>{e.value}</Typography>
@@ -61,7 +61,7 @@ export const makeExpansion = (e: ExpansionEntry, defaultExpanded?: boolean) => {
           <Typography variant="subtitle1">No data.</Typography>
         ) : (
           <div style={{ width: "100%" }}>
-            {e.entries.map(e => makeEntry(e))}
+            {e.entries.map((e, index) => makeEntry(e, index))}
           </div>
         )}
       </ExpansionPanelDetails>

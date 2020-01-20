@@ -46,6 +46,25 @@ export interface IBnibTransaction {
 }
 export type PBnibTransaction = Partial<IBnibTransaction>;
 
+export interface ILegitCheck {
+  bnib_transaction_id: number;
+  created_by: string;
+  final_result: string;
+  id: number;
+  image_url: string;
+  image_urls: string[];
+  legit_check_detail: ILegitCheckDetail[];
+  notes: string;
+  result_published_by: string;
+}
+export type PLegitCheck = Partial<ILegitCheck>;
+
+export interface ILegitCheckDetail {
+  id: number;
+}
+export type PLegitCheckDetail = Partial<ILegitCheckDetail>;
+
+
 interface IBnibTransactionFilter {
   code: string;
   status: string;

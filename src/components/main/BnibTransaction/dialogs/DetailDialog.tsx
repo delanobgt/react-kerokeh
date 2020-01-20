@@ -1,7 +1,6 @@
 import _ from "lodash";
 import React from "react";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
-import { useSnackbar } from "material-ui-snackbar-provider";
 import { Paper } from "@material-ui/core";
 import styled from "styled-components";
 
@@ -10,7 +9,9 @@ import BasicDialog from "src/components/generic/BasicDialog";
 import {
   IBnibTransaction,
   getBnibTransactionByCode,
-  BnibTransactionStatus
+  BnibTransactionStatus,
+  getLegitCheckByBnibTransactionId,
+  ILegitCheck
 } from "src/store/bnib-transaction";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import moment from "moment";
@@ -25,6 +26,8 @@ import WaitingTrackingCode from "../statuses/WaitingTrackingCode";
 import WaitingDefect from "../statuses/WaitingDefect";
 import LegitCheck from "../statuses/LegitCheck";
 import Send from "../statuses/Send";
+import UpdateLegitCheckImagesDialog from "./UpdateLegitCheckImagesDialog";
+import { TLegitCheckInitialValues } from "../types";
 
 interface IComponentProps {
   transactionCode: string;
@@ -39,10 +42,10 @@ const MyPaper = styled(Paper)`
 function DetailDialog(props: IComponentProps) {
   const { transactionCode, restartIntervalRun, dismiss } = props;
 
-  const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string>("");
   const [transaction, setTransaction] = React.useState<IBnibTransaction>(null);
+  const [legitCheck, setLegitCheck] = React.useState<ILegitCheck>(null);
 
   // initial fetch
   const fetch = React.useCallback(async () => {
@@ -51,13 +54,17 @@ function DetailDialog(props: IComponentProps) {
     const [errTransaction, transaction] = await goPromise<IBnibTransaction>(
       getBnibTransactionByCode(transactionCode)
     );
+    const [errLegitCheck, legitCheck] = await goPromise<ILegitCheck>(
+      getLegitCheckByBnibTransactionId(transaction.id || 0)
+    );
     setLoading(false);
 
-    if (errTransaction) {
-      console.log(errTransaction);
+    if (errTransaction || errLegitCheck) {
+      console.log(errTransaction, errLegitCheck);
       setError("error");
     } else {
       setTransaction(transaction);
+      setLegitCheck(legitCheck);
     }
   }, [transactionCode]);
 
@@ -66,14 +73,18 @@ function DetailDialog(props: IComponentProps) {
     const [errTransaction, transaction] = await goPromise<IBnibTransaction>(
       getBnibTransactionByCode(transactionCode)
     );
+    const [errLegitCheck, legitCheck] = await goPromise<ILegitCheck>(
+      getLegitCheckByBnibTransactionId(transaction.id || 0)
+    );
 
-    if (errTransaction) {
-      console.log(errTransaction);
-      snackbar.showMessage("Failed to refresh transaction.");
+    if (errTransaction || errLegitCheck) {
+      console.log(errTransaction, errLegitCheck);
+      setError("error");
     } else {
       setTransaction(transaction);
+      setLegitCheck(legitCheck);
     }
-  }, [transactionCode, snackbar]);
+  }, [transactionCode]);
   React.useEffect(() => {
     fetch();
   }, [fetch]);
@@ -81,6 +92,23 @@ function DetailDialog(props: IComponentProps) {
   const handleClose = React.useCallback(() => {
     dismiss();
   }, [dismiss]);
+
+  const [updateDialogId, setUpdateDialogId] = React.useState<number>(null);
+
+  // set updateInitialValues
+  const [updateInitialValues, setUpdateInitialValues] = React.useState<
+    TLegitCheckInitialValues
+  >({});
+  React.useEffect(() => {
+    if (!updateDialogId || !legitCheck) return setUpdateInitialValues({});
+    const initial_images = legitCheck.image_urls.map(url => ({
+      image_path: url,
+      deleted: false
+    }));
+    setUpdateInitialValues({
+      initial_images
+    });
+  }, [updateDialogId, setUpdateInitialValues, legitCheck]);
 
   const generalEntries = React.useMemo(() => {
     if (!transaction) return [];
@@ -300,7 +328,7 @@ function DetailDialog(props: IComponentProps) {
 
     if (transaction.status === BnibTransactionStatus.BuyerExpired) {
       components.push(
-        <Div>
+        <Div key={counter}>
           <MyNumber variant="subtitle2">{counter++}</MyNumber>
           <ContentDiv>Payment Expired</ContentDiv>
         </Div>
@@ -311,6 +339,7 @@ function DetailDialog(props: IComponentProps) {
     ) {
       components.push(
         <WaitingPayment
+          key={counter}
           orderNo={counter++}
           accessLogWaitingItem={accessLog["waiting-buyer-payment"]}
           accessLogPaidItem={accessLog["buyer-paid"]}
@@ -321,7 +350,7 @@ function DetailDialog(props: IComponentProps) {
 
     if (transaction.status === BnibTransactionStatus.SellerCancel) {
       components.push(
-        <Div>
+        <Div key={counter}>
           <MyNumber variant="subtitle2">{counter++}</MyNumber>
           <ContentDiv>
             Seller Cancelled (
@@ -336,7 +365,7 @@ function DetailDialog(props: IComponentProps) {
       return components;
     } else if (transaction.status === BnibTransactionStatus.SellerExpired) {
       components.push(
-        <Div>
+        <Div key={counter}>
           <MyNumber variant="subtitle2">{counter++}</MyNumber>
           <ContentDiv>Seller Expired</ContentDiv>
         </Div>
@@ -350,6 +379,7 @@ function DetailDialog(props: IComponentProps) {
     ) {
       components.push(
         <WaitingTrackingCode
+          key={counter}
           orderNo={counter++}
           accessLogWaitingItem={accessLog["waiting-seller-input-track"]}
           accessLogInputItem={accessLog["seller-input-track"]}
@@ -359,11 +389,32 @@ function DetailDialog(props: IComponentProps) {
     }
 
     if (
+      Boolean(accessLog["disputed"]) ||
+      transaction.status === BnibTransactionStatus.DisputedByDepatu
+    ) {
+      components.push(
+        <Div key={counter}>
+          <MyNumber variant="subtitle2">{counter++}</MyNumber>
+          <ContentDiv>
+            Disputed (by{" "}
+            <EmpSpan>{accessLog["disputed"].admin_username}</EmpSpan> at{" "}
+            <EmpSpan>
+              {moment(accessLog["disputed"].time).format(
+                "D MMMM YYYY - HH:mm:ss"
+              )}
+            </EmpSpan>
+            )
+          </ContentDiv>
+        </Div>
+      );
+      return components;
+    } else if (
       Boolean(accessLog["arrived"]) ||
       transaction.status === BnibTransactionStatus.ShippingToDepatu
     ) {
       components.push(
         <Arrived
+          key={counter}
           orderNo={counter++}
           accessLogItem={accessLog["arrived"]}
           transaction={transaction}
@@ -382,6 +433,7 @@ function DetailDialog(props: IComponentProps) {
     ) {
       components.push(
         <AcceptedRejected
+          key={counter}
           orderNo={counter++}
           accessLogAcceptedItem={accessLog["accepted"]}
           accessLogRejectedItem={accessLog["rejected"]}
@@ -401,6 +453,7 @@ function DetailDialog(props: IComponentProps) {
     ) {
       components.push(
         <Defect
+          key={counter}
           orderNo={counter++}
           accessLogDefectItem={accessLog["defect-true"]}
           accessLogNotDefectItem={accessLog["defect-false"]}
@@ -420,6 +473,7 @@ function DetailDialog(props: IComponentProps) {
     ) {
       components.push(
         <WaitingDefect
+          key={counter}
           orderNo={counter++}
           accessLogAcceptItem={accessLog["defect-true-accept"]}
           accessLogRejectItem={accessLog["defect-true-reject"]}
@@ -436,7 +490,9 @@ function DetailDialog(props: IComponentProps) {
     ) {
       components.push(
         <LegitCheck
+          key={counter}
           orderNo={counter++}
+          legitCheck={legitCheck}
           accessLogFakeItem={accessLog["legit-check-fake"]}
           accessLogIndefineableItem={accessLog["legit-check-indefinable"]}
           accessLogAuthenticItem={accessLog["legit-check-authentic"]}
@@ -458,26 +514,7 @@ function DetailDialog(props: IComponentProps) {
     ) {
       components.push(
         <Refund
-          orderNo={counter++}
-          accessLogItem={accessLog["refunded"]}
-          transaction={transaction}
-          onAfterSubmit={() => {
-            silentFetch();
-            restartIntervalRun();
-          }}
-        />
-      );
-    }
-
-    if (
-      Boolean(accessLog["refunded"]) ||
-      transaction.status === BnibTransactionStatus.RefundedByDepatu ||
-      transaction.status === BnibTransactionStatus.DefectReject ||
-      transaction.status === BnibTransactionStatus.LegitCheckFake ||
-      transaction.status === BnibTransactionStatus.LegitCheckIndefinable
-    ) {
-      components.push(
-        <Refund
+          key={counter}
           orderNo={counter++}
           accessLogItem={accessLog["refunded"]}
           transaction={transaction}
@@ -495,6 +532,7 @@ function DetailDialog(props: IComponentProps) {
     ) {
       components.push(
         <Send
+          key={counter}
           orderNo={counter++}
           accessLogItem={accessLog["depatu-send"]}
           transaction={transaction}
@@ -507,69 +545,96 @@ function DetailDialog(props: IComponentProps) {
     }
 
     return components;
-  }, [accessLog, restartIntervalRun, silentFetch, transaction]);
+  }, [accessLog, restartIntervalRun, silentFetch, transaction, legitCheck]);
 
   return (
-    <div>
-      <BasicDialog
-        open={Boolean(transactionCode)}
-        dismiss={dismiss}
-        maxWidth="xl"
-        fullWidth
-        bgClose
-      >
-        <title>BNIB Transaction Detail</title>
-        <section>
-          {loading ? (
-            <div style={{ textAlign: "center" }}>
-              <CircularProgress size={24} /> Loading...
-            </div>
-          ) : error ? (
-            <Typography variant="subtitle1" color="secondary">
-              An error occured, please{" "}
-              <span onClick={fetch} style={{ color: "lightblue" }}>
-                retry
-              </span>
-              .
-            </Typography>
-          ) : transaction ? (
-            <>
-              <div style={{ width: "100%" }}>
-                {makeExpansion(
-                  { title: "Transaction Info", entries: generalEntries },
-                  true
-                )}
-                {makeExpansion({
-                  title: "Product Detail",
-                  entries: productDetailEntries
-                })}
-                {makeExpansion({
-                  title: "Shipping Address",
-                  entries: shippingAddressEntries
-                })}
-                <br />
-                <MyPaper>
-                  <Typography variant="h6">Timeline</Typography>
-
-                  <Typography variant="subtitle1">
-                    Current Status:{" "}
-                    <EmpSpan>
-                      {_.startCase(BnibTransactionStatus[transaction.status])}
-                    </EmpSpan>
-                  </Typography>
-                  <br />
-
-                  {timelineComponents}
-                </MyPaper>
+    <>
+      <div>
+        <BasicDialog
+          open={Boolean(transactionCode)}
+          dismiss={dismiss}
+          maxWidth="xl"
+          fullWidth
+          bgClose
+        >
+          <title>BNIB Transaction Detail</title>
+          <section>
+            {loading ? (
+              <div style={{ textAlign: "center" }}>
+                <CircularProgress size={24} /> Loading...
               </div>
-            </>
-          ) : null}
-          <div style={{ textAlign: "right" }}>
-            <Button onClick={handleClose}>Close</Button>
-          </div>
-        </section>
-      </BasicDialog>
-    </div>
+            ) : error ? (
+              <Typography variant="subtitle1" color="secondary">
+                An error occured, please{" "}
+                <span onClick={fetch} style={{ color: "lightblue" }}>
+                  retry
+                </span>
+                .
+              </Typography>
+            ) : transaction ? (
+              <>
+                <div style={{ width: "100%" }}>
+                  {makeExpansion(
+                    { title: "Transaction Info", entries: generalEntries },
+                    true
+                  )}
+                  {makeExpansion({
+                    title: "Product Detail",
+                    entries: productDetailEntries
+                  })}
+                  {makeExpansion({
+                    title: "Shipping Address",
+                    entries: shippingAddressEntries
+                  })}
+                  <br />
+                  <MyPaper>
+                    <Typography variant="h6">Timeline</Typography>
+
+                    <Typography variant="subtitle1">
+                      Current Status:{" "}
+                      <EmpSpan>
+                        {_.startCase(BnibTransactionStatus[transaction.status])}
+                      </EmpSpan>
+                    </Typography>
+                    <br />
+
+                    {timelineComponents}
+                  </MyPaper>
+
+                  <br />
+                  {Boolean(legitCheck) && (
+                    <MyPaper>
+                      <Typography variant="h6">Legit Check</Typography>
+                      <Button
+                        color="primary"
+                        variant="outlined"
+                        onClick={() => setUpdateDialogId(legitCheck.id)}
+                      >
+                        Add/Remove Image
+                      </Button>
+                    </MyPaper>
+                  )}
+                </div>
+              </>
+            ) : null}
+            <div style={{ textAlign: "right" }}>
+              <Button onClick={handleClose}>Close</Button>
+            </div>
+          </section>
+        </BasicDialog>
+      </div>
+      {Boolean(updateDialogId) && (
+        <UpdateLegitCheckImagesDialog
+          legitCheckId={updateDialogId}
+          onAfterSubmit={() => {
+            silentFetch();
+            restartIntervalRun();
+          }}
+          dismiss={() => setUpdateDialogId(null)}
+          initialValues={updateInitialValues}
+        />
+      )}
+    </>
   );
 }
 

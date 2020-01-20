@@ -76,8 +76,7 @@ export const updateProduct = async (
     .join(",");
   if (Boolean(deleted_detail_images))
     formData.append("deleted_detail_images", deleted_detail_images);
-  console.log(6);
-
+  
   const response = await celestineApi().patch(
     `${PRIMARY_ROUTE}/${oldProductBrand.id}`,
     formData
