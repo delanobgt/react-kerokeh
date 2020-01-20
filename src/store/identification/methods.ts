@@ -1,6 +1,6 @@
 import celestineApi from "src/apis/celestine";
 import { IIdentification } from "./types";
-import { PRIMARY_ROUTE } from "../adminUser/constants";
+import { PRIMARY_ROUTE } from "./constants";
 
 export const getIdentificationByUserId = async (
   userId: number
