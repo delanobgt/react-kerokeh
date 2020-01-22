@@ -14,7 +14,6 @@ const RootDiv = styled("div")`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-left: 1em;
 `;
 
 export default (props: IComponentProps) => {
@@ -25,7 +24,7 @@ export default (props: IComponentProps) => {
         variant="contained"
         onClick={() => props.setCreateDialogOpen(true)}
       >
-        Add Product Brand
+        Add
       </Button>
 
       {/* display auto-updating status */}

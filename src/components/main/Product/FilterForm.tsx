@@ -25,6 +25,7 @@ function FilterForm(props: IComponentProps) {
           label="Id"
           value={filter.id || ""}
           onChange={e => updateFilter({ id: e.target.value })}
+          fullWidth
         />
       </Div>
 
@@ -33,6 +34,7 @@ function FilterForm(props: IComponentProps) {
           label="Name"
           value={filter.name || ""}
           onChange={e => updateFilter({ name: e.target.value })}
+          fullWidth
         />
       </Div>
 
@@ -41,6 +43,7 @@ function FilterForm(props: IComponentProps) {
           label="Slug"
           value={filter.slug || ""}
           onChange={e => updateFilter({ slug: e.target.value })}
+          fullWidth
         />
       </Div>
 
@@ -49,6 +52,7 @@ function FilterForm(props: IComponentProps) {
           label="Code"
           value={filter.code || ""}
           onChange={e => updateFilter({ code: e.target.value })}
+          fullWidth
         />
       </Div>
 
@@ -57,12 +61,13 @@ function FilterForm(props: IComponentProps) {
           label="Color"
           value={filter.color || ""}
           onChange={e => updateFilter({ color: e.target.value })}
+          fullWidth
         />
       </Div>
 
       <Div>
         <BasicSelect
-          style={{ width: "8em" }}
+          style={{ width: "100%" }}
           label="Gender"
           value={filter.gender || ""}
           onChange={(value: string) => updateFilter({ gender: value })}
@@ -79,7 +84,7 @@ function FilterForm(props: IComponentProps) {
 
       <Div>
         <BasicSelect
-          style={{ width: "8em" }}
+          style={{ width: "100%" }}
           label="Is Active"
           value={filter.is_active || ""}
           onChange={(value: string) => updateFilter({ is_active: value })}

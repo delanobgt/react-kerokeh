@@ -24,6 +24,7 @@ function FilterForm(props: IComponentProps) {
           label="Id"
           value={filter.id || ""}
           onChange={e => updateFilter({ id: e.target.value })}
+          fullWidth
         />
       </Div>
 
@@ -32,6 +33,7 @@ function FilterForm(props: IComponentProps) {
           label="Name"
           value={filter.name || ""}
           onChange={e => updateFilter({ name: e.target.value })}
+          fullWidth
         />
       </Div>
 
@@ -40,6 +42,7 @@ function FilterForm(props: IComponentProps) {
           label="Slug"
           value={filter.slug || ""}
           onChange={e => updateFilter({ slug: e.target.value })}
+          fullWidth
         />
       </Div>
     </div>

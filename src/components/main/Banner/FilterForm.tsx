@@ -27,12 +27,13 @@ function FilterForm(props: IComponentProps) {
           label="Id"
           value={filter.id || ""}
           onChange={e => updateFilter({ id: e.target.value })}
+          fullWidth
         />
       </Div>
 
       <Div>
         <BasicSelect
-          style={{ width: "8em" }}
+          style={{ width: "100%" }}
           label="Type"
           value={filter.type || ""}
           onChange={(value: string) => updateFilter({ type: value })}
@@ -46,7 +47,7 @@ function FilterForm(props: IComponentProps) {
 
       <Div>
         <BasicSelect
-          style={{ width: "8em" }}
+          style={{ width: "100%" }}
           label="Is Active"
           value={filter.is_active || ""}
           onChange={(value: string) => updateFilter({ is_active: value })}
@@ -59,22 +60,25 @@ function FilterForm(props: IComponentProps) {
 
       <Div>
         <DatePicker
-          label="Join At (Start)"
+          label="Expired At (Start)"
           onChange={date =>
             updateFilter({
               expired_at_start: moment(date).format("YYYY-MM-DD")
             })
           }
+          fullWidth
           value={moment(filter.expired_at_start, "YYYY-MM-DD").toDate()}
         />
-        &nbsp;&nbsp;
+      </Div>
+      <Div>
         <DatePicker
-          label="Join At (End)"
+          label="Expired At (End)"
           onChange={date =>
             updateFilter({
               expired_at_end: moment(date).format("YYYY-MM-DD")
             })
           }
+          fullWidth
           value={moment(filter.expired_at_end, "YYYY-MM-DD").toDate()}
         />
       </Div>

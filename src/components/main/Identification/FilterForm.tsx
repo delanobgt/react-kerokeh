@@ -25,12 +25,13 @@ function FilterForm(props: IComponentProps) {
           label="Id"
           value={filter.id || ""}
           onChange={e => updateFilter({ id: e.target.value })}
+          fullWidth
         />
       </Div>
 
       <Div>
         <BasicSelect
-          style={{ width: "8em" }}
+          style={{ width: "100%" }}
           label="Type"
           value={filter.type || ""}
           onChange={(value: string) => updateFilter({ type: value })}
@@ -43,7 +44,7 @@ function FilterForm(props: IComponentProps) {
 
       <Div>
         <BasicSelect
-          style={{ width: "8em" }}
+          style={{ width: "100%" }}
           label="Verified"
           value={filter.verified || ""}
           onChange={(value: string) => updateFilter({ verified: value })}
@@ -56,7 +57,7 @@ function FilterForm(props: IComponentProps) {
 
       <Div>
         <BasicSelect
-          style={{ width: "12em" }}
+          style={{ width: "100%" }}
           label="Verification Attempted"
           value={filter.verification_attempted || ""}
           onChange={(value: string) =>

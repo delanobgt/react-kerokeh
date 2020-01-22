@@ -27,6 +27,7 @@ function FilterForm(props: IComponentProps) {
           label="Id"
           value={filter.id || ""}
           onChange={e => updateFilter({ id: e.target.value })}
+          fullWidth
         />
       </Div>
 
@@ -35,6 +36,7 @@ function FilterForm(props: IComponentProps) {
           label="Username"
           value={filter.username || ""}
           onChange={e => updateFilter({ username: e.target.value })}
+          fullWidth
         />
       </Div>
 
@@ -43,6 +45,7 @@ function FilterForm(props: IComponentProps) {
           label="Full Name"
           value={filter.full_name || ""}
           onChange={e => updateFilter({ full_name: e.target.value })}
+          fullWidth
         />
       </Div>
 
@@ -51,12 +54,13 @@ function FilterForm(props: IComponentProps) {
           label="Email"
           value={filter.email || ""}
           onChange={e => updateFilter({ email: e.target.value })}
+          fullWidth
         />
       </Div>
 
       <Div>
         <BasicSelect
-          style={{ width: "8em" }}
+          style={{ width: "100%" }}
           label="Store Closed"
           value={filter.store_closed || ""}
           onChange={(value: string) => updateFilter({ store_closed: value })}
@@ -69,7 +73,7 @@ function FilterForm(props: IComponentProps) {
 
       <Div>
         <BasicSelect
-          style={{ width: "8em" }}
+          style={{ width: "100%" }}
           label="Banned"
           value={filter.banned || ""}
           onChange={(value: string) => updateFilter({ banned: value })}
@@ -82,7 +86,7 @@ function FilterForm(props: IComponentProps) {
 
       <Div>
         <BasicSelect
-          style={{ width: "8em" }}
+          style={{ width: "100%" }}
           label="Froze"
           value={filter.froze || ""}
           onChange={(value: string) => updateFilter({ froze: value })}
@@ -95,7 +99,7 @@ function FilterForm(props: IComponentProps) {
 
       <Div>
         <BasicSelect
-          style={{ width: "8em" }}
+          style={{ width: "100%" }}
           label="Is Seller"
           value={filter.is_seller || ""}
           onChange={(value: string) => updateFilter({ is_seller: value })}
@@ -115,8 +119,10 @@ function FilterForm(props: IComponentProps) {
             })
           }
           value={moment(filter.created_at_start, "YYYY-MM-DD").toDate()}
+          fullWidth
         />
-        &nbsp;&nbsp;
+      </Div>
+      <Div>
         <DatePicker
           label="Join At (End)"
           onChange={date =>
@@ -125,6 +131,7 @@ function FilterForm(props: IComponentProps) {
             })
           }
           value={moment(filter.created_at_end, "YYYY-MM-DD").toDate()}
+          fullWidth
         />
       </Div>
     </div>

@@ -50,7 +50,7 @@ function FilterForm(props: IComponentProps) {
           label="Code"
           value={filter.code || ""}
           onChange={e => updateFilter({ code: e.target.value })}
-          style={{ width: "15rem" }}
+          style={{ width: "100%" }}
         />
       </Div>
 
@@ -61,7 +61,7 @@ function FilterForm(props: IComponentProps) {
           onChange={e =>
             updateFilter({ office_shipping_tracking_code: e.target.value })
           }
-          style={{ width: "15rem" }}
+          style={{ width: "100%" }}
         />
       </Div>
 
@@ -72,7 +72,7 @@ function FilterForm(props: IComponentProps) {
           onChange={e =>
             updateFilter({ buyer_shipping_tracking_code: e.target.value })
           }
-          style={{ width: "15rem" }}
+          style={{ width: "100%" }}
         />
       </Div>
 
@@ -83,7 +83,7 @@ function FilterForm(props: IComponentProps) {
           onChange={e =>
             updateFilter({ refund_shipping_tracking_code: e.target.value })
           }
-          style={{ width: "15rem" }}
+          style={{ width: "100%" }}
         />
       </Div>
 
@@ -92,7 +92,7 @@ function FilterForm(props: IComponentProps) {
           label="Status"
           value={filter.status || ""}
           onChange={(value: string) => updateFilter({ status: value })}
-          style={{ width: "15rem" }}
+          style={{ width: "100%" }}
         >
           <MenuItem value="">No Filter</MenuItem>
           {statuses.map((status, index) => (

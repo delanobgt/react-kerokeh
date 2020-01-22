@@ -8,7 +8,6 @@ import {
   Chip
 } from "@material-ui/core";
 import { VerticalAlignTop as TitleIcon } from "@material-ui/icons";
-import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
 
@@ -38,18 +37,8 @@ import {
 } from "src/components/generic/TableGenerics";
 import { statusLabelDict } from "./constants";
 
-const useStyles = makeStyles(theme => ({
-  filterAndSortForm: {
-    marginBottom: "1rem",
-    display: "flex",
-    paddingLeft: theme.spacing(2)
-    // justifyContent: "space-between"
-  }
-}));
-
 function WithdrawRequest() {
   const refreshDelay = 5000;
-  const classes = useStyles({});
   const {
     filter,
     updateFilter,
@@ -222,17 +211,20 @@ function WithdrawRequest() {
             ) : withdrawRequests && _.isArray(withdrawRequests) ? (
               <>
                 {/* Filter Form */}
-                <div className={classes.filterAndSortForm}>
-                  <FilterForm filter={filter} updateFilter={updateFilter} />
-                  <div style={{ marginLeft: "2rem" }}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <FilterForm filter={filter} updateFilter={updateFilter} />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={4}>
                     <SortForm<WithdrawRequestSortField>
                       sorts={sorts}
                       sortFields={withdrawRequestSortFields}
                       updateSorts={updateSorts}
                     />
-                  </div>
-                </div>
+                  </Grid>
+                </Grid>
                 {/* top action */}
+                <br />
                 <TopAction
                   intervalRun={intervalRun}
                   refreshDelay={refreshDelay}

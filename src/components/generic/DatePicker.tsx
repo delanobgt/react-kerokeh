@@ -13,6 +13,7 @@ interface IComponentProps {
   onChange: (date: Date) => any;
   disabled?: boolean;
   inputVariant?: "standard" | "outlined" | "filled";
+  fullWidth?: boolean;
 }
 
 export default function DatePicker({
@@ -20,12 +21,12 @@ export default function DatePicker({
   value,
   onChange,
   disabled = false,
-  inputVariant = "standard"
+  inputVariant = "standard",
+  fullWidth
 }: IComponentProps) {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <KeyboardDatePicker
-        margin="normal"
         id={_.snakeCase(label)}
         label={label}
         format="dd/MM/yyyy"
@@ -33,9 +34,7 @@ export default function DatePicker({
         inputVariant={inputVariant}
         disabled={disabled}
         onChange={onChange}
-        KeyboardButtonProps={{
-          "aria-label": "change date"
-        }}
+        fullWidth={Boolean(fullWidth)}
       />
     </MuiPickersUtilsProvider>
   );

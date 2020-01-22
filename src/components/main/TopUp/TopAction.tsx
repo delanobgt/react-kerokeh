@@ -12,7 +12,6 @@ const RootDiv = styled("div")`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-left: 1em;
 `;
 
 export default (props: IComponentProps) => {

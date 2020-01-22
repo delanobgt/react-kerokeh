@@ -2,7 +2,6 @@ import _ from "lodash";
 import React from "react";
 import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
 import { Image as TitleIcon } from "@material-ui/icons";
-import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
 
@@ -37,18 +36,8 @@ import {
   TableTitle
 } from "src/components/generic/TableGenerics";
 
-const useStyles = makeStyles(theme => ({
-  filterAndSortForm: {
-    marginBottom: "1rem",
-    display: "flex",
-    paddingLeft: theme.spacing(2)
-    // justifyContent: "space-between"
-  }
-}));
-
 function Banner() {
   const refreshDelay = 5000;
-  const classes = useStyles({});
   const {
     filter,
     updateFilter,
@@ -59,7 +48,9 @@ function Banner() {
   } = useTableUrlState<PBannerFilter, PBannerPagination, BannerSortField>(
     {
       expired_at_start: moment.utc(0).format("YYYY-MM-DD"),
-      expired_at_end: moment().format("YYYY-MM-DD")
+      expired_at_end: moment()
+        .add(10, "years")
+        .format("YYYY-MM-DD")
     },
     { limit: 5, offset: 0 },
     []
@@ -165,6 +156,10 @@ function Banner() {
       {
         Header: "Title",
         accessor: row => row.title
+      },
+      {
+        Header: "Action Path",
+        accessor: row => row.action_path
       },
       {
         Header: "Banner Action",
@@ -287,16 +282,19 @@ function Banner() {
             ) : banners && _.isArray(banners) ? (
               <>
                 {/* Filter Form */}
-                <div className={classes.filterAndSortForm}>
-                  <FilterForm filter={filter} updateFilter={updateFilter} />
-                  <div style={{ marginLeft: "2rem" }}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <FilterForm filter={filter} updateFilter={updateFilter} />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={4}>
                     <SortForm<BannerSortField>
                       sorts={sorts}
                       sortFields={bannerSortFields}
                       updateSorts={updateSorts}
                     />
-                  </div>
-                </div>
+                  </Grid>
+                </Grid>
+                <br />
                 <TopAction
                   intervalRun={intervalRun}
                   refreshDelay={refreshDelay}

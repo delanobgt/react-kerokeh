@@ -1,13 +1,11 @@
 import _ from "lodash";
 import React from "react";
+import { Typography, MenuItem, IconButton } from "@material-ui/core";
 import {
-  Typography,
-  MenuItem,
-  FormControlLabel,
-  Switch,
-  IconButton
-} from "@material-ui/core";
-import { Close as CloseIcon } from "@material-ui/icons";
+  Close as CloseIcon,
+  ArrowUpward as ArrowUpwardIcon,
+  ArrowDownward as ArrowDownwardIcon
+} from "@material-ui/icons";
 import styled from "styled-components";
 import BasicSelect from "src/components/generic/BasicSelect";
 import { ISort } from "src/util/types";
@@ -20,6 +18,8 @@ interface IComponentProps<T> {
 
 const Div = styled.div`
   margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
 `;
 
 function SortForm<T>({ sorts, sortFields, updateSorts }: IComponentProps<T>) {
@@ -88,7 +88,7 @@ function SortForm<T>({ sorts, sortFields, updateSorts }: IComponentProps<T>) {
             {index === 0 ? "Firstly, sort by " : "if tie, then sort by "}
           </Typography>
           <BasicSelect
-            style={{ width: "10rem" }}
+            style={{ flexGrow: 1 }}
             label="Field"
             value={(sort.field as unknown) as string}
             onChange={(value: string) => {
@@ -108,17 +108,9 @@ function SortForm<T>({ sorts, sortFields, updateSorts }: IComponentProps<T>) {
               );
             })}
           </BasicSelect>
-          <FormControlLabel
-            style={{ marginLeft: "0.5rem" }}
-            control={
-              <Switch
-                checked={sort.dir !== "asc"}
-                onChange={() => handleToggleSort(index)}
-                value="Dir"
-              />
-            }
-            label={_.startCase(sort.dir)}
-          />
+          <IconButton onClick={() => handleToggleSort(index)}>
+            {sort.dir === "asc" ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
+          </IconButton>
           <IconButton edge="start" onClick={() => handleDelete(index)}>
             <CloseIcon />
           </IconButton>
@@ -127,7 +119,7 @@ function SortForm<T>({ sorts, sortFields, updateSorts }: IComponentProps<T>) {
 
       <Div>
         <BasicSelect
-          style={{ width: "10rem" }}
+          style={{ width: "100%" }}
           label="Add Sort Criteria"
           value=""
           onChange={(value: string) => {

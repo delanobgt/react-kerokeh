@@ -2,7 +2,6 @@ import _ from "lodash";
 import React from "react";
 import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
 import { Style as TitleIcon } from "@material-ui/icons";
-import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
 
@@ -33,18 +32,8 @@ import {
   TableTitle
 } from "src/components/generic/TableGenerics";
 
-const useStyles = makeStyles(theme => ({
-  filterAndSortForm: {
-    marginBottom: "1rem",
-    display: "flex",
-    paddingLeft: theme.spacing(2)
-    // justifyContent: "space-between"
-  }
-}));
-
 function ProductBrand() {
   const refreshDelay = 5000;
-  const classes = useStyles({});
   const {
     filter,
     pagination,
@@ -269,17 +258,20 @@ function ProductBrand() {
             ) : productBrands && _.isArray(productBrands) ? (
               <>
                 {/* Filter Form */}
-                <div className={classes.filterAndSortForm}>
-                  <FilterForm filter={filter} updateFilter={updateFilter} />
-                  <div style={{ marginLeft: "2rem" }}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <FilterForm filter={filter} updateFilter={updateFilter} />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={4}>
                     <SortForm<ProductBrandSortField>
                       sorts={sorts}
                       sortFields={productBrandSortFields}
                       updateSorts={updateSorts}
                     />
-                  </div>
-                </div>
+                  </Grid>
+                </Grid>
                 {/* top action */}
+                <br />
                 <TopAction
                   intervalRun={intervalRun}
                   refreshDelay={refreshDelay}

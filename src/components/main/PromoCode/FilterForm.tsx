@@ -25,6 +25,7 @@ function FilterForm(props: IComponentProps) {
           label="Id"
           value={filter.id || ""}
           onChange={e => updateFilter({ id: e.target.value })}
+          fullWidth
         />
       </Div>
 
@@ -33,12 +34,13 @@ function FilterForm(props: IComponentProps) {
           label="Code"
           value={filter.code || ""}
           onChange={e => updateFilter({ code: e.target.value })}
+          fullWidth
         />
       </Div>
 
       <Div>
         <BasicSelect
-          style={{ width: "8em" }}
+          style={{ width: "100%" }}
           label="Product Type"
           value={filter.product_type || ""}
           onChange={(value: string) => updateFilter({ product_type: value })}

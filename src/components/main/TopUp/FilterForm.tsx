@@ -33,12 +33,13 @@ function FilterForm(props: IComponentProps) {
           label="Code"
           value={filter.code || ""}
           onChange={e => updateFilter({ code: e.target.value })}
+          fullWidth
         />
       </Div>
 
       <Div>
         <BasicSelect
-          style={{ width: "10em" }}
+          style={{ width: "100%" }}
           label="Payment Status"
           value={filter.payment_status || ""}
           onChange={(value: string) => updateFilter({ payment_status: value })}
@@ -59,8 +60,10 @@ function FilterForm(props: IComponentProps) {
             })
           }
           value={moment(filter.created_at_start, "YYYY-MM-DD").toDate()}
+          fullWidth
         />
-        &nbsp;&nbsp;
+      </Div>
+      <Div>
         <DatePicker
           label="Join At (End)"
           onChange={date =>
@@ -69,6 +72,7 @@ function FilterForm(props: IComponentProps) {
             })
           }
           value={moment(filter.created_at_end, "YYYY-MM-DD").toDate()}
+          fullWidth
         />
       </Div>
     </div>
