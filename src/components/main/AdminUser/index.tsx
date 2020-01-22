@@ -14,7 +14,6 @@ import {
   VpnKey as TitleIcon
 } from "@material-ui/icons";
 
-import { makeDefaultFilterUI } from "src/components/generic/table-filters/DefaultFilter";
 import Table from "src/components/generic/ReactTable";
 import {
   getAdminUsers,
@@ -97,17 +96,17 @@ function AdminUsers() {
       {
         Header: "User ID",
         accessor: "id",
-        Filter: makeDefaultFilterUI({ placeholder: "Search by ID.." })
+        Filter: null
       },
       {
         Header: "Username",
         accessor: (row: IAdminUser) => row.username,
-        Filter: makeDefaultFilterUI({ placeholder: "Search by Username.." })
+        Filter: null
       },
       {
         Header: "Role",
         accessor: (row: IAdminUser) => row.role.name,
-        Filter: makeDefaultFilterUI({ placeholder: "Search by Role.." })
+        Filter: null
       },
       {
         Header: "Actions",

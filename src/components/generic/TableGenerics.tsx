@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Paper } from "@material-ui/core";
 
 export const TablePaper = styled(Paper)`
-  padding: 1.5em;
+  padding: 1.2rem;
 `;
 
 export const TableInfoWrapper = styled.div`

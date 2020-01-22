@@ -63,7 +63,7 @@ function SendDialog(
       } else {
         onAfterSubmit();
         dismiss();
-        snackbar.showMessage("Bnib Transaction Product refunded.");
+        snackbar.showMessage("Bnib Transaction Product sent.");
       }
     },
     [transactionCode, onAfterSubmit, dismiss, snackbar]
@@ -78,7 +78,7 @@ function SendDialog(
         fullWidth
         bgClose={!loading}
       >
-        <title>Refund BNIB Transaction Product</title>
+        <title>Send BNIB Transaction Product</title>
         <section>
           <form onSubmit={handleSubmit(submit)}>
             <div>
@@ -127,7 +127,7 @@ function SendDialog(
                 Cancel
               </Button>
               <Button type="submit" color="primary" disabled={loading}>
-                {loading ? <CircularProgress size={24} /> : "Reject"}
+                {loading ? <CircularProgress size={24} /> : "Send"}
               </Button>
             </div>
           </form>
@@ -138,6 +138,6 @@ function SendDialog(
 }
 
 export default reduxForm<IFormProps, IComponentProps>({
-  form: "refundBnibTransactionDialogForm",
+  form: "sendBnibTransactionDialogForm",
   enableReinitialize: true
 })(SendDialog);

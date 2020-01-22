@@ -25,7 +25,7 @@ export default (props: IComponentProps) => {
         variant="contained"
         onClick={() => props.setCreateDialogOpen(true)}
       >
-        Add Admin User
+        Add
       </Button>
 
       <IntervalRunStatus

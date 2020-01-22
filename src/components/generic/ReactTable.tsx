@@ -9,8 +9,13 @@ import {
   TableRow,
   TablePagination,
   TableSortLabel,
-  Typography
+  Typography,
+  Hidden,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails
 } from "@material-ui/core";
+import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 
 import { makeDefaultFilterUI } from "./table-filters/DefaultFilter";
 
@@ -39,6 +44,49 @@ function filterGreaterThan(
 }
 
 filterGreaterThan.autoRemove = (val: any) => typeof val !== "number";
+
+const makeHeaderTableCell = (column: any) => {
+  return (
+    <TableCell style={{ maxWidth: "1px" }}>
+      {/* Add a sort direction indicator */}
+      <TableSortLabel
+        active={column.isSorted}
+        direction={column.isSortedDesc ? "desc" : "asc"}
+        {...column.getHeaderProps(column.getSortByToggleProps())}
+        style={{ width: "100%" }}
+      >
+        <div
+          style={{
+            width: "100%",
+            wordWrap: "break-word",
+            overflowWrap: "break-word",
+            whiteSpace: "normal"
+          }}
+        >
+          {column.render("Header")}
+        </div>
+      </TableSortLabel>
+      {/* Render the columns filter UI */}
+      {column.canFilter && <div>{column.render("Filter")}</div>}
+    </TableCell>
+  );
+};
+
+const makeBodyTableCell = (cell: any) => {
+  return (
+    <TableCell
+      {...cell.getCellProps()}
+      style={{
+        wordWrap: "break-word",
+        overflowWrap: "break-word",
+        whiteSpace: "normal",
+        maxWidth: "1px"
+      }}
+    >
+      {cell.render("Cell")}
+    </TableCell>
+  );
+};
 
 // Our table component
 function ReactTable({ columns, data }: any) {
@@ -108,20 +156,14 @@ function ReactTable({ columns, data }: any) {
         <TableHead>
           {headerGroups.map((headerGroup: any) => (
             <TableRow {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column: any) => (
-                <TableCell>
-                  {/* Add a sort direction indicator */}
-                  <TableSortLabel
-                    active={column.isSorted}
-                    direction={column.isSortedDesc ? "desc" : "asc"}
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                  >
-                    {column.render("Header")}
-                  </TableSortLabel>
-                  {/* Render the columns filter UI */}
-                  <div>{column.canFilter ? column.render("Filter") : null}</div>
-                </TableCell>
-              ))}
+              <Hidden mdDown>
+                {headerGroup.headers.map((column: any) =>
+                  makeHeaderTableCell(column)
+                )}
+              </Hidden>
+              <Hidden lgUp>
+                <TableCell style={{ maxWidth: "1px" }}>&nbsp;</TableCell>
+              </Hidden>
             </TableRow>
           ))}
         </TableHead>
@@ -131,14 +173,74 @@ function ReactTable({ columns, data }: any) {
             .map((row: any, i: number): any => {
               prepareRow(row);
               return (
-                <TableRow {...row.getRowProps()}>
-                  {row.cells.map((cell: any) => {
-                    return (
-                      <TableCell {...cell.getCellProps()}>
-                        {cell.render("Cell")}
-                      </TableCell>
-                    );
-                  })}
+                <TableRow {...row.getRowProps()} key={i}>
+                  <Hidden smDown>
+                    {row.cells.map((cell: any) => makeBodyTableCell(cell))}
+                  </Hidden>
+                  <Hidden mdUp>
+                    <TableCell style={{ maxWidth: "1px" }}>
+                      <ExpansionPanel style={{ width: "100%" }}>
+                        <ExpansionPanelSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          style={{ flexGrow: 1 }}
+                        >
+                          <Typography
+                            style={{
+                              overflowWrap: "break-word",
+                              wordWrap: "break-word",
+                              whiteSpace: "normal",
+                              width: "55vw"
+                            }}
+                          >
+                            {row.cells[0].render("Cell")} -{" "}
+                            {row.cells[1].render("Cell")}
+                          </Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                          <div style={{ width: "100%" }}>
+                            {row.cells.map((cell: any, index: number) => {
+                              console.log(cell);
+                              return (
+                                <div
+                                  key={index}
+                                  style={{
+                                    display: "flex",
+                                    marginBottom: "1rem"
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      overflowWrap: "break-word",
+                                      wordWrap: "break-word",
+                                      whiteSpace: "normal",
+                                      width: "25%",
+                                      minWidth: "25%",
+                                      flexBasis: "25%",
+                                      marginRight: "0.8rem"
+                                    }}
+                                  >
+                                    {cell.column.Header}
+                                  </div>
+                                  <div
+                                    style={{
+                                      overflowWrap: "break-word",
+                                      wordWrap: "break-word",
+                                      whiteSpace: "normal",
+                                      width: "75%",
+                                      minWidth: "75%",
+                                      flexBasis: "75%"
+                                    }}
+                                  >
+                                    {cell.render("Cell")}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
+                    </TableCell>
+                  </Hidden>
                 </TableRow>
               );
             })}
@@ -150,14 +252,9 @@ function ReactTable({ columns, data }: any) {
         count={rows.length}
         rowsPerPage={rowsPerPage}
         page={page}
-        backIconButtonProps={{
-          "aria-label": "previous page"
-        }}
-        nextIconButtonProps={{
-          "aria-label": "next page"
-        }}
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
+        labelRowsPerPage="Rows"
       />
       <br />
       <Typography variant="subtitle1" align="center">
