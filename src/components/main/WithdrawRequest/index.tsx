@@ -36,6 +36,7 @@ import {
   TableTitle
 } from "src/components/generic/TableGenerics";
 import { statusLabelDict } from "./constants";
+import CollapseFilterAndSort from "src/components/generic/CollapseFilterAndSort";
 
 function WithdrawRequest() {
   const refreshDelay = 5000;
@@ -211,18 +212,20 @@ function WithdrawRequest() {
             ) : withdrawRequests && _.isArray(withdrawRequests) ? (
               <>
                 {/* Filter Form */}
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={6} lg={3}>
-                    <FilterForm filter={filter} updateFilter={updateFilter} />
+                <CollapseFilterAndSort>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6} lg={3}>
+                      <FilterForm filter={filter} updateFilter={updateFilter} />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={4}>
+                      <SortForm<WithdrawRequestSortField>
+                        sorts={sorts}
+                        sortFields={withdrawRequestSortFields}
+                        updateSorts={updateSorts}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} md={6} lg={4}>
-                    <SortForm<WithdrawRequestSortField>
-                      sorts={sorts}
-                      sortFields={withdrawRequestSortFields}
-                      updateSorts={updateSorts}
-                    />
-                  </Grid>
-                </Grid>
+                </CollapseFilterAndSort>
                 {/* top action */}
                 <br />
                 <TopAction

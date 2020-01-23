@@ -32,6 +32,7 @@ import {
   IBnibTransactionGetAction,
   getBnibTransactions
 } from "src/store/bnib-transaction";
+import CollapseFilterAndSort from "src/components/generic/CollapseFilterAndSort";
 
 function BnibTransaction() {
   const refreshDelay = 5000;
@@ -215,18 +216,20 @@ function BnibTransaction() {
             ) : bnibTransactions && _.isArray(bnibTransactions) ? (
               <>
                 {/* Filter Form */}
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={6} lg={3}>
-                    <FilterForm filter={filter} updateFilter={updateFilter} />
+                <CollapseFilterAndSort>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6} lg={3}>
+                      <FilterForm filter={filter} updateFilter={updateFilter} />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={4}>
+                      <SortForm<BnibTransactionSortField>
+                        sorts={sorts}
+                        sortFields={bnibTransactionSortFields}
+                        updateSorts={updateSorts}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} md={6} lg={4}>
-                    <SortForm<BnibTransactionSortField>
-                      sorts={sorts}
-                      sortFields={bnibTransactionSortFields}
-                      updateSorts={updateSorts}
-                    />
-                  </Grid>
-                </Grid>
+                </CollapseFilterAndSort>
                 <br />
                 <TopAction
                   intervalRun={intervalRun}

@@ -30,6 +30,7 @@ import {
   TableInfoWrapper,
   TableTitle
 } from "src/components/generic/TableGenerics";
+import CollapseFilterAndSort from "src/components/generic/CollapseFilterAndSort";
 
 function Users() {
   const refreshDelay = 5000;
@@ -198,18 +199,20 @@ function Users() {
             ) : users && _.isArray(users) ? (
               <>
                 {/* Filter Form */}
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={6} lg={3}>
-                    <FilterForm filter={filter} updateFilter={updateFilter} />
+                <CollapseFilterAndSort>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6} lg={3}>
+                      <FilterForm filter={filter} updateFilter={updateFilter} />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={4}>
+                      <SortForm<UserSortField>
+                        sorts={sorts}
+                        sortFields={userSortFields}
+                        updateSorts={updateSorts}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} md={6} lg={4}>
-                    <SortForm<UserSortField>
-                      sorts={sorts}
-                      sortFields={userSortFields}
-                      updateSorts={updateSorts}
-                    />
-                  </Grid>
-                </Grid>
+                </CollapseFilterAndSort>
                 {/* top action */}
                 <br />
                 <TopAction

@@ -39,6 +39,7 @@ import {
   TableInfoWrapper,
   TableTitle
 } from "src/components/generic/TableGenerics";
+import CollapseFilterAndSort from "src/components/generic/CollapseFilterAndSort";
 
 function SpecialCategoryList() {
   const refreshDelay = 5000;
@@ -308,18 +309,20 @@ function SpecialCategoryList() {
             ) : specialCategoryLists && _.isArray(specialCategoryLists) ? (
               <>
                 {/* Filter Form */}
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={6} lg={3}>
-                    <FilterForm filter={filter} updateFilter={updateFilter} />
+                <CollapseFilterAndSort>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} md={6} lg={3}>
+                      <FilterForm filter={filter} updateFilter={updateFilter} />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={4}>
+                      <SortForm<SpecialCategoryListSortField>
+                        sorts={sorts}
+                        sortFields={specialCategorySortFields}
+                        updateSorts={updateSorts}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} md={6} lg={4}>
-                    <SortForm<SpecialCategoryListSortField>
-                      sorts={sorts}
-                      sortFields={specialCategorySortFields}
-                      updateSorts={updateSorts}
-                    />
-                  </Grid>
-                </Grid>
+                </CollapseFilterAndSort>
                 {/* top action */}
                 <br />
                 <TopAction
