@@ -34,9 +34,9 @@ function ApproveDialog(props: IComponentProps) {
     }
   }, [withdrawRequestId, dismiss, restartIntervalRun, fetch, snackbar]);
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   return (
     <div>

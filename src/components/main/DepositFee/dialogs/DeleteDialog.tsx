@@ -19,7 +19,7 @@ function DeleteDialog(props: IComponentProps) {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
 
-  const handleDelete = async () => {
+  const handleDelete = React.useCallback(async () => {
     setLoading(true);
     const [err] = await goPromise(deleteDepositFee(depositFeeId));
     setLoading(false);
@@ -30,11 +30,11 @@ function DeleteDialog(props: IComponentProps) {
       dismiss();
       snackbar.showMessage("Deposit Fee deleted.");
     }
-  };
+  }, [depositFeeId, dismiss, restartIntervalRun, snackbar]);
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   return (
     <div>

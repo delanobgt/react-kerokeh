@@ -65,9 +65,9 @@ function DetailDialog(props: IComponentProps) {
     fetch();
   }, [fetch]);
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   const withdrawRequestEntries = React.useMemo(() => {
     if (!withdrawRequest) return [];

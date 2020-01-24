@@ -64,9 +64,9 @@ function RejectDialog(
     [dismiss, restartIntervalRun, snackbar, withdrawRequestId, fetch]
   );
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   return (
     <div>

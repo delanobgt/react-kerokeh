@@ -81,7 +81,7 @@ function ProductBrand() {
       getProductBrands(pagination, filter, sorts)
     );
     const [errParent, resParent] = await goPromise<IProductBrandGetAction>(
-      getProductBrands({ offset: 0, limit: 100 }, { parent_id: "0" }, [
+      getProductBrands({ offset: 0, limit: 100 }, {}, [
         { field: "full_name", dir: "asc" }
       ])
     );

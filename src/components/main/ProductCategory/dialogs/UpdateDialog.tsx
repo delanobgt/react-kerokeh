@@ -77,6 +77,7 @@ function UpdateDialog(
                       component={renderTextField}
                       validate={[requiredValidator]}
                       fullWidth={false}
+                      outlined
                     />
                     {Boolean(!field.id) && (
                       <IconButton onClick={() => fields.remove(index)}>
@@ -150,9 +151,9 @@ function UpdateDialog(
     [productCategoryId, dismiss, restartIntervalRun, initialValues, snackbar]
   );
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   return (
     <div>

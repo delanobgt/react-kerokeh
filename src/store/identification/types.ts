@@ -11,6 +11,7 @@ export interface IIdentification {
   number: string;
   rejected_reason: string | null;
   type: string;
+  username: string;
   user_id: number;
   verification_attempted: boolean;
   verification_rejected: boolean;

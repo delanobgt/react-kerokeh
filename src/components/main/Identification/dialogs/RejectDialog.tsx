@@ -21,16 +21,16 @@ interface IComponentProps {
   dismiss: () => void;
 }
 
-function AcceptDialog(props: IComponentProps) {
+function RejectDialog(props: IComponentProps) {
   const { identificationId, fetch, restartIntervalRun, dismiss } = props;
   const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
   const [reason, setReason] = React.useState<string>("");
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   const submit = React.useCallback(async () => {
     setError("");
@@ -104,4 +104,4 @@ function AcceptDialog(props: IComponentProps) {
   );
 }
 
-export default AcceptDialog;
+export default RejectDialog;

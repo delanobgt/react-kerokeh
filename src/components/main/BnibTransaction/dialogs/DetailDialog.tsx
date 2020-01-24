@@ -13,7 +13,6 @@ import {
   getLegitCheckByBnibTransactionId,
   ILegitCheck
 } from "src/store/bnib-transaction";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import moment from "moment";
 import { makeExpansion } from "src/components/generic/detail-dialog";
 import Arrived from "../statuses/Arrived";
@@ -28,6 +27,8 @@ import LegitCheck from "../statuses/LegitCheck";
 import Send from "../statuses/Send";
 import UpdateLegitCheckImagesDialog from "./UpdateLegitCheckImagesDialog";
 import { TLegitCheckInitialValues } from "../types";
+import DetailImageDialog from "src/components/generic/dialog/DetailImageDialog";
+import { IUser, getUserById } from "src/store/user";
 
 interface IComponentProps {
   transactionCode: string;
@@ -46,6 +47,10 @@ function DetailDialog(props: IComponentProps) {
   const [error, setError] = React.useState<string>("");
   const [transaction, setTransaction] = React.useState<IBnibTransaction>(null);
   const [legitCheck, setLegitCheck] = React.useState<ILegitCheck>(null);
+  const [user, setUser] = React.useState<IUser>(null);
+  const [detailDialogImageUrl, setDetailDialogImageUrl] = React.useState<
+    string
+  >("");
 
   // initial fetch
   const fetch = React.useCallback(async () => {
@@ -57,14 +62,18 @@ function DetailDialog(props: IComponentProps) {
     const [errLegitCheck, legitCheck] = await goPromise<ILegitCheck>(
       getLegitCheckByBnibTransactionId(transaction.id || 0)
     );
+    const [errUser, user] = await goPromise<IUser>(
+      getUserById(transaction.buyer_id || 0)
+    );
     setLoading(false);
 
-    if (errTransaction || errLegitCheck) {
-      console.log(errTransaction, errLegitCheck);
+    if (errTransaction || errLegitCheck || errUser) {
+      console.log(errTransaction, errLegitCheck, errUser);
       setError("error");
     } else {
       setTransaction(transaction);
       setLegitCheck(legitCheck);
+      setUser(user);
     }
   }, [transactionCode]);
 
@@ -163,6 +172,32 @@ function DetailDialog(props: IComponentProps) {
       }
     ];
   }, [transaction]);
+
+  const userEntries = React.useMemo(() => {
+    if (!user) return [];
+    return [
+      { label: "Id", value: user.id || "-" },
+      { label: "Username", value: user.username || "-" },
+      { label: "Full Name", value: user.full_name || "-" },
+      { label: "Email", value: user.email || "-" },
+      { label: "Gender", value: user.gender || "-" },
+      {
+        label: "Birthday",
+        value: user.birthday ? moment(user.birthday).format("D MMMM YYYY") : "-"
+      },
+      { label: "Referral Code", value: user.referral_code || "-" },
+      { label: "Verified Email", value: user.verified_email || "-" },
+      { label: "Country Code", value: user.country_code || "-" },
+      { label: "Phone", value: user.phone || "-" },
+      { label: "Verified Phone", value: user.verified_phone || "-" },
+      {
+        label: "Joined at",
+        value: user.last_login_at
+          ? moment(user.created_at).format("D MMMM YYYY")
+          : "-"
+      }
+    ];
+  }, [user]);
 
   const shippingAddressEntries = React.useMemo(() => {
     if (!transaction) return [];
@@ -268,15 +303,16 @@ function DetailDialog(props: IComponentProps) {
         label: "Display Image",
         value: (
           <div style={{ width: "100%" }}>
-            <TransformWrapper style={{ width: "100%" }}>
-              <TransformComponent>
-                <img
-                  alt=""
-                  style={{ width: "100%" }}
-                  src={transaction.product_detail.display_image_url}
-                />
-              </TransformComponent>
-            </TransformWrapper>
+            <img
+              alt=""
+              style={{ width: "100%" }}
+              src={transaction.product_detail.display_image_url}
+              onClick={() =>
+                setDetailDialogImageUrl(
+                  transaction.product_detail.display_image_url
+                )
+              }
+            />
           </div>
         )
       },
@@ -578,6 +614,10 @@ function DetailDialog(props: IComponentProps) {
                     { title: "Transaction Info", entries: generalEntries },
                     true
                   )}
+                  {makeExpansion(
+                    { title: "User Info", entries: userEntries },
+                    true
+                  )}
                   {makeExpansion({
                     title: "Product Detail",
                     entries: productDetailEntries
@@ -632,6 +672,13 @@ function DetailDialog(props: IComponentProps) {
           }}
           dismiss={() => setUpdateDialogId(null)}
           initialValues={updateInitialValues}
+        />
+      )}
+      {Boolean(detailDialogImageUrl) && (
+        <DetailImageDialog
+          title="Detail Image"
+          imageUrl={detailDialogImageUrl}
+          dismiss={() => setDetailDialogImageUrl(null)}
         />
       )}
     </>

@@ -37,9 +37,9 @@ function AcceptDialog(props: IComponentProps) {
   const [error, setError] = React.useState<string>("");
   const [term, setTerm] = React.useState<string>("");
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   const submit = React.useCallback(async () => {
     setError("");

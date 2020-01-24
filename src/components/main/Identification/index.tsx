@@ -165,6 +165,10 @@ function Identifications() {
         accessor: row => row.number
       },
       {
+        Header: "Username",
+        accessor: row => row.username
+      },
+      {
         Header: "Type",
         accessor: row => row.type
       },

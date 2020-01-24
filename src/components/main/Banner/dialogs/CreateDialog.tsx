@@ -86,7 +86,7 @@ function CreateDialog(
         fullWidth
         bgClose={!loading}
       >
-        <title>Create New Banner</title>
+        <title>Create Banner</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>
             <>

@@ -9,7 +9,6 @@ import {
   Chip
 } from "@material-ui/core";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import moment from "moment";
 
 import { IUser, getUserById } from "src/store/user";
@@ -23,6 +22,7 @@ import { statusLabelDict } from "../constants";
 import AcceptDialog from "./AcceptDialog";
 import RejectDialog from "./RejectDialog";
 import { MyDesc, makeExpansion } from "src/components/generic/detail-dialog";
+import DetailImageDialog from "src/components/generic/dialog/DetailImageDialog";
 
 interface IComponentProps {
   userId: number;
@@ -50,6 +50,9 @@ function DetailDialog(props: IComponentProps) {
   );
   const [acceptDialogId, setAcceptDialogId] = React.useState<number>(null);
   const [rejectDialogId, setRejectDialogId] = React.useState<number>(null);
+  const [detailDialogImageUrl, setDetailDialogImageUrl] = React.useState<
+    string
+  >("");
 
   // initial fetch
   const fetch = React.useCallback(async () => {
@@ -77,9 +80,9 @@ function DetailDialog(props: IComponentProps) {
     fetch();
   }, [fetch]);
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   const identificationEntries = React.useMemo(() => {
     if (!identification) return [];
@@ -211,17 +214,16 @@ function DetailDialog(props: IComponentProps) {
                     </Typography>
                   </ExpansionPanelSummary>
                   <ExpansionPanelDetails>
-                    <div style={{ width: "100%" }}>
-                      <TransformWrapper style={{ width: "100%" }}>
-                        <TransformComponent>
-                          <img
-                            alt=""
-                            style={{ width: "100%" }}
-                            src={identification.identification_image_url}
-                          />
-                        </TransformComponent>
-                      </TransformWrapper>
-                    </div>
+                    <img
+                      alt=""
+                      style={{ width: "100%", cursor: "pointer" }}
+                      src={identification.identification_image_url}
+                      onClick={() =>
+                        setDetailDialogImageUrl(
+                          identification.identification_image_url
+                        )
+                      }
+                    />
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
 
@@ -232,17 +234,16 @@ function DetailDialog(props: IComponentProps) {
                     </Typography>
                   </ExpansionPanelSummary>
                   <ExpansionPanelDetails>
-                    <div style={{ width: "100%" }}>
-                      <TransformWrapper style={{ width: "100%" }}>
-                        <TransformComponent>
-                          <img
-                            alt=""
-                            style={{ width: "100%" }}
-                            src={identification.identification_with_user_url}
-                          />
-                        </TransformComponent>
-                      </TransformWrapper>
-                    </div>
+                    <img
+                      alt=""
+                      style={{ width: "100%", cursor: "pointer" }}
+                      src={identification.identification_with_user_url}
+                      onClick={() =>
+                        setDetailDialogImageUrl(
+                          identification.identification_with_user_url
+                        )
+                      }
+                    />
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
               </div>
@@ -269,6 +270,13 @@ function DetailDialog(props: IComponentProps) {
           restartIntervalRun={restartIntervalRun}
           identificationId={rejectDialogId}
           dismiss={() => setRejectDialogId(null)}
+        />
+      )}
+      {Boolean(detailDialogImageUrl) && (
+        <DetailImageDialog
+          title="Identification Detail Image"
+          imageUrl={detailDialogImageUrl}
+          dismiss={() => setDetailDialogImageUrl(null)}
         />
       )}
     </>

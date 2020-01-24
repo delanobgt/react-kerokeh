@@ -1,12 +1,12 @@
 import React from "react";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { IProduct, getProductById } from "src/store/product";
 import { makeExpansion } from "src/components/generic/detail-dialog";
 import { goPromise } from "src/util/helper";
 import moment from "moment";
+import DetailImageDialog from "src/components/generic/dialog/DetailImageDialog";
 
 interface IComponentProps {
   productId: number;
@@ -18,10 +18,13 @@ function DetailDialog(props: IComponentProps) {
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string>("");
   const [product, setProduct] = React.useState<IProduct>(null);
+  const [detailDialogImageUrl, setDetailDialogImageUrl] = React.useState<
+    string
+  >("");
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   // initial fetch
   const fetch = React.useCallback(async () => {
@@ -84,15 +87,12 @@ function DetailDialog(props: IComponentProps) {
         label: "Display Image",
         value: (
           <div style={{ width: "100%" }}>
-            <TransformWrapper style={{ width: "100%" }}>
-              <TransformComponent>
-                <img
-                  alt=""
-                  style={{ width: "100%" }}
-                  src={product.display_image_url}
-                />
-              </TransformComponent>
-            </TransformWrapper>
+            <img
+              alt=""
+              style={{ width: "100%", cursor: "pointer" }}
+              src={product.display_image_url}
+              onClick={() => setDetailDialogImageUrl(product.display_image_url)}
+            />
           </div>
         )
       },
@@ -100,14 +100,23 @@ function DetailDialog(props: IComponentProps) {
         label: "Detail Image",
         value: (
           <div style={{ width: "100%" }}>
-            {(product.detail_image_urls || []).map(url => (
-              <img
-                key={url}
-                alt=""
-                style={{ width: "100px", marginRight: "1rem" }}
-                src={url}
-              />
-            ))}
+            {product.detail_image_urls.length ? (
+              product.detail_image_urls.map(url => (
+                <img
+                  key={url}
+                  alt=""
+                  style={{
+                    width: "100px",
+                    marginRight: "1rem",
+                    cursor: "pointer"
+                  }}
+                  src={url}
+                  onClick={() => setDetailDialogImageUrl(url)}
+                />
+              ))
+            ) : (
+              <Typography>- no detail images -</Typography>
+            )}
           </div>
         )
       }
@@ -134,7 +143,7 @@ function DetailDialog(props: IComponentProps) {
   }, [product]);
 
   return (
-    <div>
+    <>
       <BasicDialog
         open={Boolean(productId)}
         dismiss={dismiss}
@@ -179,7 +188,14 @@ function DetailDialog(props: IComponentProps) {
           </div>
         </section>
       </BasicDialog>
-    </div>
+      {Boolean(detailDialogImageUrl) && (
+        <DetailImageDialog
+          title="Product Detail Image"
+          imageUrl={detailDialogImageUrl}
+          dismiss={() => setDetailDialogImageUrl(null)}
+        />
+      )}
+    </>
   );
 }
 

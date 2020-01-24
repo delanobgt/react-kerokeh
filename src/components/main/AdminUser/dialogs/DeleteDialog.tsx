@@ -22,7 +22,7 @@ function DeleteDialog(props: IComponentProps) {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
 
-  const handleDelete = async () => {
+  const handleDelete = React.useCallback(async () => {
     setLoading(true);
     const [err] = await goPromise(deleteAdminUser(userId));
     setLoading(false);
@@ -33,11 +33,11 @@ function DeleteDialog(props: IComponentProps) {
       dismiss();
       snackbar.showMessage("Admin User deleted.");
     }
-  };
+  }, [dismiss, restartIntervalRun, snackbar, userId]);
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   const username = useSelector<RootState, string>(state =>
     _.get(state.adminUser.adminUsers, `${userId}.username`, null)

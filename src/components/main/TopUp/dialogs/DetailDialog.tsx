@@ -17,9 +17,9 @@ interface IComponentProps {
 function DeleteDialog(props: IComponentProps) {
   const { topUpId, dismiss } = props;
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   const topUp = useSelector<RootState, ITopUp>(
     state =>
