@@ -2,7 +2,7 @@ import React from "react";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { IProduct, getProductById } from "src/store/product";
 import { makeExpansion } from "src/components/generic/detail-dialog";
 import { goPromise } from "src/util/helper";

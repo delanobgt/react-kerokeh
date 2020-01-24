@@ -17,8 +17,8 @@ import {
 import ReactSelect from "react-select";
 import AsyncReactSelect from "react-select/async";
 import moment from "moment";
-import DatePicker from "src/components/generic/DatePicker";
-import ImageInput from "src/components/generic/ImageInput";
+import DatePicker from "src/components/generic/input/DatePicker";
+import ImageInput from "src/components/generic/input/ImageInput";
 
 export const renderTextField: RenderFieldFn = ({
   input,
@@ -54,9 +54,10 @@ export const renderSelectField: RenderFieldFn = ({
 }) => (
   <div>
     <div>
-      <FormControl error={touched && Boolean(error)}>
+      {Boolean(console.log(custom))}
+      <FormControl error={touched && Boolean(error)} style={{ width: "100%" }}>
         <InputLabel>{label}</InputLabel>
-        <Select {...input} {...custom} style={{ minWidth: "240px" }}>
+        <Select {...input} {...custom}>
           {children}
         </Select>
         {touched && Boolean(error) && (
@@ -79,6 +80,7 @@ export const renderDateField: RenderFieldFn = ({
       label={label}
       onChange={date => input.onChange(moment(date).format("YYYY-MM-DD"))}
       value={moment(input.value, "YYYY-MM-DD").toDate()}
+      fullWidth
     />
     {touched && Boolean(error) && (
       <Typography variant="caption">{error}</Typography>
@@ -123,7 +125,7 @@ export const renderAutoSuggestField: RenderAutoSuggestFieldFn = ({
   return (
     <div>
       <div>
-        <Typography variant="subtitle2" style={{ marginLeft: "0.7rem" }}>
+        <Typography style={{ color: "gray" }} variant="body2">
           {label}
         </Typography>
         <ReactSelect
@@ -154,7 +156,7 @@ export const renderAsyncAutoSuggestField: RenderAsyncAutoSuggestFieldFn = ({
   return (
     <div>
       <div>
-        <Typography variant="subtitle2" style={{ marginLeft: "0.7rem" }}>
+        <Typography style={{ color: "gray" }} variant="body2">
           {label}
         </Typography>
         <AsyncReactSelect

@@ -8,7 +8,7 @@ import {
 import styled from "styled-components";
 import { useSnackbar } from "material-ui-snackbar-provider";
 
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { goPromise } from "src/util/helper";
 import {
   IIdentification,

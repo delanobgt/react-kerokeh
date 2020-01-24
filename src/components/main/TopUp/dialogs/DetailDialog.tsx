@@ -2,7 +2,7 @@ import _ from "lodash";
 import React from "react";
 import { Button } from "@material-ui/core";
 
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { RootState } from "src/store";
 import { useSelector } from "react-redux";
 import { makeExpansion } from "src/components/generic/detail-dialog";

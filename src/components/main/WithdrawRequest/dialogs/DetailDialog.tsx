@@ -11,7 +11,7 @@ import {
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 
 import { IUser, getUserById } from "src/store/user";
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import moment from "moment";
 import { goPromise } from "src/util/helper";
 import { makeExpansion } from "src/components/generic/detail-dialog";

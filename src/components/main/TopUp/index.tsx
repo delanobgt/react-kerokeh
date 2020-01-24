@@ -1,13 +1,21 @@
 import _ from "lodash";
 import React from "react";
-import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
-import { VerticalAlignBottom as TitleIcon } from "@material-ui/icons";
+import {
+  CircularProgress,
+  Typography,
+  Grid,
+  IconButton
+} from "@material-ui/core";
+import {
+  VerticalAlignBottom as TitleIcon,
+  Details as DetailsIcon
+} from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
 
 import Table, {
   OnPaginationChangeFn
-} from "src/components/generic/ReactTableSSR";
+} from "src/components/generic/table/ReactTableSSR";
 import { RootState } from "src/store";
 import { goPromise } from "src/util/helper";
 import useIntervalRun from "src/hooks/useIntervalRun";
@@ -29,7 +37,7 @@ import {
   TablePaper,
   TableInfoWrapper,
   TableTitle
-} from "src/components/generic/TableGenerics";
+} from "src/components/generic/table/table-infos";
 import CollapseFilterAndSort from "src/components/generic/CollapseFilterAndSort";
 
 function TopUp() {
@@ -157,13 +165,9 @@ function TopUp() {
         Cell: ({ row: { original } }) => {
           return (
             <div>
-              <Button
-                onClick={() => setDetailDialogId(original.id)}
-                color="primary"
-                variant="outlined"
-              >
-                Detail
-              </Button>
+              <IconButton onClick={() => setDetailDialogId(original.id)}>
+                <DetailsIcon />
+              </IconButton>
             </div>
           );
         }

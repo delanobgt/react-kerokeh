@@ -7,10 +7,10 @@ import {
   IBnibTransaction,
   defectBnibTransactionByCode
 } from "src/store/bnib-transaction";
-import ConfirmDialog from "src/components/generic/ConfirmDialog";
+import ConfirmDialog from "src/components/generic/dialog/ConfirmDialog";
 import { goPromise } from "src/util/helper";
 import DefectDialog from "../dialogs/DefectDialog";
-import DetailImageDialog from "../dialogs/DetailImageDialog";
+import DetailImageDialog from "src/components/generic/dialog/DetailImageDialog";
 
 interface IProps {
   orderNo: number;
@@ -151,6 +151,7 @@ export default function(props: IProps) {
       )}
       {Boolean(detailDialogImageUrl) && (
         <DetailImageDialog
+          title="Defect Detail Image"
           imageUrl={detailDialogImageUrl}
           dismiss={() => setDetailDialogImageUrl(null)}
         />

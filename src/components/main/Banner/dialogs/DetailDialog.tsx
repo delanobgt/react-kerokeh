@@ -1,12 +1,12 @@
 import React from "react";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { makeExpansion } from "src/components/generic/detail-dialog";
 import { goPromise } from "src/util/helper";
 import moment from "moment";
 import { getBannerById, IBanner } from "src/store/banner";
+import DetailImageDialog from "src/components/generic/dialog/DetailImageDialog";
 
 interface IComponentProps {
   bannerId: number;
@@ -18,10 +18,13 @@ function DetailDialog(props: IComponentProps) {
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string>("");
   const [banner, setBanner] = React.useState<IBanner>(null);
+  const [detailDialogImageUrl, setDetailDialogImageUrl] = React.useState<
+    string
+  >("");
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   // initial fetch
   const fetch = React.useCallback(async () => {
@@ -62,19 +65,18 @@ function DetailDialog(props: IComponentProps) {
       {
         label: "Image",
         value: (
-          <div style={{ width: "100%" }}>
-            <TransformWrapper style={{ width: "100%" }}>
-              <TransformComponent>
-                <img alt="" style={{ width: "100%" }} src={banner.image_url} />
-              </TransformComponent>
-            </TransformWrapper>
-          </div>
+          <img
+            alt=""
+            style={{ width: "100%", cursor: "pointer" }}
+            src={banner.image_url}
+            onClick={() => setDetailDialogImageUrl(banner.image_url)}
+          />
         )
       }
     ];
   }, [banner]);
   return (
-    <div>
+    <>
       <BasicDialog
         open={Boolean(bannerId)}
         dismiss={dismiss}
@@ -111,7 +113,14 @@ function DetailDialog(props: IComponentProps) {
           </div>
         </section>
       </BasicDialog>
-    </div>
+      {Boolean(detailDialogImageUrl) && (
+        <DetailImageDialog
+          title="Banner Detail Image"
+          imageUrl={detailDialogImageUrl}
+          dismiss={() => setDetailDialogImageUrl(null)}
+        />
+      )}
+    </>
   );
 }
 

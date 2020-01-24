@@ -4,16 +4,19 @@ import {
   CircularProgress,
   Typography,
   Grid,
-  Button,
+  IconButton,
   Chip
 } from "@material-ui/core";
-import { VerticalAlignTop as TitleIcon } from "@material-ui/icons";
+import {
+  VerticalAlignTop as TitleIcon,
+  Details as DetailsIcon
+} from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
 
 import Table, {
   OnPaginationChangeFn
-} from "src/components/generic/ReactTableSSR";
+} from "src/components/generic/table/ReactTableSSR";
 import { RootState } from "src/store";
 import { goPromise } from "src/util/helper";
 import useIntervalRun from "src/hooks/useIntervalRun";
@@ -34,7 +37,7 @@ import {
   TablePaper,
   TableInfoWrapper,
   TableTitle
-} from "src/components/generic/TableGenerics";
+} from "src/components/generic/table/table-infos";
 import { statusLabelDict } from "./constants";
 import CollapseFilterAndSort from "src/components/generic/CollapseFilterAndSort";
 
@@ -161,13 +164,9 @@ function WithdrawRequest() {
         Cell: ({ row: { original } }) => {
           return (
             <div>
-              <Button
-                onClick={() => setDetailDialogId(original.id)}
-                color="primary"
-                variant="outlined"
-              >
-                Detail
-              </Button>
+              <IconButton onClick={() => setDetailDialogId(original.id)}>
+                <DetailsIcon />
+              </IconButton>
             </div>
           );
         }

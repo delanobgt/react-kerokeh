@@ -1,13 +1,23 @@
 import _ from "lodash";
 import React from "react";
-import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
-import { Style as TitleIcon } from "@material-ui/icons";
+import {
+  CircularProgress,
+  Typography,
+  Grid,
+  IconButton
+} from "@material-ui/core";
+import {
+  Style as TitleIcon,
+  Details as DetailsIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon
+} from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
 
 import Table, {
   OnPaginationChangeFn
-} from "src/components/generic/ReactTableSSR";
+} from "src/components/generic/table/ReactTableSSR";
 import { RootState } from "src/store";
 import { goPromise } from "src/util/helper";
 import useIntervalRun from "src/hooks/useIntervalRun";
@@ -16,7 +26,6 @@ import CreateDialog from "./dialogs/CreateDialog";
 import UpdateDialog from "./dialogs/UpdateDialog";
 import DeleteDialog from "./dialogs/DeleteDialog";
 import DetailDialog from "./dialogs/DetailDialog";
-import DetailImageDialog from "./dialogs/DetailImageDialog";
 import useTableUrlState from "src/hooks/useTableUrlState";
 import moment from "moment";
 import FilterForm from "./FilterForm";
@@ -34,8 +43,9 @@ import {
   TablePaper,
   TableInfoWrapper,
   TableTitle
-} from "src/components/generic/TableGenerics";
+} from "src/components/generic/table/table-infos";
 import CollapseFilterAndSort from "src/components/generic/CollapseFilterAndSort";
+import DetailImageDialog from "src/components/generic/dialog/DetailImageDialog";
 
 function Product() {
   const refreshDelay = 5000;
@@ -199,31 +209,15 @@ function Product() {
         Cell: ({ row: { original } }) => {
           return (
             <div>
-              <Button
-                onClick={() => setDetailDialogId(original.id)}
-                color="primary"
-                variant="outlined"
-              >
-                Detail
-              </Button>
-              <br />
-              <Button
-                onClick={() => setUpdateDialogId(original.id)}
-                color="primary"
-                variant="outlined"
-                style={{ marginTop: "1rem" }}
-              >
-                Update
-              </Button>
-              <br />
-              <Button
-                onClick={() => setDeleteDialogId(original.id)}
-                color="primary"
-                variant="outlined"
-                style={{ marginTop: "1rem" }}
-              >
-                Delete
-              </Button>
+              <IconButton onClick={() => setDetailDialogId(original.id)}>
+                <DetailsIcon />
+              </IconButton>
+              <IconButton onClick={() => setUpdateDialogId(original.id)}>
+                <EditIcon />
+              </IconButton>
+              <IconButton onClick={() => setDeleteDialogId(original.id)}>
+                <DeleteIcon />
+              </IconButton>
             </div>
           );
         }
@@ -362,6 +356,7 @@ function Product() {
       )}
       {Boolean(detailDialogImageUrl) && (
         <DetailImageDialog
+          title="Product Detail Image"
           imageUrl={detailDialogImageUrl}
           dismiss={() => setDetailDialogImageUrl(null)}
         />

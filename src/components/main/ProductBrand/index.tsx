@@ -1,13 +1,18 @@
 import _ from "lodash";
 import React from "react";
-import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
-import { Style as TitleIcon } from "@material-ui/icons";
+import {
+  CircularProgress,
+  Typography,
+  Grid,
+  IconButton
+} from "@material-ui/core";
+import { Style as TitleIcon, Edit as EditIcon } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
 
 import Table, {
   OnPaginationChangeFn
-} from "src/components/generic/ReactTableSSR";
+} from "src/components/generic/table/ReactTableSSR";
 import { RootState } from "src/store";
 import { goPromise } from "src/util/helper";
 import useIntervalRun from "src/hooks/useIntervalRun";
@@ -30,7 +35,7 @@ import {
   TablePaper,
   TableInfoWrapper,
   TableTitle
-} from "src/components/generic/TableGenerics";
+} from "src/components/generic/table/table-infos";
 import CollapseFilterAndSort from "src/components/generic/CollapseFilterAndSort";
 
 function ProductBrand() {
@@ -170,13 +175,9 @@ function ProductBrand() {
         Cell: ({ row: { original } }) => {
           return (
             <div>
-              <Button
-                onClick={() => setUpdateDialogId(original.id)}
-                color="primary"
-                variant="outlined"
-              >
-                Update
-              </Button>
+              <IconButton onClick={() => setUpdateDialogId(original.id)}>
+                <EditIcon />
+              </IconButton>
             </div>
           );
         }

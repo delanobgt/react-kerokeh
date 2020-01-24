@@ -7,7 +7,7 @@ import {
   ArrowDownward as ArrowDownwardIcon
 } from "@material-ui/icons";
 import styled from "styled-components";
-import BasicSelect from "src/components/generic/BasicSelect";
+import BasicSelect from "src/components/generic/input/BasicSelect";
 import { ISort } from "src/util/types";
 
 interface IComponentProps<T> {

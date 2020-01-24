@@ -7,7 +7,7 @@ import { useSnackbar } from "material-ui-snackbar-provider";
 import { deleteAdminUser } from "src/store/adminUser";
 import { goPromise } from "src/util/helper";
 import { RootState } from "src/store";
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 
 interface IComponentProps {
   userId: number;
@@ -50,7 +50,7 @@ function DeleteDialog(props: IComponentProps) {
         dismiss={dismiss}
         maxWidth="xs"
         fullWidth
-        bgClose
+        bgClose={!loading}
       >
         <title>Delete Admin User</title>
         <section>

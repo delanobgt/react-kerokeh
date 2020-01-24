@@ -10,8 +10,11 @@ import {
 import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
-import BasicDialog from "src/components/generic/BasicDialog";
-import { requiredValidator } from "src/redux-form/validators";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
+import {
+  requiredValidator,
+  unsignedWholeNumberValidator
+} from "src/redux-form/validators";
 import { renderTextField } from "src/redux-form/renderers";
 import { updateDepositFee, PDepositFee } from "src/store/deposit-fee";
 
@@ -80,25 +83,25 @@ function UpdateDialog(
         dismiss={dismiss}
         maxWidth="xs"
         fullWidth
-        bgClose
+        bgClose={!loading}
       >
         <title>Update Deposit Fee</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>
             <Field
               name="fee"
-              type="number"
+              type="text"
               label="Fee"
               component={renderTextField}
-              validate={[requiredValidator]}
+              validate={[requiredValidator, unsignedWholeNumberValidator]}
               disabled={loading}
             />
             <Field
               name="starting_price"
-              type="number"
+              type="text"
               label="Starting Price"
               component={renderTextField}
-              validate={[requiredValidator]}
+              validate={[requiredValidator, unsignedWholeNumberValidator]}
               disabled={loading}
             />
             {error && (

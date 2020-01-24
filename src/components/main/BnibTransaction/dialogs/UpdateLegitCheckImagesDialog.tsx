@@ -17,7 +17,7 @@ import {
 import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { requiredValidator } from "src/redux-form/validators";
 import { renderImageField, renderSwitchField } from "src/redux-form/renderers";
 import { RenderFieldArrayFn } from "src/util/types";
@@ -188,7 +188,7 @@ function UpdateLegitCheckImagesDialog(
         dismiss={dismiss}
         maxWidth="xs"
         fullWidth
-        bgClose
+        bgClose={!loading}
       >
         <title>Update Legit Check Images</title>
         <section>

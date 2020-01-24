@@ -1,7 +1,15 @@
 import _ from "lodash";
 import React from "react";
-import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
-import { Receipt as TitleIcon } from "@material-ui/icons";
+import {
+  CircularProgress,
+  Typography,
+  Grid,
+  IconButton
+} from "@material-ui/core";
+import {
+  Receipt as TitleIcon,
+  Details as DetailsIcon
+} from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
 import useReactRouter from "use-react-router";
@@ -9,7 +17,7 @@ import queryString from "query-string";
 
 import Table, {
   OnPaginationChangeFn
-} from "src/components/generic/ReactTableSSR";
+} from "src/components/generic/table/ReactTableSSR";
 import { RootState } from "src/store";
 import { goPromise } from "src/util/helper";
 import useIntervalRun from "src/hooks/useIntervalRun";
@@ -23,7 +31,7 @@ import {
   TablePaper,
   TableInfoWrapper,
   TableTitle
-} from "src/components/generic/TableGenerics";
+} from "src/components/generic/table/table-infos";
 import {
   PBnibTransactionFilter,
   PBnibTransactionPagination,
@@ -165,13 +173,9 @@ function BnibTransaction() {
         Cell: ({ row: { original } }) => {
           return (
             <div>
-              <Button
-                onClick={() => setDetailDialogCode(original.code)}
-                color="primary"
-                variant="outlined"
-              >
-                Detail
-              </Button>
+              <IconButton onClick={() => setDetailDialogCode(original.code)}>
+                <DetailsIcon />
+              </IconButton>
             </div>
           );
         }

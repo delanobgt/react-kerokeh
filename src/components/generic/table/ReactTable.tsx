@@ -18,6 +18,14 @@ import {
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 
 import { makeDefaultFilterUI } from "./table-filters/DefaultFilter";
+import {
+  HeaderTableCellDiv,
+  BodyTableCell,
+  Title,
+  Entry,
+  Label,
+  Value
+} from "./table-components";
 
 function fuzzyTextFilterFn(
   rows: any,
@@ -45,9 +53,9 @@ function filterGreaterThan(
 
 filterGreaterThan.autoRemove = (val: any) => typeof val !== "number";
 
-const makeHeaderTableCell = (column: any) => {
+const makeHeaderTableCell = (column: any, key: number) => {
   return (
-    <TableCell style={{ maxWidth: "1px" }}>
+    <TableCell style={{ maxWidth: "1px" }} key={key}>
       {/* Add a sort direction indicator */}
       <TableSortLabel
         active={column.isSorted}
@@ -55,16 +63,7 @@ const makeHeaderTableCell = (column: any) => {
         {...column.getHeaderProps(column.getSortByToggleProps())}
         style={{ width: "100%" }}
       >
-        <div
-          style={{
-            width: "100%",
-            wordWrap: "break-word",
-            overflowWrap: "break-word",
-            whiteSpace: "normal"
-          }}
-        >
-          {column.render("Header")}
-        </div>
+        <HeaderTableCellDiv>{column.render("Header")}</HeaderTableCellDiv>
       </TableSortLabel>
       {/* Render the columns filter UI */}
       {column.canFilter && <div>{column.render("Filter")}</div>}
@@ -72,19 +71,11 @@ const makeHeaderTableCell = (column: any) => {
   );
 };
 
-const makeBodyTableCell = (cell: any) => {
+const makeBodyTableCell = (cell: any, key: number) => {
   return (
-    <TableCell
-      {...cell.getCellProps()}
-      style={{
-        wordWrap: "break-word",
-        overflowWrap: "break-word",
-        whiteSpace: "normal",
-        maxWidth: "1px"
-      }}
-    >
+    <BodyTableCell {...cell.getCellProps()} key={key}>
       {cell.render("Cell")}
-    </TableCell>
+    </BodyTableCell>
   );
 };
 
@@ -157,8 +148,8 @@ function ReactTable({ columns, data }: any) {
           {headerGroups.map((headerGroup: any) => (
             <TableRow {...headerGroup.getHeaderGroupProps()}>
               <Hidden mdDown>
-                {headerGroup.headers.map((column: any) =>
-                  makeHeaderTableCell(column)
+                {headerGroup.headers.map((column: any, key: number) =>
+                  makeHeaderTableCell(column, key)
                 )}
               </Hidden>
               <Hidden lgUp>
@@ -174,66 +165,31 @@ function ReactTable({ columns, data }: any) {
               prepareRow(row);
               return (
                 <TableRow {...row.getRowProps()} key={i}>
-                  <Hidden smDown>
-                    {row.cells.map((cell: any) => makeBodyTableCell(cell))}
+                  <Hidden smDown key={1}>
+                    {row.cells.map((cell: any, index: number) =>
+                      makeBodyTableCell(cell, index)
+                    )}
                   </Hidden>
-                  <Hidden mdUp>
+                  <Hidden mdUp key={2}>
                     <TableCell style={{ maxWidth: "1px" }}>
                       <ExpansionPanel style={{ width: "100%" }}>
                         <ExpansionPanelSummary
                           expandIcon={<ExpandMoreIcon />}
                           style={{ flexGrow: 1 }}
                         >
-                          <Typography
-                            style={{
-                              overflowWrap: "break-word",
-                              wordWrap: "break-word",
-                              whiteSpace: "normal",
-                              width: "55vw"
-                            }}
-                          >
+                          <Title>
                             {row.cells[0].render("Cell")} -{" "}
                             {row.cells[1].render("Cell")}
-                          </Typography>
+                          </Title>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                           <div style={{ width: "100%" }}>
                             {row.cells.map((cell: any, index: number) => {
-                              console.log(cell);
                               return (
-                                <div
-                                  key={index}
-                                  style={{
-                                    display: "flex",
-                                    marginBottom: "1rem"
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      overflowWrap: "break-word",
-                                      wordWrap: "break-word",
-                                      whiteSpace: "normal",
-                                      width: "25%",
-                                      minWidth: "25%",
-                                      flexBasis: "25%",
-                                      marginRight: "0.8rem"
-                                    }}
-                                  >
-                                    {cell.column.Header}
-                                  </div>
-                                  <div
-                                    style={{
-                                      overflowWrap: "break-word",
-                                      wordWrap: "break-word",
-                                      whiteSpace: "normal",
-                                      width: "75%",
-                                      minWidth: "75%",
-                                      flexBasis: "75%"
-                                    }}
-                                  >
-                                    {cell.render("Cell")}
-                                  </div>
-                                </div>
+                                <Entry>
+                                  <Label>{cell.column.Header}</Label>
+                                  <Value>{cell.render("Cell")}</Value>
+                                </Entry>
                               );
                             })}
                           </div>

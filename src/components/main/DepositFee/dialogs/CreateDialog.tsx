@@ -10,7 +10,7 @@ import {
 import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { requiredValidator } from "src/redux-form/validators";
 import { renderTextField } from "src/redux-form/renderers";
 import { createDepositFee } from "src/store/deposit-fee";
@@ -72,7 +72,7 @@ function CreateDialog(
         dismiss={dismiss}
         maxWidth="xs"
         fullWidth
-        bgClose
+        bgClose={!loading}
       >
         <title>Create Deposit Fee</title>
         <section>

@@ -15,7 +15,7 @@ import {
 import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import {
   requiredValidator,
   unsignedRealNumberValidator,
@@ -91,7 +91,7 @@ function CreateDialog(
         dismiss={dismiss}
         maxWidth="xs"
         fullWidth
-        bgClose
+        bgClose={!loading}
       >
         <title>Create Promo Code</title>
         <section>
@@ -172,8 +172,8 @@ function CreateDialog(
                 component={renderImageField}
                 validate={[requiredValidator]}
                 disabled={loading}
-                accept="image/svg"
-                extensions={["svg"]}
+                accept="image/png"
+                extensions={["png"]}
               />
               {error && (
                 <Typography variant="subtitle1">

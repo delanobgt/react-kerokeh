@@ -17,7 +17,7 @@ import { Close as CloseIcon } from "@material-ui/icons";
 import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { requiredValidator } from "src/redux-form/validators";
 import { renderTextField } from "src/redux-form/renderers";
 import {
@@ -161,7 +161,7 @@ function UpdateDialog(
         dismiss={dismiss}
         maxWidth="xs"
         fullWidth
-        bgClose
+        bgClose={!loading}
       >
         <title>Update Product Category</title>
         <section>

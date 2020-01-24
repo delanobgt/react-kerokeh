@@ -8,7 +8,7 @@ import {
   IShippingAddress,
   getShippingAddressesByUserId
 } from "src/store/user";
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import moment from "moment";
 import { goPromise } from "src/util/helper";
 import {

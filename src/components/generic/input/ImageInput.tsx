@@ -8,7 +8,7 @@ const MainDiv = styled.div`
   justify-content: space-between;
   border: 2px solid cornflowerblue;
   border-radius: 5px;
-  padding: 0.5rem 0.5rem 0.5rem 0;
+  padding: 0.5rem;
 `;
 
 function checkExtension(
@@ -17,7 +17,7 @@ function checkExtension(
 ): boolean {
   if (!extensions) return true;
   for (let ext of extensions) {
-    if (pExt.endsWith("." + ext)) return true;
+    if (pExt.toLowerCase().endsWith("." + ext.toLowerCase())) return true;
   }
   return false;
 }
@@ -89,7 +89,7 @@ export default function(props: IComponentProps) {
         onChange={realOnChange}
       />
       <div>
-        <Typography variant="body1" style={{ marginLeft: "0.5rem" }}>
+        <Typography variant="body1">
           {label} ({extensions.join(", ")})
         </Typography>
         <MainDiv>

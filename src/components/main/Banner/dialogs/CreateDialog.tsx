@@ -15,7 +15,7 @@ import {
 import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { requiredValidator } from "src/redux-form/validators";
 import {
   renderTextField,
@@ -84,7 +84,7 @@ function CreateDialog(
         dismiss={dismiss}
         maxWidth="xs"
         fullWidth
-        bgClose
+        bgClose={!loading}
       >
         <title>Create New Banner</title>
         <section>

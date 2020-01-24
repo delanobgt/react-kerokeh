@@ -5,7 +5,7 @@ import { Paper } from "@material-ui/core";
 import styled from "styled-components";
 
 import { goPromise } from "src/util/helper";
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import {
   IBnibTransaction,
   getBnibTransactionByCode,
@@ -555,7 +555,7 @@ function DetailDialog(props: IComponentProps) {
           dismiss={dismiss}
           maxWidth="xl"
           fullWidth
-          bgClose
+          bgClose={!loading}
         >
           <title>BNIB Transaction Detail</title>
           <section>

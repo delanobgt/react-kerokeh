@@ -4,7 +4,7 @@ import jwtDecode from "jwt-decode";
 import { useSelector } from "react-redux";
 import { Button } from "@material-ui/core";
 import { RootState } from "src/store";
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import Link from "src/components/generic/Link";
 import { JWToken } from "src/util/types";
 

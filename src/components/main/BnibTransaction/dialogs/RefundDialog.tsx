@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core";
 import { useSnackbar } from "material-ui-snackbar-provider";
 
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { goPromise } from "src/util/helper";
 import { refundBnibTransactionByCode } from "src/store/bnib-transaction";
 import { renderSelectField, renderTextField } from "src/redux-form/renderers";

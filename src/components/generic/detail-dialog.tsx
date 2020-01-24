@@ -8,17 +8,6 @@ import {
 } from "@material-ui/core";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 
-export const SingleEntry = styled.div`
-  display: flex;
-  margin-bottom: 0.5rem;
-`;
-
-export const Label = styled(Typography)`
-  min-width: 180px;
-  flex-basis: 180px;
-  width: 180px;
-`;
-
 export const MyDesc = styled(Typography)`
   color: red;
   padding-left: 0.75rem;
@@ -35,14 +24,44 @@ export interface ExpansionEntry {
 }
 
 export const makeEntry = (e: FieldEntry, key: number) => (
-  <SingleEntry key={key}>
-    <Label>{e.label}</Label>
-    {["string", "number"].includes(typeof e.value) ? (
-      <Typography>{e.value}</Typography>
-    ) : (
-      e.value
-    )}
-  </SingleEntry>
+  <div
+    key={key}
+    style={{
+      display: "flex",
+      marginBottom: "1rem"
+    }}
+  >
+    <div
+      style={{
+        overflowWrap: "break-word",
+        wordWrap: "break-word",
+        whiteSpace: "normal",
+        width: "25%",
+        minWidth: "25%",
+        flexBasis: "25%",
+        marginRight: "0.8rem",
+        color: "grey"
+      }}
+    >
+      {e.label}
+    </div>
+    <div
+      style={{
+        overflowWrap: "break-word",
+        wordWrap: "break-word",
+        whiteSpace: "normal",
+        width: "75%",
+        minWidth: "75%",
+        flexBasis: "75%"
+      }}
+    >
+      {["string", "number"].includes(typeof e.value) ? (
+        <Typography>{e.value}</Typography>
+      ) : (
+        e.value
+      )}
+    </div>
+  </div>
 );
 
 export const makeExpansion = (e: ExpansionEntry, defaultExpanded?: boolean) => {

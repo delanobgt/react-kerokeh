@@ -1,14 +1,23 @@
 import _ from "lodash";
 import React from "react";
-import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
-import { Bookmark as TitleIcon } from "@material-ui/icons";
+import {
+  CircularProgress,
+  Typography,
+  Grid,
+  IconButton
+} from "@material-ui/core";
+import {
+  Bookmark as TitleIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon
+} from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
 import queryString from "query-string";
 
 import Table, {
   OnPaginationChangeFn
-} from "src/components/generic/ReactTableSSR";
+} from "src/components/generic/table/ReactTableSSR";
 import { RootState } from "src/store";
 import { goPromise } from "src/util/helper";
 import useIntervalRun from "src/hooks/useIntervalRun";
@@ -16,7 +25,6 @@ import TopAction from "./TopAction";
 import CreateDialog from "./dialogs/CreateDialog";
 import UpdateDialog from "./dialogs/UpdateDialog";
 import DeleteDialog from "./dialogs/DeleteDialog";
-import DetailImageDialog from "./dialogs/DetailImageDialog";
 import useTableUrlState from "src/hooks/useTableUrlState";
 import SortForm from "src/components/generic/SortForm";
 import FilterForm from "./FilterForm";
@@ -38,8 +46,9 @@ import {
   TablePaper,
   TableInfoWrapper,
   TableTitle
-} from "src/components/generic/TableGenerics";
+} from "src/components/generic/table/table-infos";
 import CollapseFilterAndSort from "src/components/generic/CollapseFilterAndSort";
+import DetailImageDialog from "src/components/generic/dialog/DetailImageDialog";
 
 function SpecialCategoryList() {
   const refreshDelay = 5000;
@@ -217,22 +226,12 @@ function SpecialCategoryList() {
         Cell: ({ row: { original } }) => {
           return (
             <div>
-              <Button
-                onClick={() => setUpdateDialogId(original.id)}
-                color="primary"
-                variant="outlined"
-                style={{ marginLeft: "1rem" }}
-              >
-                Update
-              </Button>
-              <Button
-                onClick={() => setDeleteDialogId(original.id)}
-                color="primary"
-                variant="outlined"
-                style={{ marginLeft: "1rem" }}
-              >
-                Delete
-              </Button>
+              <IconButton onClick={() => setUpdateDialogId(original.id)}>
+                <EditIcon />
+              </IconButton>
+              <IconButton onClick={() => setDeleteDialogId(original.id)}>
+                <DeleteIcon />
+              </IconButton>
             </div>
           );
         }
@@ -369,6 +368,7 @@ function SpecialCategoryList() {
       )}
       {detailDialogImageUrl && (
         <DetailImageDialog
+          title="Special Category List Detail Image"
           imageUrl={detailDialogImageUrl}
           dismiss={() => setDetailDialogImageUrl(null)}
         />

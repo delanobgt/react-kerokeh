@@ -15,9 +15,9 @@ import {
   ILegitCheck,
   createLegitCheck
 } from "src/store/bnib-transaction";
-import ConfirmDialog from "src/components/generic/ConfirmDialog";
+import ConfirmDialog from "src/components/generic/dialog/ConfirmDialog";
 import { goPromise } from "src/util/helper";
-import BasicSelect from "src/components/generic/BasicSelect";
+import BasicSelect from "src/components/generic/input/BasicSelect";
 
 interface IComponentProps {
   orderNo: number;

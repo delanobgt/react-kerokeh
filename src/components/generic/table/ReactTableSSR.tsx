@@ -7,14 +7,20 @@ import {
   TableHead,
   TableRow,
   TablePagination,
-  TableSortLabel,
-  Typography,
   Hidden,
   ExpansionPanel,
   ExpansionPanelSummary,
   ExpansionPanelDetails
 } from "@material-ui/core";
 import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
+import {
+  Title,
+  Entry,
+  Label,
+  Value,
+  BodyTableCell,
+  HeaderTableCellDiv
+} from "./table-components";
 
 interface IComponentProps {
   columns: any[];
@@ -31,46 +37,19 @@ export type OnPaginationChangeFn = (
   pageSize: number
 ) => void;
 
-const makeHeaderTableCell = (column: any) => {
+const makeHeaderTableCell = (column: any, key: number) => {
   return (
-    <TableCell style={{ maxWidth: "1px" }}>
-      {/* Add a sort direction indicator */}
-      <TableSortLabel
-        active={column.isSorted}
-        direction={column.isSortedDesc ? "desc" : "asc"}
-        {...column.getHeaderProps(column.getSortByToggleProps())}
-        style={{ width: "100%" }}
-      >
-        <div
-          style={{
-            width: "100%",
-            wordWrap: "break-word",
-            overflowWrap: "break-word",
-            whiteSpace: "normal"
-          }}
-        >
-          {column.render("Header")}
-        </div>
-      </TableSortLabel>
-      {/* Render the columns filter UI */}
-      {column.canFilter && <div>{column.render("Filter")}</div>}
+    <TableCell style={{ maxWidth: "1px" }} key={key}>
+      <HeaderTableCellDiv>{column.render("Header")}</HeaderTableCellDiv>
     </TableCell>
   );
 };
 
-const makeBodyTableCell = (cell: any) => {
+const makeBodyTableCell = (cell: any, key: number) => {
   return (
-    <TableCell
-      {...cell.getCellProps()}
-      style={{
-        wordWrap: "break-word",
-        overflowWrap: "break-word",
-        whiteSpace: "normal",
-        maxWidth: "1px"
-      }}
-    >
+    <BodyTableCell {...cell.getCellProps()} key={key}>
       {cell.render("Cell")}
-    </TableCell>
+    </BodyTableCell>
   );
 };
 
@@ -156,8 +135,8 @@ function ReactTableSSR({
           {headerGroups.map((headerGroup: any, index) => (
             <TableRow key={index} {...headerGroup.getHeaderGroupProps()}>
               <Hidden mdDown>
-                {headerGroup.headers.map((column: any) =>
-                  makeHeaderTableCell(column)
+                {headerGroup.headers.map((column: any, index: number) =>
+                  makeHeaderTableCell(column, index)
                 )}
               </Hidden>
               <Hidden lgUp>
@@ -171,66 +150,31 @@ function ReactTableSSR({
             prepareRow(row);
             return (
               <TableRow {...row.getRowProps()} key={index}>
-                <Hidden smDown>
-                  {row.cells.map((cell: any) => makeBodyTableCell(cell))}
+                <Hidden smDown key={0}>
+                  {row.cells.map((cell: any, index: number) =>
+                    makeBodyTableCell(cell, index)
+                  )}
                 </Hidden>
-                <Hidden mdUp>
+                <Hidden mdUp key={1}>
                   <TableCell style={{ maxWidth: "1px" }}>
                     <ExpansionPanel style={{ width: "100%" }}>
                       <ExpansionPanelSummary
                         expandIcon={<ExpandMoreIcon />}
                         style={{ flexGrow: 1 }}
                       >
-                        <Typography
-                          style={{
-                            overflowWrap: "break-word",
-                            wordWrap: "break-word",
-                            whiteSpace: "normal",
-                            width: "55vw"
-                          }}
-                        >
+                        <Title>
                           {row.cells[0].render("Cell")} -{" "}
                           {row.cells[1].render("Cell")}
-                        </Typography>
+                        </Title>
                       </ExpansionPanelSummary>
                       <ExpansionPanelDetails>
                         <div style={{ width: "100%" }}>
                           {row.cells.map((cell: any, index: number) => {
-                            console.log(cell);
                             return (
-                              <div
-                                key={index}
-                                style={{
-                                  display: "flex",
-                                  marginBottom: "1rem"
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    overflowWrap: "break-word",
-                                    wordWrap: "break-word",
-                                    whiteSpace: "normal",
-                                    width: "25%",
-                                    minWidth: "25%",
-                                    flexBasis: "25%",
-                                    marginRight: "0.8rem"
-                                  }}
-                                >
-                                  {cell.column.Header}
-                                </div>
-                                <div
-                                  style={{
-                                    overflowWrap: "break-word",
-                                    wordWrap: "break-word",
-                                    whiteSpace: "normal",
-                                    width: "75%",
-                                    minWidth: "75%",
-                                    flexBasis: "75%"
-                                  }}
-                                >
-                                  {cell.render("Cell")}
-                                </div>
-                              </div>
+                              <Entry key={index}>
+                                <Label>{cell.column.Header}</Label>
+                                <Value>{cell.render("Cell")}</Value>
+                              </Entry>
                             );
                           })}
                         </div>

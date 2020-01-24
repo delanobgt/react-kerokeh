@@ -1,13 +1,21 @@
 import _ from "lodash";
 import React from "react";
-import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
+import {
+  CircularProgress,
+  Typography,
+  Grid,
+  IconButton
+} from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { SettingsApplications as TitleIcon } from "@material-ui/icons";
+import {
+  SettingsApplications as TitleIcon,
+  Edit as EditIcon
+} from "@material-ui/icons";
 import { Column } from "react-table";
 
 import Table, {
   OnPaginationChangeFn
-} from "src/components/generic/ReactTableSSR";
+} from "src/components/generic/table/ReactTableSSR";
 import { RootState } from "src/store";
 import { goPromise } from "src/util/helper";
 import useIntervalRun from "src/hooks/useIntervalRun";
@@ -27,7 +35,7 @@ import {
   TablePaper,
   TableInfoWrapper,
   TableTitle
-} from "src/components/generic/TableGenerics";
+} from "src/components/generic/table/table-infos";
 
 function Config() {
   const refreshDelay = 5000;
@@ -135,13 +143,9 @@ function Config() {
         Cell: ({ row: { original } }) => {
           return (
             <div>
-              <Button
-                onClick={() => setUpdateDialogConfigId(original.id)}
-                color="primary"
-                variant="outlined"
-              >
-                Update
-              </Button>
+              <IconButton onClick={() => setUpdateDialogConfigId(original.id)}>
+                <EditIcon />
+              </IconButton>
             </div>
           );
         }

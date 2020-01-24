@@ -16,7 +16,7 @@ import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
 import { createAdminUser } from "src/store/adminUser";
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { requiredValidator } from "src/redux-form/validators";
 import { renderTextField, renderSelectField } from "src/redux-form/renderers";
 
@@ -79,7 +79,7 @@ function CreateDialog(
         dismiss={dismiss}
         maxWidth="xs"
         fullWidth
-        bgClose
+        bgClose={!loading}
       >
         <title>Create Admin User</title>
         <section>
@@ -92,6 +92,7 @@ function CreateDialog(
               validate={[requiredValidator]}
               disabled={loading}
               autoComplete="off"
+              fullWidth
             />
             <Field
               name="password"
@@ -101,6 +102,7 @@ function CreateDialog(
               validate={[requiredValidator]}
               disabled={loading}
               autoComplete="off"
+              fullWidth
             />
             <Field
               name="role_id"
@@ -108,6 +110,7 @@ function CreateDialog(
               component={renderSelectField}
               validate={[requiredValidator]}
               disabled={loading}
+              style={{ width: "100%" }}
             >
               <MenuItem value={1}>Admin</MenuItem>
               <MenuItem value={2}>Staff</MenuItem>

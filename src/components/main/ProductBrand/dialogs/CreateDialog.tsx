@@ -10,7 +10,7 @@ import {
 import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { requiredValidator } from "src/redux-form/validators";
 import {
   createProductBrand,
@@ -121,9 +121,9 @@ function CreateDialog(
         dismiss={dismiss}
         maxWidth="xs"
         fullWidth
-        bgClose
+        bgClose={!loading}
       >
-        <title>Create New Product Brand</title>
+        <title>Create Product Brand</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>
             <>

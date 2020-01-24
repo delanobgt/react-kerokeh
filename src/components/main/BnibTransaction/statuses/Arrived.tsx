@@ -7,7 +7,7 @@ import {
   IBnibTransaction,
   arriveBnibTransactionByCode
 } from "src/store/bnib-transaction";
-import ConfirmDialog from "src/components/generic/ConfirmDialog";
+import ConfirmDialog from "src/components/generic/dialog/ConfirmDialog";
 import { goPromise } from "src/util/helper";
 import DisputeDialog from "../dialogs/DisputeDialog";
 

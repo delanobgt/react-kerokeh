@@ -4,10 +4,13 @@ import {
   CircularProgress,
   Typography,
   Grid,
-  Button,
+  IconButton,
   Chip
 } from "@material-ui/core";
-import { People as TitleIcon } from "@material-ui/icons";
+import {
+  People as TitleIcon,
+  Details as DetailsIcon
+} from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
 import useReactRouter from "use-react-router";
@@ -15,7 +18,7 @@ import queryString from "query-string";
 
 import Table, {
   OnPaginationChangeFn
-} from "src/components/generic/ReactTableSSR";
+} from "src/components/generic/table/ReactTableSSR";
 import { RootState } from "src/store";
 import { goPromise } from "src/util/helper";
 import useIntervalRun from "src/hooks/useIntervalRun";
@@ -38,7 +41,7 @@ import {
   TablePaper,
   TableInfoWrapper,
   TableTitle
-} from "src/components/generic/TableGenerics";
+} from "src/components/generic/table/table-infos";
 import CollapseFilterAndSort from "src/components/generic/CollapseFilterAndSort";
 
 function Identifications() {
@@ -204,13 +207,9 @@ function Identifications() {
         Cell: ({ row: { original } }) => {
           return (
             <div>
-              <Button
-                onClick={() => setDetailDialogId(original.user_id)}
-                color="primary"
-                variant="outlined"
-              >
-                Details
-              </Button>
+              <IconButton onClick={() => setDetailDialogId(original.user_id)}>
+                <DetailsIcon />
+              </IconButton>
             </div>
           );
         }

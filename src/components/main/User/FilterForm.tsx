@@ -2,8 +2,8 @@ import React from "react";
 import { TextField, Typography, MenuItem } from "@material-ui/core";
 import styled from "styled-components";
 import { PUserFilter } from "src/store/user";
-import BasicSelect from "src/components/generic/BasicSelect";
-import DatePicker from "src/components/generic/DatePicker";
+import BasicSelect from "src/components/generic/input/BasicSelect";
+import DatePicker from "src/components/generic/input/DatePicker";
 import moment from "moment";
 
 interface IComponentProps {

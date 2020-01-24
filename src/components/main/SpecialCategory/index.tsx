@@ -1,14 +1,24 @@
 import _ from "lodash";
 import React from "react";
-import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
-import { Bookmark as TitleIcon } from "@material-ui/icons";
+import {
+  CircularProgress,
+  Typography,
+  Grid,
+  Button,
+  IconButton
+} from "@material-ui/core";
+import {
+  Bookmark as TitleIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon
+} from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
 
 import { RoutePath } from "src/Router/routes";
 import Table, {
   OnPaginationChangeFn
-} from "src/components/generic/ReactTableSSR";
+} from "src/components/generic/table/ReactTableSSR";
 import { RootState } from "src/store";
 import { goPromise } from "src/util/helper";
 import useIntervalRun from "src/hooks/useIntervalRun";
@@ -32,7 +42,7 @@ import {
   TablePaper,
   TableInfoWrapper,
   TableTitle
-} from "src/components/generic/TableGenerics";
+} from "src/components/generic/table/table-infos";
 import CollapseFilterAndSort from "src/components/generic/CollapseFilterAndSort";
 
 function SpecialCategory() {
@@ -156,24 +166,14 @@ function SpecialCategory() {
                 color="primary"
                 variant="outlined"
               >
-                View List
+                List
               </Button>
-              <Button
-                onClick={() => setUpdateDialogId(original.id)}
-                color="primary"
-                variant="outlined"
-                style={{ marginLeft: "1rem" }}
-              >
-                Update
-              </Button>
-              <Button
-                onClick={() => setDeleteDialogId(original.id)}
-                color="primary"
-                variant="outlined"
-                style={{ marginLeft: "1rem" }}
-              >
-                Delete
-              </Button>
+              <IconButton onClick={() => setUpdateDialogId(original.id)}>
+                <EditIcon />
+              </IconButton>
+              <IconButton onClick={() => setDeleteDialogId(original.id)}>
+                <DeleteIcon />
+              </IconButton>
             </div>
           );
         }

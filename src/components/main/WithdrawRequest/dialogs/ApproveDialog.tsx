@@ -3,7 +3,7 @@ import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { approveWithdrawRequest } from "src/store/withdraw-request";
 
 interface IComponentProps {
@@ -45,7 +45,7 @@ function ApproveDialog(props: IComponentProps) {
         dismiss={dismiss}
         maxWidth="xs"
         fullWidth
-        bgClose
+        bgClose={!loading}
       >
         <title>Approve Withdraw Request</title>
         <section>

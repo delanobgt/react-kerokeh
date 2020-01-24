@@ -4,8 +4,8 @@ import { TextField, Typography, MenuItem } from "@material-ui/core";
 import styled from "styled-components";
 import { PTopUpFilter } from "src/store/top-up";
 import moment from "moment";
-import DatePicker from "src/components/generic/DatePicker";
-import BasicSelect from "src/components/generic/BasicSelect";
+import DatePicker from "src/components/generic/input/DatePicker";
+import BasicSelect from "src/components/generic/input/BasicSelect";
 
 interface IComponentProps {
   filter: PTopUpFilter;

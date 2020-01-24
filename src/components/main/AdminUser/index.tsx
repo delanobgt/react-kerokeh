@@ -14,7 +14,7 @@ import {
   VpnKey as TitleIcon
 } from "@material-ui/icons";
 
-import Table from "src/components/generic/ReactTable";
+import Table from "src/components/generic/table/ReactTable";
 import {
   getAdminUsers,
   IAdminUser,
@@ -32,7 +32,7 @@ import {
   TablePaper,
   TableTitle,
   TableInfoWrapper
-} from "src/components/generic/TableGenerics";
+} from "src/components/generic/table/table-infos";
 
 function AdminUsers() {
   const refreshDelay = 5000;
@@ -116,10 +116,7 @@ function AdminUsers() {
           if (String(authId) === String(original.id)) return null;
           return (
             <div>
-              <IconButton
-                onClick={() => setUpdateDialogId(original.id)}
-                className="mr-3"
-              >
+              <IconButton onClick={() => setUpdateDialogId(original.id)}>
                 <EditIcon />
               </IconButton>
               <IconButton onClick={() => setDeleteDialogId(original.id)}>

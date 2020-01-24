@@ -1,7 +1,7 @@
 import React from "react";
 import { TextField, Typography, MenuItem } from "@material-ui/core";
 import styled from "styled-components";
-import BasicSelect from "src/components/generic/BasicSelect";
+import BasicSelect from "src/components/generic/input/BasicSelect";
 import { PSpecialCategoryListFilter } from "src/store/special-category-list";
 
 interface IComponentProps {

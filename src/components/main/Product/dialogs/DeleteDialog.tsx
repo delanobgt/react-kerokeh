@@ -3,7 +3,7 @@ import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
-import BasicDialog from "src/components/generic/BasicDialog";
+import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { deleteProduct } from "src/store/product";
 
 interface IComponentProps {
@@ -43,7 +43,7 @@ function DeleteDialog(props: IComponentProps) {
         dismiss={dismiss}
         maxWidth="xs"
         fullWidth
-        bgClose
+        bgClose={!loading}
       >
         <title>Delete Product</title>
         <section>

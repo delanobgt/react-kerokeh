@@ -14,7 +14,6 @@ const RootDiv = styled("div")`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-left: 1em;
 `;
 
 export default (props: IComponentProps) => {
