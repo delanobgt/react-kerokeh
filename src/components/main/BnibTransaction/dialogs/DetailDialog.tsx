@@ -1,6 +1,11 @@
 import _ from "lodash";
 import React from "react";
-import { Button, CircularProgress, Typography } from "@material-ui/core";
+import {
+  Button,
+  CircularProgress,
+  Typography,
+  MenuItem
+} from "@material-ui/core";
 import { Paper } from "@material-ui/core";
 import styled from "styled-components";
 
@@ -11,7 +16,8 @@ import {
   getBnibTransactionByCode,
   BnibTransactionStatus,
   getLegitCheckByBnibTransactionId,
-  ILegitCheck
+  ILegitCheck,
+  publishFinalResult
 } from "src/store/bnib-transaction";
 import moment from "moment";
 import { makeExpansion } from "src/components/generic/detail-dialog";
@@ -29,6 +35,8 @@ import UpdateLegitCheckImagesDialog from "./UpdateLegitCheckImagesDialog";
 import { TLegitCheckInitialValues } from "../types";
 import DetailImageDialog from "src/components/generic/dialog/DetailImageDialog";
 import { IUser, getUserById } from "src/store/user";
+import LegitCheckDetailTable from "../tables/LegitCheckDetail";
+import BasicSelect from "src/components/generic/input/BasicSelect";
 
 interface IComponentProps {
   transactionCode: string;
@@ -47,10 +55,17 @@ function DetailDialog(props: IComponentProps) {
   const [error, setError] = React.useState<string>("");
   const [transaction, setTransaction] = React.useState<IBnibTransaction>(null);
   const [legitCheck, setLegitCheck] = React.useState<ILegitCheck>(null);
-  const [user, setUser] = React.useState<IUser>(null);
+  const [buyer, setBuyer] = React.useState<IUser>(null);
+  const [seller, setSeller] = React.useState<IUser>(null);
   const [detailDialogImageUrl, setDetailDialogImageUrl] = React.useState<
     string
   >("");
+
+  const [finalResult, setFinalResult] = React.useState<string>("");
+  const [finalResultLoading, setFinalResultLoading] = React.useState<boolean>(
+    false
+  );
+  const [finalResultError, setFinalResultError] = React.useState<string>("");
 
   // initial fetch
   const fetch = React.useCallback(async () => {
@@ -62,18 +77,22 @@ function DetailDialog(props: IComponentProps) {
     const [errLegitCheck, legitCheck] = await goPromise<ILegitCheck>(
       getLegitCheckByBnibTransactionId(transaction.id || 0)
     );
-    const [errUser, user] = await goPromise<IUser>(
+    const [errBuyer, buyer] = await goPromise<IUser>(
       getUserById(transaction.buyer_id || 0)
+    );
+    const [errSeller, seller] = await goPromise<IUser>(
+      getUserById(transaction.seller_id || 0)
     );
     setLoading(false);
 
-    if (errTransaction || errLegitCheck || errUser) {
-      console.log(errTransaction, errLegitCheck, errUser);
+    if (errTransaction || errLegitCheck || errBuyer || errSeller) {
+      console.log(errTransaction, errLegitCheck, errBuyer, errSeller);
       setError("error");
     } else {
       setTransaction(transaction);
       setLegitCheck(legitCheck);
-      setUser(user);
+      setBuyer(buyer);
+      setSeller(seller);
     }
   }, [transactionCode]);
 
@@ -101,6 +120,23 @@ function DetailDialog(props: IComponentProps) {
   const handleClose = React.useCallback(() => {
     dismiss();
   }, [dismiss]);
+
+  const publish = React.useCallback(async () => {
+    if (!legitCheck) return;
+    setFinalResultError("");
+    setFinalResultLoading(true);
+    const [err] = await goPromise<void>(
+      publishFinalResult(legitCheck.id, finalResult)
+    );
+    setFinalResultLoading(false);
+
+    if (err) {
+      console.log(err);
+      setError("error");
+    } else {
+      silentFetch();
+    }
+  }, [silentFetch, legitCheck, finalResult]);
 
   const [updateDialogId, setUpdateDialogId] = React.useState<number>(null);
 
@@ -173,31 +209,61 @@ function DetailDialog(props: IComponentProps) {
     ];
   }, [transaction]);
 
-  const userEntries = React.useMemo(() => {
-    if (!user) return [];
+  const buyerEntries = React.useMemo(() => {
+    if (!buyer) return [];
     return [
-      { label: "Id", value: user.id || "-" },
-      { label: "Username", value: user.username || "-" },
-      { label: "Full Name", value: user.full_name || "-" },
-      { label: "Email", value: user.email || "-" },
-      { label: "Gender", value: user.gender || "-" },
+      { label: "Id", value: buyer.id || "-" },
+      { label: "Username", value: buyer.username || "-" },
+      { label: "Full Name", value: buyer.full_name || "-" },
+      { label: "Email", value: buyer.email || "-" },
+      { label: "Gender", value: buyer.gender || "-" },
       {
         label: "Birthday",
-        value: user.birthday ? moment(user.birthday).format("D MMMM YYYY") : "-"
+        value: buyer.birthday
+          ? moment(buyer.birthday).format("D MMMM YYYY")
+          : "-"
       },
-      { label: "Referral Code", value: user.referral_code || "-" },
-      { label: "Verified Email", value: user.verified_email || "-" },
-      { label: "Country Code", value: user.country_code || "-" },
-      { label: "Phone", value: user.phone || "-" },
-      { label: "Verified Phone", value: user.verified_phone || "-" },
+      { label: "Referral Code", value: buyer.referral_code || "-" },
+      { label: "Verified Email", value: buyer.verified_email || "-" },
+      { label: "Country Code", value: buyer.country_code || "-" },
+      { label: "Phone", value: buyer.phone || "-" },
+      { label: "Verified Phone", value: buyer.verified_phone || "-" },
       {
         label: "Joined at",
-        value: user.last_login_at
-          ? moment(user.created_at).format("D MMMM YYYY")
+        value: buyer.last_login_at
+          ? moment(buyer.created_at).format("D MMMM YYYY")
           : "-"
       }
     ];
-  }, [user]);
+  }, [buyer]);
+
+  const sellerEntries = React.useMemo(() => {
+    if (!seller) return [];
+    return [
+      { label: "Id", value: seller.id || "-" },
+      { label: "Username", value: seller.username || "-" },
+      { label: "Full Name", value: seller.full_name || "-" },
+      { label: "Email", value: seller.email || "-" },
+      { label: "Gender", value: seller.gender || "-" },
+      {
+        label: "Birthday",
+        value: seller.birthday
+          ? moment(seller.birthday).format("D MMMM YYYY")
+          : "-"
+      },
+      { label: "Referral Code", value: seller.referral_code || "-" },
+      { label: "Verified Email", value: seller.verified_email || "-" },
+      { label: "Country Code", value: seller.country_code || "-" },
+      { label: "Phone", value: seller.phone || "-" },
+      { label: "Verified Phone", value: seller.verified_phone || "-" },
+      {
+        label: "Joined at",
+        value: seller.last_login_at
+          ? moment(seller.created_at).format("D MMMM YYYY")
+          : "-"
+      }
+    ];
+  }, [seller]);
 
   const shippingAddressEntries = React.useMemo(() => {
     if (!transaction) return [];
@@ -607,7 +673,7 @@ function DetailDialog(props: IComponentProps) {
                 </span>
                 .
               </Typography>
-            ) : transaction ? (
+            ) : transaction && legitCheck ? (
               <>
                 <div style={{ width: "100%" }}>
                   {makeExpansion(
@@ -615,7 +681,11 @@ function DetailDialog(props: IComponentProps) {
                     true
                   )}
                   {makeExpansion(
-                    { title: "User Info", entries: userEntries },
+                    { title: "Buyer Info", entries: buyerEntries },
+                    true
+                  )}
+                  {makeExpansion(
+                    { title: "Seller Info", entries: sellerEntries },
                     true
                   )}
                   {makeExpansion({
@@ -629,7 +699,6 @@ function DetailDialog(props: IComponentProps) {
                   <br />
                   <MyPaper>
                     <Typography variant="h6">Timeline</Typography>
-
                     <Typography variant="subtitle1">
                       Current Status:{" "}
                       <EmpSpan>
@@ -645,6 +714,23 @@ function DetailDialog(props: IComponentProps) {
                   {Boolean(legitCheck) && (
                     <MyPaper>
                       <Typography variant="h6">Legit Check</Typography>
+                      <br />
+                      <Typography variant="subtitle1">Images</Typography>
+                      <div>
+                        {legitCheck.image_urls.map(url => (
+                          <img
+                            key={url}
+                            src={url}
+                            alt=""
+                            style={{
+                              height: "60px",
+                              marginRight: "1rem",
+                              cursor: "pointer"
+                            }}
+                            onClick={() => setDetailDialogImageUrl(url)}
+                          />
+                        ))}
+                      </div>
                       <Button
                         color="primary"
                         variant="outlined"
@@ -652,6 +738,47 @@ function DetailDialog(props: IComponentProps) {
                       >
                         Add/Remove Image
                       </Button>
+                      <br />
+                      <br />
+
+                      <div>
+                        <LegitCheckDetailTable legitCheckId={legitCheck.id} />
+                      </div>
+
+                      <div>
+                        <BasicSelect
+                          style={{ width: "10rem" }}
+                          label="Final Result"
+                          disabled={
+                            Boolean(legitCheck.final_result) ||
+                            finalResultLoading
+                          }
+                          value={legitCheck.final_result || finalResult}
+                          onChange={(value: string) => {
+                            setFinalResult(value);
+                          }}
+                        >
+                          <MenuItem value=""></MenuItem>
+                          <MenuItem value="authentic">Authentic</MenuItem>
+                          <MenuItem value="indefinable">Indefinable</MenuItem>
+                          <MenuItem value="fake">Fake</MenuItem>
+                        </BasicSelect>
+                        {Boolean(finalResultError) && (
+                          <Typography
+                            variant="subtitle2"
+                            style={{ color: "red" }}
+                          >
+                            {finalResultError}
+                          </Typography>
+                        )}
+                        <Button
+                          variant="outlined"
+                          onClick={publish}
+                          disabled={finalResultLoading}
+                        >
+                          Publish
+                        </Button>
+                      </div>
                     </MyPaper>
                   )}
                 </div>

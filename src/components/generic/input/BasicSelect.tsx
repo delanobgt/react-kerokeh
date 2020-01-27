@@ -8,6 +8,7 @@ interface IComponentProps {
   label: string;
   onChange: (value: string) => void;
   children?: ReactNode;
+  disabled?: boolean;
 }
 
 function BasicSelect(props: IComponentProps) {
@@ -31,6 +32,7 @@ function BasicSelect(props: IComponentProps) {
         labelId={labelId}
         value={props.value}
         onChange={e => props.onChange(String(e.target.value))}
+        disabled={props.disabled || false}
       >
         {props.children || null}
       </Select>

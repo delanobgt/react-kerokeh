@@ -56,6 +56,24 @@ function FilterForm(props: IComponentProps) {
 
       <Div>
         <TextField
+          label="Buyer Username"
+          value={filter.buyer_username || ""}
+          onChange={e => updateFilter({ buyer_username: e.target.value })}
+          style={{ width: "100%" }}
+        />
+      </Div>
+
+      <Div>
+        <TextField
+          label="Seller Username"
+          value={filter.seller_username || ""}
+          onChange={e => updateFilter({ seller_username: e.target.value })}
+          style={{ width: "100%" }}
+        />
+      </Div>
+
+      <Div>
+        <TextField
           label="Office Shipping Tracking Code"
           value={filter.office_shipping_tracking_code || ""}
           onChange={e =>

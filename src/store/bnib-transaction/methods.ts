@@ -1,6 +1,6 @@
 import celestineApi from "src/apis/celestine";
-import { IBnibTransaction, ILegitCheck } from "./types";
-import { PRIMARY_ROUTE, SECONDARY_ROUTE } from "./constants";
+import { IBnibTransaction, ILegitCheck, ILegitCheckDetail, PLegitCheckDetail } from "./types";
+import { PRIMARY_ROUTE, SECONDARY_ROUTE, TERNARY_ROUTE } from "./constants";
 
 export const getBnibTransactionByCode = async (code: string): Promise<IBnibTransaction> => {
   const response = await celestineApi().get(`${PRIMARY_ROUTE}/${code}`);
@@ -49,6 +49,7 @@ export const disputeBnibTransactionByCode = async (code: string, reject_reason: 
   await celestineApi().post(`${PRIMARY_ROUTE}/${code}/disputed`, { reject_reason });
 };
 
+// Legit Check
 export const getLegitCheckByBnibTransactionId = async (id: number): Promise<ILegitCheck> => {
   const response = await celestineApi().get(`${SECONDARY_ROUTE}`, { params: { bnib_transaction_id: id } });
   const legitCheck: ILegitCheck = (response.data.data && response.data.data.length) ? response.data.data[0] : null;
@@ -80,4 +81,49 @@ export const updateLegitCheck = async (legitCheckId: number, detail_images: any[
       formData.append("deleted_images", deleted_detail_images);
     } 
   await celestineApi().patch(`${SECONDARY_ROUTE}/${legitCheckId}`, formData);
+};
+
+export const publishFinalResult = async (
+  id:number, final_result: string
+): Promise<void> => {
+  const response = await celestineApi().patch(
+    `${SECONDARY_ROUTE}/${id}/result`, {final_result}
+  );
+  return response.data;
+};
+
+// Legit Check Detail
+export const getLegitCheckDetails = async (legit_check_id: number): Promise<ILegitCheckDetail[]> => {
+  const response = await celestineApi().get(`${TERNARY_ROUTE}`, {
+    params: {
+      legit_check_id
+    }
+  });
+  const legitCheckDetails: ILegitCheckDetail[] = response.data.data;
+  return legitCheckDetails;
+};
+
+export const getLegitCheckDetailById = async (id: number): Promise<ILegitCheckDetail> => {
+  const response = await celestineApi().get(`${TERNARY_ROUTE}/${id}`, {
+  });
+  return response.data;
+};
+
+export const createLegitCheckDetail = async (legitCheckDetail: PLegitCheckDetail): Promise<ILegitCheckDetail> => {
+  legitCheckDetail.price = Number(legitCheckDetail.price);
+  const response = await celestineApi().post(
+    `${TERNARY_ROUTE}`, legitCheckDetail
+  );
+  return response.data;
+}
+
+export const updateLegitCheckDetail = async (
+  oldLegitCheckDetail: PLegitCheckDetail,
+  newLegitCheckDetail: PLegitCheckDetail,
+): Promise<ILegitCheckDetail> => {
+  newLegitCheckDetail.price = Number(newLegitCheckDetail.price);
+  const response = await celestineApi().patch(
+    `${TERNARY_ROUTE}/${oldLegitCheckDetail.id}`, newLegitCheckDetail
+  );
+  return response.data;
 };

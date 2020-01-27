@@ -80,7 +80,7 @@ const makeBodyTableCell = (cell: any, key: number) => {
 };
 
 // Our table component
-function ReactTable({ columns, data }: any) {
+function ReactTable({ columns, data, showPagination }: any) {
   const [page, setPage] = React.useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = React.useState<number>(5);
   const defaultColumn = React.useMemo(
@@ -202,16 +202,18 @@ function ReactTable({ columns, data }: any) {
             })}
         </TableBody>
       </Table>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
-        labelRowsPerPage="Rows"
-      />
+      {Boolean(showPagination) && (
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+          labelRowsPerPage="Rows"
+        />
+      )}
       <br />
       <Typography variant="subtitle1" align="center">
         <em>Tips</em>: Hold <strong>Shift</strong> to do multi-sort

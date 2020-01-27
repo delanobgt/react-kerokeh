@@ -63,8 +63,8 @@ function DefectDialog(
                       component={renderImageField}
                       validate={[requiredValidator]}
                       disabled={loading}
-                      accept="image/png"
-                      extensions={["png"]}
+                      accept="image/png,image/jpg,image/jpeg"
+                      extensions={["png", "jpg", "jpeg"]}
                     />
                     <IconButton onClick={() => fields.remove(index)}>
                       <CloseIcon />

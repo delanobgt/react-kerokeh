@@ -60,14 +60,22 @@ export interface ILegitCheck {
 export type PLegitCheck = Partial<ILegitCheck>;
 
 export interface ILegitCheckDetail {
+  checker_initial: string;
+  created_by: string;
+  currency: string;
   id: number;
+  legit_check_id: number;
+  price: number;
+  result: string;
+  updated_by: string;
 }
 export type PLegitCheckDetail = Partial<ILegitCheckDetail>;
-
 
 interface IBnibTransactionFilter {
   code: string;
   status: string;
+  buyer_username: string;
+  seller_username: string;
   office_shipping_tracking_code: string;
   buyer_shipping_tracking_code: string;
   refund_shipping_tracking_code: string;

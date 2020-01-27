@@ -5,7 +5,7 @@ import {
   BnibTransactionSortField,
   IBnibTransactionGetAction,
   EBnibTransactionActionTypes,
-  IBnibTransaction
+  IBnibTransaction,
 } from "./types";
 import celestineApi from "src/apis/celestine";
 import { ISort } from "src/util/types";

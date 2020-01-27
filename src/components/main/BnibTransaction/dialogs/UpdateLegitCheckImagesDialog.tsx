@@ -195,6 +195,7 @@ function UpdateLegitCheckImagesDialog(
           <form onSubmit={handleSubmit(handleSave)}>
             <>
               {initialLegitCheckImageFieldArray}
+              <br />
               {detailImageFieldArray}
               {error && (
                 <Typography variant="subtitle1">
