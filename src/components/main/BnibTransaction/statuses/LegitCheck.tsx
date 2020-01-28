@@ -54,9 +54,7 @@ function LegitCheck(props: IComponentProps) {
 
     if (err) {
       console.log(err);
-      setError(
-        "Something went wrong. Maybe other admin has taken action on this transaction."
-      );
+      setError(_.get(err, "response.data.errors", "Something went wrong!"));
     } else {
       onAfterSubmit();
     }
@@ -74,9 +72,7 @@ function LegitCheck(props: IComponentProps) {
 
       if (err) {
         console.log(err);
-        setError(
-          "Something went wrong. Maybe other admin has taken action on this transaction."
-        );
+        setError(_.get(err, "response.data.errors", "Something went wrong!"));
       } else {
         onAfterSubmit();
       }
@@ -144,7 +140,7 @@ function LegitCheck(props: IComponentProps) {
                     <MenuItem value="fake">Fake</MenuItem>
                   </BasicSelect>
                   {Boolean(error) && (
-                    <Typography variant="subtitle2" style={{ color: "red" }}>
+                    <Typography variant="body2" style={{ color: "red" }}>
                       {error}
                     </Typography>
                   )}

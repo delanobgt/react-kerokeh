@@ -45,7 +45,7 @@ interface IFormProps {
   expired_at: string;
   limit: number;
   percentage: number;
-  product_type: string;
+  product_type: number;
   image: any;
 }
 
@@ -139,14 +139,10 @@ function CreateDialog(
                 validate={[requiredValidator]}
                 disabled={loading}
               >
-                <MenuItem value="bnib_product">BNIB Product</MenuItem>
-                <MenuItem value="bnib_buy_order">BNIB Buy Order</MenuItem>
-                <MenuItem value="direct_bnib_product">
-                  Direct BNIB Product
-                </MenuItem>
-                <MenuItem value="direct_bnib_buy_order">
-                  Direct BNIB Buy Order
-                </MenuItem>
+                <MenuItem value={1}>BNIB Product</MenuItem>
+                <MenuItem value={2}>Direct BNIB Buy Order</MenuItem>
+                <MenuItem value={3}>Direct BNIB Product</MenuItem>
+                <MenuItem value={4}>BNIB Buy Order</MenuItem>
               </Field>
               <Field
                 name="active_status"

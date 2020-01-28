@@ -178,8 +178,11 @@ function ReactTable({ columns, data, showPagination }: any) {
                           style={{ flexGrow: 1 }}
                         >
                           <Title>
-                            {row.cells[0].render("Cell")} -{" "}
-                            {row.cells[1].render("Cell")}
+                            {Boolean(row.cells[0]) &&
+                              row.cells[0].render("Cell")}{" "}
+                            {Boolean(row.cells[1]) && (
+                              <span>- {row.cells[1].render("Cell")}</span>
+                            )}
                           </Title>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>

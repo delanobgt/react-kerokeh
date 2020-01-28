@@ -46,12 +46,10 @@ function FilterForm(props: IComponentProps) {
           onChange={(value: string) => updateFilter({ product_type: value })}
         >
           <MenuItem value="">No Filter</MenuItem>
-          <MenuItem value="bnib_product">BNIB Product</MenuItem>
-          <MenuItem value="bnib_buy_order">BNIB Buy Order</MenuItem>
-          <MenuItem value="direct_bnib_product">Direct BNIB Product</MenuItem>
-          <MenuItem value="direct_bnib_buy_order">
-            Direct BNIB Buy Order
-          </MenuItem>
+          <MenuItem value="1">BNIB Product</MenuItem>
+          <MenuItem value="2">Direct BNIB Buy Order</MenuItem>
+          <MenuItem value="3">Direct BNIB Product</MenuItem>
+          <MenuItem value="4">BNIB Buy Order</MenuItem>
         </BasicSelect>
       </Div>
     </div>

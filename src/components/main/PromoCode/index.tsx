@@ -44,6 +44,7 @@ import {
 } from "src/components/generic/table/table-infos";
 import CollapseFilterAndSort from "src/components/generic/CollapseFilterAndSort";
 import DetailImageDialog from "src/components/generic/dialog/DetailImageDialog";
+import { EProductType } from "./constants";
 
 function PromoCode() {
   const refreshDelay = 5000;
@@ -179,7 +180,7 @@ function PromoCode() {
       },
       {
         Header: "Product Type",
-        accessor: row => _.startCase(row.product_type || "-")
+        accessor: row => _.startCase(EProductType[row.product_type])
       },
       {
         Header: "Active Status",

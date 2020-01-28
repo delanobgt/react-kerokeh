@@ -5,7 +5,7 @@ export const Title = styled(Typography)`
   overflow-wrap: break-word;
   word-wrap: break-word;
   white-space: normal;
-  width: 55vw;
+  width: 35vw;
 `;
 
 export const Entry = styled.div`

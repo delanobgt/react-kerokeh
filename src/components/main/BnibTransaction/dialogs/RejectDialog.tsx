@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React from "react";
 import {
   Button,
@@ -38,9 +39,7 @@ function RejectDialog(props: IComponentProps) {
 
     if (err) {
       console.log(err);
-      setError(
-        "Something went wrong. Maybe other admin has taken action on this transaction."
-      );
+      setError(_.get(err, "response.data.errors", "Something went wrong!"));
     } else {
       onAfterSubmit();
       dismiss();

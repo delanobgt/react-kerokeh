@@ -14,7 +14,7 @@ export interface IPromoCode {
   image_url: string;
   limit: number;
   percentage: number;
-  product_type: string;
+  product_type: number;
   updated_by: string;
   usage: number;
 }

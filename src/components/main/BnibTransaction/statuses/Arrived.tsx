@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React from "react";
 import { EmpSpan, Div, MyNumber, ContentDiv } from "../components";
 import moment from "moment";
@@ -42,9 +43,7 @@ export default function(props: IProps) {
 
       if (err) {
         console.log(err);
-        setError(
-          "Something went wrong. Maybe other admin has taken action on this transaction."
-        );
+        setError(_.get(err, "response.data.errors", "Something went wrong!"));
       } else {
         onAfterSubmit();
       }

@@ -166,7 +166,7 @@ function UpdateLegitCheckImagesDialog(
         if (_.has(err, "response.data.errors")) {
           throw new SubmissionError(err.response.data.errors);
         } else {
-          setError("error");
+          setError(_.get(err, "response.data.errors", "Something went wrong!"));
         }
       } else {
         onAfterSubmit();

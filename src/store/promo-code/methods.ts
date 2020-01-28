@@ -11,7 +11,7 @@ export const createPromoCode = async (
   formData.append("code", promoCode.code);
   formData.append("expired_at", promoCode.expired_at);
   formData.append("percentage", String(promoCode.percentage));
-  formData.append("product_type", promoCode.product_type);
+  formData.append("product_type", String(promoCode.product_type));
   formData.append("limit", String(promoCode.limit));
   if (typeof promoCode.description === "string")
     formData.append("description", promoCode.description);
@@ -31,7 +31,7 @@ export const updatePromoCode = async (
   formData.append("active_status", String(newPromoCode.active_status));
   formData.append("expired_at", newPromoCode.expired_at);
   formData.append("percentage", String(newPromoCode.percentage));
-  formData.append("product_type", newPromoCode.product_type);
+  formData.append("product_type", String(newPromoCode.product_type));
   formData.append("limit", String(newPromoCode.limit));
   if (typeof newPromoCode.description === "string")
     formData.append("description", newPromoCode.description);

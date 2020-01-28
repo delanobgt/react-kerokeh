@@ -1,11 +1,6 @@
 import _ from "lodash";
 import React from "react";
-import {
-  Button,
-  CircularProgress,
-  Typography,
-  MenuItem
-} from "@material-ui/core";
+import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { Paper } from "@material-ui/core";
 import styled from "styled-components";
 
@@ -16,8 +11,7 @@ import {
   getBnibTransactionByCode,
   BnibTransactionStatus,
   getLegitCheckByBnibTransactionId,
-  ILegitCheck,
-  publishFinalResult
+  ILegitCheck
 } from "src/store/bnib-transaction";
 import moment from "moment";
 import { makeExpansion } from "src/components/generic/detail-dialog";
@@ -31,12 +25,9 @@ import WaitingTrackingCode from "../statuses/WaitingTrackingCode";
 import WaitingDefect from "../statuses/WaitingDefect";
 import LegitCheck from "../statuses/LegitCheck";
 import Send from "../statuses/Send";
-import UpdateLegitCheckImagesDialog from "./UpdateLegitCheckImagesDialog";
-import { TLegitCheckInitialValues } from "../types";
 import DetailImageDialog from "src/components/generic/dialog/DetailImageDialog";
 import { IUser, getUserById } from "src/store/user";
-import LegitCheckDetailTable from "../tables/LegitCheckDetail";
-import BasicSelect from "src/components/generic/input/BasicSelect";
+import LegitCheckModule from "../LegitCheckModule";
 
 interface IComponentProps {
   transactionCode: string;
@@ -61,12 +52,6 @@ function DetailDialog(props: IComponentProps) {
     string
   >("");
 
-  const [finalResult, setFinalResult] = React.useState<string>("");
-  const [finalResultLoading, setFinalResultLoading] = React.useState<boolean>(
-    false
-  );
-  const [finalResultError, setFinalResultError] = React.useState<string>("");
-
   // initial fetch
   const fetch = React.useCallback(async () => {
     setError("");
@@ -87,7 +72,7 @@ function DetailDialog(props: IComponentProps) {
 
     if (errTransaction || errLegitCheck || errBuyer || errSeller) {
       console.log(errTransaction, errLegitCheck, errBuyer, errSeller);
-      setError("error");
+      setError("Something went wrong!");
     } else {
       setTransaction(transaction);
       setLegitCheck(legitCheck);
@@ -107,7 +92,7 @@ function DetailDialog(props: IComponentProps) {
 
     if (errTransaction || errLegitCheck) {
       console.log(errTransaction, errLegitCheck);
-      setError("error");
+      setError("Something went wrong!");
     } else {
       setTransaction(transaction);
       setLegitCheck(legitCheck);
@@ -120,40 +105,6 @@ function DetailDialog(props: IComponentProps) {
   const handleClose = React.useCallback(() => {
     dismiss();
   }, [dismiss]);
-
-  const publish = React.useCallback(async () => {
-    if (!legitCheck) return;
-    setFinalResultError("");
-    setFinalResultLoading(true);
-    const [err] = await goPromise<void>(
-      publishFinalResult(legitCheck.id, finalResult)
-    );
-    setFinalResultLoading(false);
-
-    if (err) {
-      console.log(err);
-      setError("error");
-    } else {
-      silentFetch();
-    }
-  }, [silentFetch, legitCheck, finalResult]);
-
-  const [updateDialogId, setUpdateDialogId] = React.useState<number>(null);
-
-  // set updateInitialValues
-  const [updateInitialValues, setUpdateInitialValues] = React.useState<
-    TLegitCheckInitialValues
-  >({});
-  React.useEffect(() => {
-    if (!updateDialogId || !legitCheck) return setUpdateInitialValues({});
-    const initial_images = legitCheck.image_urls.map(url => ({
-      image_path: url,
-      deleted: false
-    }));
-    setUpdateInitialValues({
-      initial_images
-    });
-  }, [updateDialogId, setUpdateInitialValues, legitCheck]);
 
   const generalEntries = React.useMemo(() => {
     if (!transaction) return [];
@@ -680,14 +631,14 @@ function DetailDialog(props: IComponentProps) {
                     { title: "Transaction Info", entries: generalEntries },
                     true
                   )}
-                  {makeExpansion(
-                    { title: "Buyer Info", entries: buyerEntries },
-                    true
-                  )}
-                  {makeExpansion(
-                    { title: "Seller Info", entries: sellerEntries },
-                    true
-                  )}
+                  {makeExpansion({
+                    title: "Buyer Info",
+                    entries: buyerEntries
+                  })}
+                  {makeExpansion({
+                    title: "Seller Info",
+                    entries: sellerEntries
+                  })}
                   {makeExpansion({
                     title: "Product Detail",
                     entries: productDetailEntries
@@ -712,74 +663,13 @@ function DetailDialog(props: IComponentProps) {
 
                   <br />
                   {Boolean(legitCheck) && (
-                    <MyPaper>
-                      <Typography variant="h6">Legit Check</Typography>
-                      <br />
-                      <Typography variant="subtitle1">Images</Typography>
-                      <div>
-                        {legitCheck.image_urls.map(url => (
-                          <img
-                            key={url}
-                            src={url}
-                            alt=""
-                            style={{
-                              height: "60px",
-                              marginRight: "1rem",
-                              cursor: "pointer"
-                            }}
-                            onClick={() => setDetailDialogImageUrl(url)}
-                          />
-                        ))}
-                      </div>
-                      <Button
-                        color="primary"
-                        variant="outlined"
-                        onClick={() => setUpdateDialogId(legitCheck.id)}
-                      >
-                        Add/Remove Image
-                      </Button>
-                      <br />
-                      <br />
-
-                      <div>
-                        <LegitCheckDetailTable legitCheckId={legitCheck.id} />
-                      </div>
-
-                      <div>
-                        <BasicSelect
-                          style={{ width: "10rem" }}
-                          label="Final Result"
-                          disabled={
-                            Boolean(legitCheck.final_result) ||
-                            finalResultLoading
-                          }
-                          value={legitCheck.final_result || finalResult}
-                          onChange={(value: string) => {
-                            setFinalResult(value);
-                          }}
-                        >
-                          <MenuItem value=""></MenuItem>
-                          <MenuItem value="authentic">Authentic</MenuItem>
-                          <MenuItem value="indefinable">Indefinable</MenuItem>
-                          <MenuItem value="fake">Fake</MenuItem>
-                        </BasicSelect>
-                        {Boolean(finalResultError) && (
-                          <Typography
-                            variant="subtitle2"
-                            style={{ color: "red" }}
-                          >
-                            {finalResultError}
-                          </Typography>
-                        )}
-                        <Button
-                          variant="outlined"
-                          onClick={publish}
-                          disabled={finalResultLoading}
-                        >
-                          Publish
-                        </Button>
-                      </div>
-                    </MyPaper>
+                    <LegitCheckModule
+                      legitCheck={legitCheck}
+                      onAfterSubmit={() => {
+                        silentFetch();
+                        restartIntervalRun();
+                      }}
+                    />
                   )}
                 </div>
               </>
@@ -790,17 +680,7 @@ function DetailDialog(props: IComponentProps) {
           </section>
         </BasicDialog>
       </div>
-      {Boolean(updateDialogId) && (
-        <UpdateLegitCheckImagesDialog
-          legitCheckId={updateDialogId}
-          onAfterSubmit={() => {
-            silentFetch();
-            restartIntervalRun();
-          }}
-          dismiss={() => setUpdateDialogId(null)}
-          initialValues={updateInitialValues}
-        />
-      )}
+
       {Boolean(detailDialogImageUrl) && (
         <DetailImageDialog
           title="Detail Image"
