@@ -15,6 +15,7 @@ export interface IBnibTransaction {
   buyer_confirmation: number | boolean;
   buyer_confirmation_expired_at: string;
   buyer_id: number;
+  buyer_username: string;
   buyer_shipping_address_id: number;
   buyer_shipping_cost: number;
   buyer_shipping_provider: string;
@@ -39,6 +40,7 @@ export interface IBnibTransaction {
   refund_shipping_tracking_code: string;
   seller_confirmation_expired_at: string;
   seller_id: number;
+  seller_username: string;
   shipping_address: IShippingAddress;
   status: number;
   status_message: string;

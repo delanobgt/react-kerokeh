@@ -624,7 +624,7 @@ function DetailDialog(props: IComponentProps) {
                 </span>
                 .
               </Typography>
-            ) : transaction && legitCheck ? (
+            ) : transaction ? (
               <>
                 <div style={{ width: "100%" }}>
                   {makeExpansion(

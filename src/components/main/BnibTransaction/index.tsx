@@ -160,6 +160,14 @@ function BnibTransaction() {
         accessor: row => row.code
       },
       {
+        Header: "Buyer",
+        accessor: row => row.buyer_username
+      },
+      {
+        Header: "Seller",
+        accessor: row => row.seller_username
+      },
+      {
         Header: "Status",
         accessor: row => row.status_message
       },
