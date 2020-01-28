@@ -139,10 +139,10 @@ function CreateDialog(
                 validate={[requiredValidator]}
                 disabled={loading}
               >
-                <MenuItem value={1}>BNIB Product</MenuItem>
-                <MenuItem value={2}>Direct BNIB Buy Order</MenuItem>
-                <MenuItem value={3}>Direct BNIB Product</MenuItem>
-                <MenuItem value={4}>BNIB Buy Order</MenuItem>
+                <MenuItem value={1}>Sell BNIB</MenuItem>
+                <MenuItem value={2}>Buy BNIB</MenuItem>
+                <MenuItem value={3}>Sell Bidding</MenuItem>
+                <MenuItem value={4}>Bid</MenuItem>
               </Field>
               <Field
                 name="active_status"
