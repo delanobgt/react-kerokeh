@@ -113,7 +113,7 @@ function RefundDialog(
                 Cancel
               </Button>
               <Button type="submit" color="primary" disabled={loading}>
-                {loading ? <CircularProgress size={24} /> : "Reject"}
+                {loading ? <CircularProgress size={24} /> : "Send Back"}
               </Button>
             </div>
           </form>

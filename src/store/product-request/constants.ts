@@ -1,1 +1,1 @@
-export const PRIMARY_ROUTE = "/admin/topup"
+export const PRIMARY_ROUTE = "/admin/product-request";

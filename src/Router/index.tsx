@@ -20,6 +20,7 @@ import DepositFee from "src/components/main/DepositFee";
 import Product from "src/components/main/Product";
 import ProductBrand from "src/components/main/ProductBrand";
 import ProductCategory from "src/components/main/ProductCategory";
+import ProductRequest from "src/components/main/ProductRequest";
 import PromoCode from "src/components/main/PromoCode";
 import Identification from "src/components/main/Identification";
 import User from "src/components/main/User";
@@ -98,6 +99,10 @@ const routes = [
   {
     routePath: RoutePath.PRODUCT_CATEGORY,
     component: <ProductCategory />
+  },
+  {
+    routePath: RoutePath.PRODUCT_REQUEST,
+    component: <ProductRequest />
   },
   {
     routePath: RoutePath.PROMO_CODE,

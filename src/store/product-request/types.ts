@@ -1,66 +1,49 @@
 // enums
-export enum ETopUpActionTypes {
-  TOP_UP_GET = "@@top-up/TOP_UP_GET"
+export enum EProductRequestActionTypes {
+  PRODUCT_REQUEST_GET = "@@top-up/PRODUCT_REQUEST_GET"
 }
 
 // entity types
-export interface ITopUp {
-  amount: number;
-  code: string;
-  created_at: string;
-  description: string;
-  fraud_status: string;
-  id: 1;
-  invoice_id: null | number;
-  payment_channel: string;
-  payment_code: string;
-  payment_status: string;
-  payment_type: string;
-  user_id: number;
-  virtual_account_number: number;
-  wallet_mutation_id: number;
+export interface IProductRequest {
+  brand: string;
+  id: number;
+  name: string;
+  product_code: string;
+  requester_id: number;
+  retail_price: number;
+  sub_brand: string;
 }
-export type PTopUp = Partial<ITopUp>;
+export type PProductRequest = Partial<IProductRequest>;
 
-interface ITopUpFilter {
-  code: string;
-  payment_status: string;
-  created_at_start: string;
-  created_at_end: string;
+interface IProductRequestFilter {
 }
-export type PTopUpFilter = Partial<ITopUpFilter>;
+export type PProductRequestFilter = Partial<IProductRequestFilter>;
 
-interface ITopUpPagination {
+interface IProductRequestPagination {
   limit: number;
   offset: number;
 }
-export type PTopUpPagination = Partial<ITopUpPagination>;
+export type PProductRequestPagination = Partial<IProductRequestPagination>;
 
-export type TopUpSortField =
-  | "amount"
-  | "code"
-  | "created_at"
-  | "description"
-  | "fraud_status"
-  | "id"
-  | "invoice_id"
-  | "payment_channel"
-  | "payment_code"
-  | "payment_status"
-  | "payment_type"
-  | "virtual_account_number";
+export type ProductRequestSortField =
+  | 'brand'
+  | 'id'
+  | 'name'
+  | 'product_code'
+  | 'retail_price'
+  | 'sub_brand';
 
 // redux state type
-export interface ITopUpState {
-  topUps: ITopUp[];
+export interface IProductRequestState {
+  productRequests: IProductRequest[];
   realTotal: number;
 }
 
 // action types
-export interface ITopUpGetAction {
-  type: ETopUpActionTypes.TOP_UP_GET;
-  topUps: ITopUp[];
+export interface IProductRequestGetAction {
+  type: EProductRequestActionTypes.PRODUCT_REQUEST_GET;
+  productRequests: IProductRequest[];
   realTotal: number;
 }
 
-export type TopUpActionType = ITopUpGetAction;
+export type ProductRequestActionType = IProductRequestGetAction;

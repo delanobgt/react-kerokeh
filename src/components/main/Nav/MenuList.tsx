@@ -22,6 +22,7 @@ import {
   ExpandLess as ExpandLessIcon,
   ExpandMore as ExpandMoreIcon,
   Money as MoneyIcon,
+  Poll as PollIcon,
   VerticalAlignBottom as VerticalAlignBottomIcon,
   VerticalAlignTop as VerticalAlignTopIcon
 } from "@material-ui/icons";
@@ -84,6 +85,11 @@ const menuList: IMenu[] = [
     title: "Promo Code",
     Icon: MoneyOffIcon,
     link: RoutePath.PROMO_CODE
+  },
+  {
+    title: "Product Request",
+    Icon: PollIcon,
+    link: RoutePath.PRODUCT_REQUEST
   },
   {
     title: "Special Category",

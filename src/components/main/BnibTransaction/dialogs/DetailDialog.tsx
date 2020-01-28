@@ -3,6 +3,7 @@ import React from "react";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { Paper } from "@material-ui/core";
 import styled from "styled-components";
+import ReactToPrint from "react-to-print";
 
 import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/dialog/BasicDialog";
@@ -26,7 +27,12 @@ import WaitingDefect from "../statuses/WaitingDefect";
 import LegitCheck from "../statuses/LegitCheck";
 import Send from "../statuses/Send";
 import DetailImageDialog from "src/components/generic/dialog/DetailImageDialog";
-import { IUser, getUserById } from "src/store/user";
+import {
+  IUser,
+  getUserById,
+  getShippingAddressById,
+  IShippingAddress
+} from "src/store/user";
 import LegitCheckModule from "../LegitCheckModule";
 
 interface IComponentProps {
@@ -48,6 +54,11 @@ function DetailDialog(props: IComponentProps) {
   const [legitCheck, setLegitCheck] = React.useState<ILegitCheck>(null);
   const [buyer, setBuyer] = React.useState<IUser>(null);
   const [seller, setSeller] = React.useState<IUser>(null);
+  const [refundShippingAddress, setRefundShippingAddress] = React.useState<
+    IShippingAddress
+  >(null);
+  const buyerShippingAddressComponentRef = React.useRef();
+  const refundShippingAddressComponentRef = React.useRef();
   const [detailDialogImageUrl, setDetailDialogImageUrl] = React.useState<
     string
   >("");
@@ -60,24 +71,40 @@ function DetailDialog(props: IComponentProps) {
       getBnibTransactionByCode(transactionCode)
     );
     const [errLegitCheck, legitCheck] = await goPromise<ILegitCheck>(
-      getLegitCheckByBnibTransactionId(transaction.id || 0)
+      getLegitCheckByBnibTransactionId(transaction.id)
     );
     const [errBuyer, buyer] = await goPromise<IUser>(
-      getUserById(transaction.buyer_id || 0)
+      getUserById(transaction.buyer_id)
     );
     const [errSeller, seller] = await goPromise<IUser>(
-      getUserById(transaction.seller_id || 0)
+      getUserById(transaction.seller_id)
     );
+    const [errRefundShippingAddress, refundShippingAddress] = await goPromise<
+      IShippingAddress
+    >(getShippingAddressById(transaction.refund_shipping_address_id));
     setLoading(false);
 
-    if (errTransaction || errLegitCheck || errBuyer || errSeller) {
-      console.log(errTransaction, errLegitCheck, errBuyer, errSeller);
+    if (
+      errTransaction ||
+      errLegitCheck ||
+      errBuyer ||
+      errSeller ||
+      errRefundShippingAddress
+    ) {
+      console.log(
+        errTransaction,
+        errLegitCheck,
+        errBuyer,
+        errSeller,
+        errRefundShippingAddress
+      );
       setError("Something went wrong!");
     } else {
       setTransaction(transaction);
       setLegitCheck(legitCheck);
       setBuyer(buyer);
       setSeller(seller);
+      setRefundShippingAddress(refundShippingAddress);
     }
   }, [transactionCode]);
 
@@ -216,7 +243,7 @@ function DetailDialog(props: IComponentProps) {
     ];
   }, [seller]);
 
-  const shippingAddressEntries = React.useMemo(() => {
+  const buyerShippingAddressEntries = React.useMemo(() => {
     if (!transaction) return [];
     return [
       {
@@ -265,6 +292,56 @@ function DetailDialog(props: IComponentProps) {
       }
     ];
   }, [transaction]);
+
+  const refundShippingAddressEntries = React.useMemo(() => {
+    if (!refundShippingAddress) return [];
+    return [
+      {
+        label: "Id",
+        value: refundShippingAddress.id || "-"
+      },
+      {
+        label: "Additional Info",
+        value: refundShippingAddress.additional_info || "-"
+      },
+      {
+        label: "Address",
+        value: refundShippingAddress.address || "-"
+      },
+      {
+        label: "City",
+        value: refundShippingAddress.city || "-"
+      },
+      {
+        label: "Country",
+        value: refundShippingAddress.country || "-"
+      },
+      {
+        label: "Name",
+        value: refundShippingAddress.name || "-"
+      },
+      {
+        label: "Phone",
+        value: refundShippingAddress.phone || "-"
+      },
+      {
+        label: "Province",
+        value: refundShippingAddress.province || "-"
+      },
+      {
+        label: "Recipient",
+        value: refundShippingAddress.recipient || "-"
+      },
+      {
+        label: "Used for Transaction",
+        value: refundShippingAddress.used_for_transaction ? "YES" : "NO"
+      },
+      {
+        label: "Zip Code",
+        value: refundShippingAddress.zip_code || "-"
+      }
+    ];
+  }, [refundShippingAddress]);
 
   const productCategoryEntries = React.useMemo(() => {
     if (!transaction) return [];
@@ -322,7 +399,7 @@ function DetailDialog(props: IComponentProps) {
           <div style={{ width: "100%" }}>
             <img
               alt=""
-              style={{ width: "100%" }}
+              style={{ width: "100%", cursor: "pointer" }}
               src={transaction.product_detail.display_image_url}
               onClick={() =>
                 setDetailDialogImageUrl(
@@ -341,7 +418,11 @@ function DetailDialog(props: IComponentProps) {
               <img
                 key={url}
                 alt=""
-                style={{ width: "100px", marginRight: "1rem" }}
+                style={{
+                  width: "100px",
+                  marginRight: "1rem",
+                  cursor: "pointer"
+                }}
                 src={url}
               />
             ))}
@@ -643,10 +724,30 @@ function DetailDialog(props: IComponentProps) {
                     title: "Product Detail",
                     entries: productDetailEntries
                   })}
-                  {makeExpansion({
-                    title: "Shipping Address",
-                    entries: shippingAddressEntries
-                  })}
+                  <ReactToPrint
+                    trigger={() => (
+                      <Button>Print Buyer Shipping Address</Button>
+                    )}
+                    content={() => buyerShippingAddressComponentRef.current}
+                  />
+                  <div ref={buyerShippingAddressComponentRef}>
+                    {makeExpansion({
+                      title: "Buyer Shipping Address",
+                      entries: buyerShippingAddressEntries
+                    })}
+                  </div>
+                  <ReactToPrint
+                    trigger={() => (
+                      <Button>Print Refund Shipping Address</Button>
+                    )}
+                    content={() => refundShippingAddressComponentRef.current}
+                  />
+                  <div ref={refundShippingAddressComponentRef}>
+                    {makeExpansion({
+                      title: "Seller Shipping Address",
+                      entries: refundShippingAddressEntries
+                    })}
+                  </div>
                   <br />
                   <MyPaper>
                     <Typography variant="h6">Timeline</Typography>

@@ -1,22 +1,22 @@
 import { Reducer } from "redux";
-import { ETopUpActionTypes, ITopUpState, TopUpActionType } from "./types";
+import { EProductRequestActionTypes, IProductRequestState, ProductRequestActionType } from "./types";
 
-const initialState: ITopUpState = {
-  topUps: [],
+const initialState: IProductRequestState = {
+  productRequests: [],
   realTotal: 0
 };
 
-const reducer: Reducer<ITopUpState, TopUpActionType> = (
+const reducer: Reducer<IProductRequestState, ProductRequestActionType> = (
   state = initialState,
-  action: TopUpActionType
-): ITopUpState => {
+  action: ProductRequestActionType
+): IProductRequestState => {
   switch (action.type) {
-    case ETopUpActionTypes.TOP_UP_GET: {
-      const { topUps } = action;
+    case EProductRequestActionTypes.PRODUCT_REQUEST_GET: {
+      const { productRequests, realTotal } = action;
       return {
         ...state,
-        topUps,
-        realTotal: action.realTotal
+        productRequests,
+        realTotal
       };
     }
     default: {
@@ -25,4 +25,4 @@ const reducer: Reducer<ITopUpState, TopUpActionType> = (
   }
 };
 
-export { reducer as topUpReducer };
+export { reducer as productRequestReducer };

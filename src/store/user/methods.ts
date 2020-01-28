@@ -8,6 +8,12 @@ export const getUserById = async (id: number): Promise<IUser> => {
   return user;
 };
 
+export const getShippingAddressById = async (id: number): Promise<IShippingAddress> => {
+  const response = await celestineApi().get(`${SECONDARY_ROUTE}/${id}`);
+  const shippingAdress = response.data;
+  return shippingAdress;
+};
+
 export const getShippingAddressesByUserId = async (user_id: number): Promise<IShippingAddress> => {
   const response = await celestineApi().get(SECONDARY_ROUTE, {
     params: {

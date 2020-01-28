@@ -108,7 +108,7 @@ function CreateDialog(
               <Field
                 name="percentage"
                 type="text"
-                label="Percentage"
+                label="Percentage (0-1)"
                 component={renderTextField}
                 validate={[requiredValidator, unsignedRealNumberValidator]}
                 disabled={loading}
@@ -141,8 +141,8 @@ function CreateDialog(
               >
                 <MenuItem value={1}>Sell BNIB</MenuItem>
                 <MenuItem value={2}>Buy BNIB</MenuItem>
-                <MenuItem value={3}>Sell Bidding</MenuItem>
-                <MenuItem value={4}>Bid</MenuItem>
+                <MenuItem value={3}>Bidding Admin Fee</MenuItem>
+                <MenuItem value={4}>Bidding Shipping Cost</MenuItem>
               </Field>
               <Field
                 name="active_status"
