@@ -44,7 +44,10 @@ export default function(props: IProps) {
               </Typography>
             </div>
           ) : transaction.status === BnibTransactionStatus.RefundedByDepatu ||
-            transaction.status === BnibTransactionStatus.DefectReject ? (
+            transaction.status === BnibTransactionStatus.DefectReject ||
+            transaction.status === BnibTransactionStatus.LegitCheckFake ||
+            transaction.status ===
+              BnibTransactionStatus.LegitCheckIndefinable ? (
             <div>
               <Typography variant="subtitle1">Refund the product ?</Typography>
 
