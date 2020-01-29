@@ -246,14 +246,6 @@ function DetailDialog(props: IComponentProps) {
     if (!transaction) return [];
     return [
       {
-        label: "Id",
-        value: transaction.shipping_address.id || "-"
-      },
-      {
-        label: "Additional Info",
-        value: transaction.shipping_address.additional_info || "-"
-      },
-      {
         label: "Address",
         value: transaction.shipping_address.address || "-"
       },
@@ -282,12 +274,12 @@ function DetailDialog(props: IComponentProps) {
         value: transaction.shipping_address.recipient || "-"
       },
       {
-        label: "Used for Transaction",
-        value: transaction.shipping_address.used_for_transaction ? "YES" : "NO"
-      },
-      {
         label: "Zip Code",
         value: transaction.shipping_address.zip_code || "-"
+      },
+      {
+        label: "Additional Info",
+        value: transaction.shipping_address.additional_info || "-"
       }
     ];
   }, [transaction]);
@@ -295,14 +287,6 @@ function DetailDialog(props: IComponentProps) {
   const refundShippingAddressEntries = React.useMemo(() => {
     if (!refundShippingAddress) return [];
     return [
-      {
-        label: "Id",
-        value: refundShippingAddress.id || "-"
-      },
-      {
-        label: "Additional Info",
-        value: refundShippingAddress.additional_info || "-"
-      },
       {
         label: "Address",
         value: refundShippingAddress.address || "-"
@@ -332,12 +316,12 @@ function DetailDialog(props: IComponentProps) {
         value: refundShippingAddress.recipient || "-"
       },
       {
-        label: "Used for Transaction",
-        value: refundShippingAddress.used_for_transaction ? "YES" : "NO"
-      },
-      {
         label: "Zip Code",
         value: refundShippingAddress.zip_code || "-"
+      },
+      {
+        label: "Additional Info",
+        value: refundShippingAddress.additional_info || "-"
       }
     ];
   }, [refundShippingAddress]);
