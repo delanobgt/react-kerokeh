@@ -3,7 +3,7 @@ import { Button, CircularProgress, Typography } from "@material-ui/core";
 
 import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { IProduct, getProductById } from "src/store/product";
-import { makeExpansion } from "src/components/generic/detail-dialog";
+import { MyExpansion } from "src/components/generic/detail-dialog";
 import { goPromise } from "src/util/helper";
 import moment from "moment";
 import DetailImageDialog from "src/components/generic/dialog/DetailImageDialog";
@@ -101,19 +101,21 @@ function DetailDialog(props: IComponentProps) {
         value: (
           <div style={{ width: "100%" }}>
             {product.detail_image_urls.length ? (
-              product.detail_image_urls.map(url => (
-                <img
-                  key={url}
-                  alt=""
-                  style={{
-                    width: "100px",
-                    marginRight: "1rem",
-                    cursor: "pointer"
-                  }}
-                  src={url}
-                  onClick={() => setDetailDialogImageUrl(url)}
-                />
-              ))
+              <div>
+                {product.detail_image_urls.map(url => (
+                  <img
+                    key={url}
+                    alt=""
+                    style={{
+                      width: "100px",
+                      marginRight: "1rem",
+                      cursor: "pointer"
+                    }}
+                    src={url}
+                    onClick={() => setDetailDialogImageUrl(url)}
+                  />
+                ))}
+              </div>
             ) : (
               <Typography>- no detail images -</Typography>
             )}
@@ -168,18 +170,22 @@ function DetailDialog(props: IComponentProps) {
           ) : product ? (
             <>
               <div style={{ width: "100%" }}>
-                {makeExpansion(
-                  { title: "Product", entries: productEntries },
-                  true
-                )}
-                {makeExpansion({
-                  title: "Product Brand",
-                  entries: productBrandEntries
-                })}
-                {makeExpansion({
-                  title: "Product Category",
-                  entries: productCategoryEntries
-                })}
+                <MyExpansion
+                  entry={{ title: "Product", entries: productEntries }}
+                  defaultExpanded
+                />
+                <MyExpansion
+                  entry={{
+                    title: "Product Brand",
+                    entries: productBrandEntries
+                  }}
+                />
+                <MyExpansion
+                  entry={{
+                    title: "Product Category",
+                    entries: productCategoryEntries
+                  }}
+                />
               </div>
             </>
           ) : null}

@@ -71,6 +71,7 @@ export default function(props: IComponentProps) {
       setErrors(newErrors);
 
       if (!newErrors.length) onChange(file);
+      inputRef.current.value = "";
     },
     [onChange, extensions, maxSize]
   );

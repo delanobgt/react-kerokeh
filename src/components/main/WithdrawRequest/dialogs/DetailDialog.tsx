@@ -14,7 +14,7 @@ import { IUser, getUserById } from "src/store/user";
 import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import moment from "moment";
 import { goPromise } from "src/util/helper";
-import { makeExpansion } from "src/components/generic/detail-dialog";
+import { MyExpansion } from "src/components/generic/detail-dialog";
 import {
   IWithdrawRequest,
   getWithdrawRequestById
@@ -170,15 +170,19 @@ function DetailDialog(props: IComponentProps) {
           ) : user ? (
             <>
               <div>
-                {makeExpansion(
-                  {
+                <MyExpansion
+                  entry={{
                     title: "Withdraw Request Info",
                     entries: withdrawRequestEntries
-                  },
-                  true
-                )}
-                {makeExpansion({ title: "Bank Info", entries: bankEntries })}
-                {makeExpansion({ title: "User Info", entries: userEntries })}
+                  }}
+                  defaultExpanded
+                />
+                <MyExpansion
+                  entry={{ title: "Bank Info", entries: bankEntries }}
+                />
+                <MyExpansion
+                  entry={{ title: "User Info", entries: userEntries }}
+                />
                 {Boolean(withdrawRequest) &&
                   withdrawRequest.status === "pending" && (
                     <ExpansionPanel defaultExpanded>

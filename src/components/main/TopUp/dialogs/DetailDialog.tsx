@@ -5,7 +5,7 @@ import { Button } from "@material-ui/core";
 import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { RootState } from "src/store";
 import { useSelector } from "react-redux";
-import { makeExpansion } from "src/components/generic/detail-dialog";
+import { MyExpansion } from "src/components/generic/detail-dialog";
 import moment from "moment";
 import { ITopUp } from "src/store/top-up";
 
@@ -65,7 +65,10 @@ function DeleteDialog(props: IComponentProps) {
         <section>
           {Boolean(topUp) && (
             <div style={{ width: "100%" }}>
-              {makeExpansion({ title: "Product", entries: topUpEntries }, true)}
+              <MyExpansion
+                entry={{ title: "Product", entries: topUpEntries }}
+                defaultExpanded
+              />
             </div>
           )}
           <div style={{ textAlign: "right" }}>

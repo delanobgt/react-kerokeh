@@ -2,7 +2,7 @@ import React from "react";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
 
 import BasicDialog from "src/components/generic/dialog/BasicDialog";
-import { makeExpansion } from "src/components/generic/detail-dialog";
+import { MyExpansion } from "src/components/generic/detail-dialog";
 import { goPromise } from "src/util/helper";
 import moment from "moment";
 import { getBannerById, IBanner } from "src/store/banner";
@@ -101,10 +101,10 @@ function DetailDialog(props: IComponentProps) {
           ) : banner ? (
             <>
               <div style={{ width: "100%" }}>
-                {makeExpansion(
-                  { title: "Banner", entries: bannerEntries },
-                  true
-                )}
+                <MyExpansion
+                  entry={{ title: "Banner", entries: bannerEntries }}
+                  defaultExpanded={true}
+                />
               </div>
             </>
           ) : null}

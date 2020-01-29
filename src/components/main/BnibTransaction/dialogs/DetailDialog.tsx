@@ -3,7 +3,6 @@ import React from "react";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { Paper } from "@material-ui/core";
 import styled from "styled-components";
-import ReactToPrint from "react-to-print";
 
 import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/dialog/BasicDialog";
@@ -15,7 +14,7 @@ import {
   ILegitCheck
 } from "src/store/bnib-transaction";
 import moment from "moment";
-import { makeExpansion } from "src/components/generic/detail-dialog";
+import { MyExpansion } from "src/components/generic/detail-dialog";
 import Arrived from "../statuses/Arrived";
 import AcceptedRejected from "../statuses/AcceptedRejected";
 import { EmpSpan, Div, MyNumber, ContentDiv } from "../components";
@@ -431,17 +430,25 @@ function DetailDialog(props: IComponentProps) {
       },
       {
         label: "Product Brand",
-        value: makeExpansion({
-          title: "Product Brand",
-          entries: productBrandEntries
-        })
+        value: (
+          <MyExpansion
+            entry={{
+              title: "Product Brand",
+              entries: productBrandEntries
+            }}
+          />
+        )
       },
       {
         label: "Product Category",
-        value: makeExpansion({
-          title: "Product Category",
-          entries: productCategoryEntries
-        })
+        value: (
+          <MyExpansion
+            entry={{
+              title: "Product Category",
+              entries: productCategoryEntries
+            }}
+          />
+        )
       }
     ];
   }, [transaction, productBrandEntries, productCategoryEntries]);
@@ -708,45 +715,48 @@ function DetailDialog(props: IComponentProps) {
             ) : transaction ? (
               <>
                 <div style={{ width: "100%" }}>
-                  {makeExpansion(
-                    { title: "Transaction Info", entries: generalEntries },
-                    true
-                  )}
-                  {makeExpansion({
-                    title: "Buyer Info",
-                    entries: buyerEntries
-                  })}
-                  {makeExpansion({
-                    title: "Seller Info",
-                    entries: sellerEntries
-                  })}
-                  {makeExpansion({
-                    title: "Product Detail",
-                    entries: productDetailEntries
-                  })}
-                  <ReactToPrint
-                    trigger={() => (
-                      <Button>Print Buyer Shipping Address</Button>
-                    )}
-                    content={() => buyerShippingAddressComponentRef.current}
+                  <MyExpansion
+                    entry={{
+                      title: "Transaction Info",
+                      entries: generalEntries
+                    }}
+                    defaultExpanded
+                  />
+                  <MyExpansion
+                    entry={{
+                      title: "Buyer Info",
+                      entries: buyerEntries
+                    }}
+                  />
+                  <MyExpansion
+                    entry={{
+                      title: "Seller Info",
+                      entries: sellerEntries
+                    }}
+                  />
+                  <MyExpansion
+                    entry={{
+                      title: "Product Detail",
+                      entries: productDetailEntries
+                    }}
                   />
                   <div ref={buyerShippingAddressComponentRef}>
-                    {makeExpansion({
-                      title: "Buyer Shipping Address",
-                      entries: buyerShippingAddressEntries
-                    })}
+                    <MyExpansion
+                      entry={{
+                        title: "Buyer Shipping Address",
+                        entries: buyerShippingAddressEntries
+                      }}
+                      printable
+                    />
                   </div>
-                  <ReactToPrint
-                    trigger={() => (
-                      <Button>Print Refund Shipping Address</Button>
-                    )}
-                    content={() => refundShippingAddressComponentRef.current}
-                  />
                   <div ref={refundShippingAddressComponentRef}>
-                    {makeExpansion({
-                      title: "Seller Shipping Address",
-                      entries: refundShippingAddressEntries
-                    })}
+                    <MyExpansion
+                      entry={{
+                        title: "Seller Shipping Address",
+                        entries: refundShippingAddressEntries
+                      }}
+                      printable
+                    />
                   </div>
                   <br />
                   <MyPaper>
@@ -761,7 +771,6 @@ function DetailDialog(props: IComponentProps) {
 
                     {timelineComponents}
                   </MyPaper>
-
                   <br />
                   {Boolean(legitCheck) && (
                     <LegitCheckModule

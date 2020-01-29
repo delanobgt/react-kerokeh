@@ -21,7 +21,7 @@ import {
 import { statusLabelDict } from "../constants";
 import AcceptDialog from "./AcceptDialog";
 import RejectDialog from "./RejectDialog";
-import { MyDesc, makeExpansion } from "src/components/generic/detail-dialog";
+import { MyDesc, MyExpansion } from "src/components/generic/detail-dialog";
 import DetailImageDialog from "src/components/generic/dialog/DetailImageDialog";
 
 interface IComponentProps {
@@ -166,17 +166,19 @@ function DetailDialog(props: IComponentProps) {
           ) : user ? (
             <>
               <div>
-                {makeExpansion(
-                  {
+                <MyExpansion
+                  entry={{
                     title: "Identification Info",
                     entries: identificationEntries
-                  },
-                  true
-                )}
-                {makeExpansion({
-                  title: "User Info",
-                  entries: userEntries
-                })}
+                  }}
+                  defaultExpanded
+                />
+                <MyExpansion
+                  entry={{
+                    title: "User Info",
+                    entries: userEntries
+                  }}
+                />
 
                 {identification.verification_attempted && (
                   <ExpansionPanel>

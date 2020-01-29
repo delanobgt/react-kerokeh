@@ -2,7 +2,7 @@ import React from "react";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
 
 import BasicDialog from "src/components/generic/dialog/BasicDialog";
-import { makeExpansion } from "src/components/generic/detail-dialog";
+import { MyExpansion } from "src/components/generic/detail-dialog";
 import { goPromise } from "src/util/helper";
 import {
   ILegitCheckDetail,
@@ -88,13 +88,13 @@ function DetailDialog(props: IComponentProps) {
           ) : legitCheckDetail ? (
             <>
               <div style={{ width: "100%" }}>
-                {makeExpansion(
-                  {
+                <MyExpansion
+                  entry={{
                     title: "Legit Check Detail",
                     entries: legitCheckDetailEntries
-                  },
-                  true
-                )}
+                  }}
+                  defaultExpanded
+                />
               </div>
             </>
           ) : null}

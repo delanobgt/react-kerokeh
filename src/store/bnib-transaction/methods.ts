@@ -65,7 +65,6 @@ export const createLegitCheck = async (bnibTransactionId: number): Promise<void>
 
 export const updateLegitCheck = async (legitCheckId: number, detail_images: any[],
   initial_images: { image_path: string; deleted: boolean }[]): Promise<void> => {
-    console.log(legitCheckId, detail_images, initial_images)
   const formData = new FormData();
   if (detail_images) {
     console.log({detail_images})

@@ -16,7 +16,7 @@ import {
   getIdentificationByUserId
 } from "src/store/identification";
 import { statusLabelDict } from "../../Identification/constants";
-import { makeExpansion, MyDesc } from "src/components/generic/detail-dialog";
+import { MyExpansion, MyDesc } from "src/components/generic/detail-dialog";
 
 interface IComponentProps {
   userId: number;
@@ -322,30 +322,42 @@ function DetailDialog(props: IComponentProps) {
           ) : user ? (
             <>
               <div>
-                {makeExpansion(
-                  {
+                <MyExpansion
+                  entry={{
                     title: "General Info",
                     entries: generalEntries
-                  },
-                  true
-                )}
-                {makeExpansion({ title: "Auth", entries: authEntries })}
-                {makeExpansion({ title: "Bank", entries: bankEntries })}
-                {makeExpansion({ title: "Seller", entries: sellerEntries })}
-                {makeExpansion({ title: "Wallet", entries: walletEntries })}
-                {makeExpansion({
-                  title: "Active Shipping Address",
-                  entries: activeShippingAddressEntries
-                })}
-                {makeExpansion({
-                  title: "Active Refund Shipping Address",
-                  entries: activeRefundShippingAddressEntries
-                })}
-                {makeExpansion({ title: "Referral", entries: referralEntries })}
-                {makeExpansion({
-                  title: "Identification",
-                  entries: identificationEntries
-                })}
+                  }}
+                  defaultExpanded
+                />
+                <MyExpansion entry={{ title: "Auth", entries: authEntries }} />
+                <MyExpansion entry={{ title: "Bank", entries: bankEntries }} />
+                <MyExpansion
+                  entry={{ title: "Seller", entries: sellerEntries }}
+                />
+                <MyExpansion
+                  entry={{ title: "Wallet", entries: walletEntries }}
+                />
+                <MyExpansion
+                  entry={{
+                    title: "Active Shipping Address",
+                    entries: activeShippingAddressEntries
+                  }}
+                />
+                <MyExpansion
+                  entry={{
+                    title: "Active Refund Shipping Address",
+                    entries: activeRefundShippingAddressEntries
+                  }}
+                />
+                <MyExpansion
+                  entry={{ title: "Referral", entries: referralEntries }}
+                />
+                <MyExpansion
+                  entry={{
+                    title: "Identification",
+                    entries: identificationEntries
+                  }}
+                />
               </div>
             </>
           ) : null}

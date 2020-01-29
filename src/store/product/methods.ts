@@ -6,7 +6,9 @@ import { PRIMARY_ROUTE } from "./constants";
 export const getProductById = async (id: number): Promise<IProduct> => {
   const response = await celestineApi().get(`${PRIMARY_ROUTE}/${id}`);
   const product: IProduct = response.data;
-  product.detail_image_urls = product.detail_image_url.split(",");
+  product.detail_image_urls = Boolean(product.detail_image_url)
+        ? product.detail_image_url.split(",")
+        : [];
   return product;
 };
 

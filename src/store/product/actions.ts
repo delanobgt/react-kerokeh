@@ -26,7 +26,7 @@ export const getProducts = async (
   });
   const products: IProduct[] = response.data.data;
   for (let product of products) {
-    product.detail_image_urls = Boolean(product.detail_image_url) ? product.detail_image_url.split(',') : [];
+    product.detail_image_urls = Boolean(product.detail_image_url) ? (product.detail_image_url.split(',')) : ([]);
   }
   const meta = response.data.meta;
   return {

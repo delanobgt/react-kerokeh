@@ -4,10 +4,8 @@ import {
   Button,
   CircularProgress,
   Typography,
-  MenuItem,
-  IconButton
+  MenuItem
 } from "@material-ui/core";
-import { Close as CloseIcon } from "@material-ui/icons";
 import {
   Field,
   reduxForm,
@@ -39,6 +37,7 @@ import {
   getProductCategories
 } from "src/store/product-category";
 import { TInitialValues } from "../types";
+import MultipleImageInput from "src/components/generic/input/MultipleImageInput";
 
 interface IComponentProps {
   productId: number;
@@ -58,7 +57,6 @@ interface IFormProps {
   color: string;
   release_date: string;
   display_image: any;
-  detail_images: any[];
   product_brand_option: {
     label: string;
     value: number;
@@ -84,6 +82,9 @@ function UpdateDialog(
   const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
+  const [productDetailImages, setProductDetailImages] = React.useState<any[]>(
+    []
+  );
 
   const renderInitialDetailImages: RenderFieldArrayFn<any> = React.useCallback(
     ({ fields }) => (
@@ -138,59 +139,6 @@ function UpdateDialog(
     [renderInitialDetailImages]
   );
 
-  const renderDetailImages: RenderFieldArrayFn<any> = React.useCallback(
-    ({ fields }) => (
-      <div>
-        <Typography variant="subtitle1">Add Detail Images</Typography>
-        {!Boolean(fields.length) ? (
-          <Typography variant="body2">- no new detail image yet -</Typography>
-        ) : (
-          fields
-            .map((member: any, index: number) => {
-              return {
-                key: index,
-                component: (
-                  <div
-                    key={index}
-                    style={{ display: "flex", alignItems: "center" }}
-                  >
-                    <Field
-                      name={`${member}`}
-                      label="New Detail Image"
-                      component={renderImageField}
-                      validate={[requiredValidator]}
-                      disabled={loading}
-                      accept="image/png"
-                      extensions={["png"]}
-                    />
-                    <IconButton onClick={() => fields.remove(index)}>
-                      <CloseIcon />
-                    </IconButton>
-                  </div>
-                )
-              };
-            })
-            .map(e => e.component)
-        )}
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={() => fields.push(null)}
-        >
-          Add Detail Image
-        </Button>
-      </div>
-    ),
-    [loading]
-  );
-  const detailImageFieldArray = React.useMemo(
-    () => (
-      /* tslint:disable-next-line */
-      <FieldArray name="detail_images" component={renderDetailImages} />
-    ),
-    [renderDetailImages]
-  );
-
   const productBrandPromiseOptions = React.useCallback(
     (inputValue: string) =>
       new Promise(async resolve => {
@@ -239,7 +187,7 @@ function UpdateDialog(
           formValues.product_brand_option.value,
           formValues.product_category_option.value,
           formValues.display_image,
-          formValues.detail_images,
+          productDetailImages,
           formValues.initial_detail_images
         )
       );
@@ -256,7 +204,7 @@ function UpdateDialog(
         snackbar.showMessage("Product updated.");
       }
     },
-    [dismiss, restartIntervalRun, snackbar, initialValues]
+    [dismiss, restartIntervalRun, snackbar, initialValues, productDetailImages]
   );
 
   const handleClose = () => {
@@ -395,7 +343,13 @@ function UpdateDialog(
                 extensions={["png"]}
               />
               {initialDetailImageFieldArray}
-              {detailImageFieldArray}
+              <MultipleImageInput
+                label="Product Detail Image"
+                files={productDetailImages}
+                onChange={files => setProductDetailImages(files)}
+                accept="image/png,image/jpg,image/jpeg"
+                extensions={["png", "jpg", "jpeg"]}
+              />
               {error && (
                 <Typography variant="subtitle1">
                   Something is wrong. Please try again.

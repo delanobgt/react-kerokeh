@@ -4,16 +4,13 @@ import {
   Button,
   CircularProgress,
   Typography,
-  MenuItem,
-  IconButton
+  MenuItem
 } from "@material-ui/core";
-import { Close as CloseIcon } from "@material-ui/icons";
 import {
   Field,
   reduxForm,
   SubmissionError,
-  InjectedFormProps,
-  FieldArray
+  InjectedFormProps
 } from "redux-form";
 import { useSnackbar } from "material-ui-snackbar-provider";
 
@@ -27,7 +24,6 @@ import {
   renderImageField,
   renderAsyncAutoSuggestField
 } from "src/redux-form/renderers";
-import { RenderFieldArrayFn } from "src/util/types";
 import { createProduct } from "src/store/product";
 import {
   getProductBrands,
@@ -37,6 +33,7 @@ import {
   IProductCategoryGetAction,
   getProductCategories
 } from "src/store/product-category";
+import MultipleImageInput from "src/components/generic/input/MultipleImageInput";
 
 interface IComponentProps {
   open: boolean;
@@ -64,7 +61,6 @@ interface IFormProps {
     value: number;
   };
   display_image: any;
-  detail_images: any[];
 }
 
 function CreateDialog(
@@ -75,58 +71,8 @@ function CreateDialog(
   const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
-
-  const renderProducts: RenderFieldArrayFn<any> = React.useCallback(
-    ({ fields }) => (
-      <div>
-        {!Boolean(fields.length) ? (
-          <Typography variant="subtitle1">- no detail image yet -</Typography>
-        ) : (
-          fields
-            .map((member: any, index: number) => {
-              return {
-                key: index,
-                component: (
-                  <div
-                    key={index}
-                    style={{ display: "flex", alignItems: "center" }}
-                  >
-                    <Field
-                      name={`${member}`}
-                      label="Detail Image"
-                      component={renderImageField}
-                      validate={[requiredValidator]}
-                      disabled={loading}
-                      accept="image/png"
-                      extensions={["png"]}
-                    />
-                    <IconButton onClick={() => fields.remove(index)}>
-                      <CloseIcon />
-                    </IconButton>
-                  </div>
-                )
-              };
-            })
-            .map(e => e.component)
-        )}
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={() => fields.push(null)}
-        >
-          Add Product Size
-        </Button>
-      </div>
-    ),
-    [loading]
-  );
-
-  const fieldArray = React.useMemo(
-    () => (
-      /* tslint:disable-next-line */
-      <FieldArray name="detail_images" component={renderProducts} />
-    ),
-    [renderProducts]
+  const [productDetailImages, setProductDetailImages] = React.useState<any[]>(
+    []
   );
 
   const productBrandPromiseOptions = React.useCallback(
@@ -176,7 +122,7 @@ function CreateDialog(
           formValues.product_brand_option.value,
           formValues.product_category_option.value,
           formValues.display_image,
-          formValues.detail_images
+          productDetailImages
         )
       );
       setLoading(false);
@@ -192,7 +138,7 @@ function CreateDialog(
         snackbar.showMessage("Product created.");
       }
     },
-    [dismiss, restartIntervalRun, snackbar]
+    [dismiss, restartIntervalRun, snackbar, productDetailImages]
   );
 
   const handleClose = () => {
@@ -323,7 +269,13 @@ function CreateDialog(
                 accept="image/png"
                 extensions={["png"]}
               />
-              {fieldArray}
+              <MultipleImageInput
+                label="Product Detail Image"
+                files={productDetailImages}
+                onChange={files => setProductDetailImages(files)}
+                accept="image/png,image/jpg,image/jpeg"
+                extensions={["png", "jpg", "jpeg"]}
+              />
               {error && (
                 <Typography variant="subtitle1">
                   Something is wrong. Please try again.
