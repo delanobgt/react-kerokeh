@@ -30,6 +30,15 @@ function FilterForm(props: IComponentProps) {
       </Div>
 
       <Div>
+        <TextField
+          label="Username"
+          value={filter.username || ""}
+          onChange={e => updateFilter({ username: e.target.value })}
+          fullWidth
+        />
+      </Div>
+
+      <Div>
         <BasicSelect
           style={{ width: "100%" }}
           label="Type"

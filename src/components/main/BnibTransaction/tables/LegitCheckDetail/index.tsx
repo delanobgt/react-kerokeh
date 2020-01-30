@@ -14,14 +14,16 @@ import { TableInfoWrapper } from "src/components/generic/table/table-infos";
 import {
   ILegitCheckDetail,
   getLegitCheckDetails,
-  PLegitCheckDetail
+  PLegitCheckDetail,
+  ILegitCheck
 } from "src/store/bnib-transaction";
 
 interface IComponentProps {
-  legitCheckId: number;
+  legitCheck: ILegitCheck;
 }
 
 function LegitCheckDetailTable(props: IComponentProps) {
+  const { legitCheck } = props;
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
   const [legitCheckDetails, setLegitCheckDetails] = React.useState<
@@ -38,7 +40,7 @@ function LegitCheckDetailTable(props: IComponentProps) {
     setError("");
     setLoading(true);
     const [err, res] = await goPromise<ILegitCheckDetail[]>(
-      getLegitCheckDetails(props.legitCheckId)
+      getLegitCheckDetails(legitCheck.id)
     );
     setLoading(false);
 
@@ -48,7 +50,7 @@ function LegitCheckDetailTable(props: IComponentProps) {
     } else {
       setLegitCheckDetails(res);
     }
-  }, [props.legitCheckId]);
+  }, [legitCheck]);
   React.useEffect(() => {
     fetch();
   }, [fetch]);
@@ -90,15 +92,17 @@ function LegitCheckDetailTable(props: IComponentProps) {
               <IconButton onClick={() => setDetailDialogId(original.id)}>
                 <DetailsIcon />
               </IconButton>
-              <IconButton onClick={() => setUpdateDialogId(original.id)}>
-                <EditIcon />
-              </IconButton>
+              {Boolean(!legitCheck.final_result) && (
+                <IconButton onClick={() => setUpdateDialogId(original.id)}>
+                  <EditIcon />
+                </IconButton>
+              )}
             </div>
           );
         }
       }
     ],
-    []
+    [legitCheck]
   );
 
   // set updateInitialValues
@@ -157,7 +161,7 @@ function LegitCheckDetailTable(props: IComponentProps) {
         <CreateDialog
           open={createDialogOpen}
           dismiss={() => setCreateDialogOpen(null)}
-          legit_check_id={props.legitCheckId}
+          legit_check_id={legitCheck.id}
           onAfterSubmit={() => fetch()}
         />
       )}

@@ -1,7 +1,6 @@
 import _ from "lodash";
 import React from "react";
-import { EmpSpan, Div, MyNumber, ContentDiv } from "../components";
-import moment from "moment";
+import { Div, MyNumber, ContentDiv, Trace } from "../components";
 import {
   Typography,
   Button,
@@ -9,11 +8,12 @@ import {
   MenuItem
 } from "@material-ui/core";
 import {
-  BnibTransactionStatus,
+  EBnibTransactionStatus,
   IBnibTransaction,
   legitCheckBnibTransactionByCode,
   ILegitCheck,
-  createLegitCheck
+  createLegitCheck,
+  IAccessLogItem
 } from "src/store/bnib-transaction";
 import ConfirmDialog from "src/components/generic/dialog/ConfirmDialog";
 import { goPromise } from "src/util/helper";
@@ -22,9 +22,9 @@ import BasicSelect from "src/components/generic/input/BasicSelect";
 interface IComponentProps {
   orderNo: number;
   legitCheck: ILegitCheck;
-  accessLogFakeItem: any;
-  accessLogIndefineableItem: any;
-  accessLogAuthenticItem: any;
+  accessLogFakeItem: IAccessLogItem;
+  accessLogIndefineableItem: IAccessLogItem;
+  accessLogAuthenticItem: IAccessLogItem;
   transaction: IBnibTransaction;
   onAfterSubmit: () => void;
 }
@@ -86,40 +86,37 @@ function LegitCheck(props: IComponentProps) {
         <MyNumber variant="subtitle2">{orderNo}</MyNumber>
         <ContentDiv>
           {Boolean(accessLogFakeItem) ? (
-            <Typography variant="subtitle1">
-              Legit Check <span style={{ color: "red" }}>FAKE</span> (by{" "}
-              <EmpSpan>{accessLogFakeItem.admin_username}</EmpSpan> at{" "}
-              <EmpSpan>
-                {moment(accessLogFakeItem.time).format(
-                  "D MMMM YYYY - HH:mm:ss"
-                )}
-              </EmpSpan>
-              )
-            </Typography>
+            <>
+              <Trace
+                name={accessLogFakeItem.admin_username}
+                time={accessLogFakeItem.time}
+              />
+              <Typography variant="subtitle1">
+                Legit Check <span style={{ color: "red" }}>FAKE</span>
+              </Typography>
+            </>
           ) : Boolean(accessLogIndefineableItem) ? (
-            <Typography variant="subtitle1">
-              Legit Check <span style={{ color: "orange" }}>INDEFINABLE</span>{" "}
-              (by <EmpSpan>{accessLogIndefineableItem.admin_username}</EmpSpan>{" "}
-              at{" "}
-              <EmpSpan>
-                {moment(accessLogIndefineableItem.time).format(
-                  "D MMMM YYYY - HH:mm:ss"
-                )}
-              </EmpSpan>
-              )
-            </Typography>
+            <>
+              <Trace
+                name={accessLogIndefineableItem.admin_username}
+                time={accessLogIndefineableItem.time}
+              />
+              <Typography variant="subtitle1">
+                Legit Check <span style={{ color: "orange" }}>INDEFINABLE</span>
+              </Typography>
+            </>
           ) : Boolean(accessLogAuthenticItem) ? (
-            <Typography variant="subtitle1">
-              Legit Check <span style={{ color: "limegreen" }}>AUTHENTIC</span>{" "}
-              (by <EmpSpan>{accessLogAuthenticItem.admin_username}</EmpSpan> at{" "}
-              <EmpSpan>
-                {moment(accessLogAuthenticItem.time).format(
-                  "D MMMM YYYY - HH:mm:ss"
-                )}
-              </EmpSpan>
-              )
-            </Typography>
-          ) : transaction.status === BnibTransactionStatus.LegitChecking ? (
+            <>
+              <Typography variant="subtitle1">
+                <Trace
+                  name={accessLogAuthenticItem.admin_username}
+                  time={accessLogAuthenticItem.time}
+                />
+                Legit Check{" "}
+                <span style={{ color: "limegreen" }}>AUTHENTIC</span>
+              </Typography>
+            </>
+          ) : transaction.status === EBnibTransactionStatus.LegitChecking ? (
             legitCheck ? (
               <div>
                 <Typography variant="subtitle1">

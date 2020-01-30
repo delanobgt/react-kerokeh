@@ -1,22 +1,22 @@
 import _ from "lodash";
 import React from "react";
-import { EmpSpan, Div, MyNumber, ContentDiv } from "../components";
-import moment from "moment";
+import { Div, MyNumber, ContentDiv, Trace } from "../components";
 import { Typography, Button, CircularProgress } from "@material-ui/core";
 import {
-  BnibTransactionStatus,
+  EBnibTransactionStatus,
   IBnibTransaction,
-  defectBnibTransactionByCode
+  defectBnibTransactionByCode,
+  IAccessLogItem
 } from "src/store/bnib-transaction";
 import ConfirmDialog from "src/components/generic/dialog/ConfirmDialog";
 import { goPromise } from "src/util/helper";
-import DefectDialog from "../dialogs/DefectDialog";
+import DefectDialog from "../dialogs/small-dialogs/DefectDialog";
 import DetailImageDialog from "src/components/generic/dialog/DetailImageDialog";
 
 interface IProps {
   orderNo: number;
-  accessLogDefectItem: any;
-  accessLogNotDefectItem: any;
+  accessLogDefectItem: IAccessLogItem;
+  accessLogNotDefectItem: IAccessLogItem;
   transaction: IBnibTransaction;
   onAfterSubmit: () => void;
 }
@@ -76,13 +76,12 @@ export default function(props: IProps) {
         <ContentDiv>
           {Boolean(accessLogDefectItem) || Boolean(accessLogNotDefectItem) ? (
             <div>
+              <Trace
+                name={accessLogItem.admin_username}
+                time={accessLogItem.time}
+              />
               <Typography variant="subtitle1">
-                {defected ? "Defected" : "Not defected"} (by{" "}
-                <EmpSpan>{accessLogItem.admin_username}</EmpSpan> at{" "}
-                <EmpSpan>
-                  {moment(accessLogItem.time).format("D MMMM YYYY - HH:mm:ss")}
-                </EmpSpan>
-                )
+                {defected ? "Defected" : "Not defected"}
               </Typography>
 
               {defected && (
@@ -103,7 +102,7 @@ export default function(props: IProps) {
                 </div>
               )}
             </div>
-          ) : transaction.status === BnibTransactionStatus.AcceptedByDepatu ? (
+          ) : transaction.status === EBnibTransactionStatus.AcceptedByDepatu ? (
             <div>
               <Typography variant="subtitle1">
                 Is the product defected ?

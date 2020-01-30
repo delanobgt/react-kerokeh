@@ -85,7 +85,7 @@ export const MyExpansion = ({
   }, [expanded, setExpanded]);
   const ref = React.useRef();
   return (
-    <div>
+    <>
       {printable && expanded && (
         <div style={{ marginTop: "1rem" }}>
           <ReactToPrint
@@ -117,6 +117,6 @@ export const MyExpansion = ({
           )}
         </ExpansionPanelDetails>
       </ExpansionPanel>
-    </div>
+    </>
   );
 };

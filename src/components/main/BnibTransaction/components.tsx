@@ -1,5 +1,7 @@
+import React from "react";
 import styled from "styled-components";
 import { Typography } from "@material-ui/core";
+import moment from "moment";
 
 interface IMyNumberSCProps {
   disabled?: boolean;
@@ -16,13 +18,16 @@ export const Div = styled.div`
 `;
 
 export const ContentDiv = styled.div`
-  padding-top: 0.35rem;
+  padding-top: 7px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: normal;
 `;
 
 export const MyNumber = styled(Typography)`
-  padding: 0.5rem;
-  width: 1.25rem;
-  height: 1.25rem;
+  flex-basis: 36px;
+  min-width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,3 +37,19 @@ export const MyNumber = styled(Typography)`
       props.disabled ? "lightgray" : props.color || "cornflowerblue"};
   margin-right: 0.75rem !important;
 `;
+
+interface ITraceProps {
+  name: string;
+  time: string;
+}
+
+export const Trace = (props: ITraceProps) => {
+  const { name, time } = props;
+
+  return (
+    <div>
+      [<EmpSpan>{name}</EmpSpan> at{" "}
+      <EmpSpan>{moment(time).format("D MMMM YYYY - HH:mm:ss")}</EmpSpan>]
+    </div>
+  );
+};

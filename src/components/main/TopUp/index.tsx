@@ -149,7 +149,7 @@ function TopUp() {
       },
       {
         Header: "Amount",
-        accessor: row => row.amount
+        accessor: row => Number(row.amount || 0).toLocaleString("de-DE")
       },
       {
         Header: "Code",

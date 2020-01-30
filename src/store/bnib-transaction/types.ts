@@ -6,9 +6,64 @@ export enum EBnibTransactionActionTypes {
   BNIB_TRANSACTION_GET = "@@bnib-transaction/BNIB_TRANSACTION_GET"
 }
 
+export enum EBnibTransactionStatus {
+  WaitingPaymentFromBuyer,
+  WaitingTrackingCode,
+  SellerExpired,
+  BuyerExpired,
+  ShippingToDepatu,
+  ArrivedAtDepatu,
+  LegitChecking,
+  LegitCheckAuthentic,
+  LegitCheckIndefinable,
+  LegitCheckFake,
+  RefundedByDepatu,
+  DisputedByDepatu,
+  AcceptedByDepatu,
+  DefectProceedApproval,
+  DefectReject,
+  ShippingToBuyer,
+  ArrivedAtBuyer,
+  ShippingToSeller,
+  ArrivedAtSeller,
+  BuyerConfirmation,
+  SellerCancel,
+  Done
+}
+
+export enum EAccessLogStatus {
+  WaitingSellerInputTrack = "waiting-seller-input-track",
+	WaitingBuyerPayment     = "waiting-buyer-payment",
+	BuyerPaid               = "buyer-paid",
+	SellerInputTrack        = "seller-input-track",
+	Arrived                 = "arrived",
+	Accepted                = "accepted",
+	Rejected                = "rejected",
+	ArrivedAtBuyer          = "arrived-at-buyer",
+	ConfirmationBuyer       = "arrived-at-buyer",
+	DefectTrue              = "defect-true",
+	DefectFalse             = "defect-false",
+	DefectTrueAccept        = "defect-true-accept",
+	DefectTrueReject        = "defect-true-reject",
+	Disputed                = "disputed",
+	LegitCheckFake          = "legit-check-fake",
+	LegitCheckIndefinable   = "legit-check-indefinable",
+	LegitCheckAuthentic     = "legit-check-authentic",
+	Refunded                = "refunded", // send back to seller
+	SellerCancel            = "seller-cancel",
+	DepatuSend              = "depatu-send", // send to buyer
+}
+
 // entity types
+export interface IAccessLogItem {
+  admin_username: string;
+  user_id: number;
+  time: string;
+}
+
 export interface IBnibTransaction {
   access_log: string;
+  accessLog: Record<EAccessLogStatus, IAccessLogItem>;
   bid_payment_expired_at: string;
   bnib_buy_order_id: number;
   bnib_product_id: number;

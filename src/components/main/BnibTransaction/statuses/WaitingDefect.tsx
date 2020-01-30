@@ -1,16 +1,16 @@
 import React from "react";
-import { EmpSpan, Div, MyNumber, ContentDiv } from "../components";
-import moment from "moment";
+import { EmpSpan, Div, MyNumber, ContentDiv, Trace } from "../components";
 import { Typography } from "@material-ui/core";
 import {
-  BnibTransactionStatus,
-  IBnibTransaction
+  EBnibTransactionStatus,
+  IBnibTransaction,
+  IAccessLogItem
 } from "src/store/bnib-transaction";
 
 interface IProps {
   orderNo: number;
-  accessLogAcceptItem: any;
-  accessLogRejectItem: any;
+  accessLogAcceptItem: IAccessLogItem;
+  accessLogRejectItem: IAccessLogItem;
   transaction: IBnibTransaction;
 }
 
@@ -36,16 +36,14 @@ export default function(props: IProps) {
         <MyNumber variant="subtitle2">{orderNo}</MyNumber>
         <ContentDiv>
           {Boolean(accessLogAcceptItem) || Boolean(accessLogRejectItem) ? (
-            <Typography variant="subtitle1">
-              {accepted ? "Defects Accepted" : "Defects Rejected"} (by{" "}
-              <EmpSpan>Buyer</EmpSpan> at{" "}
-              <EmpSpan>
-                {moment(accessLogItem.time).format("D MMMM YYYY - HH:mm:ss")}
-              </EmpSpan>
-              )
-            </Typography>
+            <>
+              <Trace name="Buyer" time={accessLogItem.time} />
+              <Typography variant="subtitle1">
+                {accepted ? "Defects Accepted" : "Defects Rejected"}
+              </Typography>
+            </>
           ) : transaction.status ===
-            BnibTransactionStatus.DefectProceedApproval ? (
+            EBnibTransactionStatus.DefectProceedApproval ? (
             <Typography variant="subtitle1">
               Waiting for Defect Approval from <EmpSpan>Buyer</EmpSpan>
             </Typography>

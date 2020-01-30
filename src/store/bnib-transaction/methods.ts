@@ -5,6 +5,7 @@ import { PRIMARY_ROUTE, SECONDARY_ROUTE, TERNARY_ROUTE } from "./constants";
 export const getBnibTransactionByCode = async (code: string): Promise<IBnibTransaction> => {
   const response = await celestineApi().get(`${PRIMARY_ROUTE}/${code}`);
   const transaction: IBnibTransaction = response.data;
+  transaction.accessLog = JSON.parse(transaction.access_log);
   transaction.product_detail.detail_image_urls = transaction.product_detail.detail_image_url.split(/,/);
   transaction.defected_image_urls = transaction.defected_image_url ? transaction.defected_image_url.split(/,/) : [];
   return transaction;

@@ -1,16 +1,16 @@
 import React from "react";
-import { EmpSpan, Div, MyNumber, ContentDiv } from "../components";
-import moment from "moment";
+import { Div, MyNumber, ContentDiv, Trace } from "../components";
 import { Typography, Button } from "@material-ui/core";
 import {
-  BnibTransactionStatus,
-  IBnibTransaction
+  EBnibTransactionStatus,
+  IBnibTransaction,
+  IAccessLogItem
 } from "src/store/bnib-transaction";
-import RefundDialog from "../dialogs/RefundDialog";
+import RefundDialog from "../dialogs/small-dialogs/RefundDialog";
 
 interface IProps {
   orderNo: number;
-  accessLogItem: any;
+  accessLogItem: IAccessLogItem;
   transaction: IBnibTransaction;
   onAfterSubmit: () => void;
 }
@@ -28,13 +28,12 @@ export default function(props: IProps) {
         <ContentDiv>
           {Boolean(accessLogItem) ? (
             <div>
+              <Trace
+                name={accessLogItem.admin_username}
+                time={accessLogItem.time}
+              />
               <Typography variant="subtitle1">
-                Sent Back and Refunded (by{" "}
-                <EmpSpan>{accessLogItem.admin_username}</EmpSpan> at{" "}
-                <EmpSpan>
-                  {moment(accessLogItem.time).format("D MMMM YYYY - HH:mm:ss")}
-                </EmpSpan>
-                )
+                Sent Back and Refunded
               </Typography>
               <Typography variant="subtitle1">
                 Courier: {transaction.refund_shipping_provider}
@@ -43,11 +42,11 @@ export default function(props: IProps) {
                 Tracking Code: {transaction.refund_shipping_tracking_code}
               </Typography>
             </div>
-          ) : transaction.status === BnibTransactionStatus.RefundedByDepatu ||
-            transaction.status === BnibTransactionStatus.DefectReject ||
-            transaction.status === BnibTransactionStatus.LegitCheckFake ||
+          ) : transaction.status === EBnibTransactionStatus.RefundedByDepatu ||
+            transaction.status === EBnibTransactionStatus.DefectReject ||
+            transaction.status === EBnibTransactionStatus.LegitCheckFake ||
             transaction.status ===
-              BnibTransactionStatus.LegitCheckIndefinable ? (
+              EBnibTransactionStatus.LegitCheckIndefinable ? (
             <div>
               <Typography variant="subtitle1">Refund the product ?</Typography>
 

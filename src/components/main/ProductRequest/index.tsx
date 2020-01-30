@@ -138,7 +138,7 @@ function ProductRequest() {
       },
       {
         Header: "Retail Price",
-        accessor: row => row.retail_price
+        accessor: row => Number(row.retail_price).toLocaleString("de-DE")
       }
     ],
     []

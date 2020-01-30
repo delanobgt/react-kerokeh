@@ -1,8 +1,12 @@
+import _ from "lodash";
 import React from "react";
 import { TextField, Typography, MenuItem } from "@material-ui/core";
 import styled from "styled-components";
 import BasicSelect from "src/components/generic/input/BasicSelect";
-import { PBnibTransactionFilter } from "src/store/bnib-transaction";
+import {
+  PBnibTransactionFilter,
+  EBnibTransactionStatus
+} from "src/store/bnib-transaction";
 
 interface IComponentProps {
   filter: PBnibTransactionFilter;
@@ -13,30 +17,9 @@ const Div = styled.div`
   margin-bottom: 0.5rem;
 `;
 
-const statuses = [
-  "Waiting Payment From Buyer",
-  "Waiting Tracking Code",
-  "Seller Expired",
-  "Buyer Expired",
-  "Shipping To Depatu",
-  "Arrived At Depatu",
-  "Legit Checking",
-  "Legit Check Authentic",
-  "Legit Check Indefinable",
-  "Legit Check Fake",
-  "Refunded By Depatu",
-  "Disputed By Depatu",
-  "Accepted By Depatu",
-  "Defect Proceed Approval",
-  "Defect Reject",
-  "Shipping To Buyer",
-  "Arrived At Buyer",
-  "Shipping To Seller",
-  "Arrived At Seller",
-  "Buyer Confirmation",
-  "Seller Cancel",
-  "Done"
-];
+const statuses = Object.keys(EBnibTransactionStatus)
+  .filter(stat => isNaN(Number(stat)))
+  .map(stat => _.startCase(stat));
 
 function FilterForm(props: IComponentProps) {
   const { filter, updateFilter } = props;

@@ -81,7 +81,7 @@ function CreateDialog(
         fullWidth
         bgClose={!loading}
       >
-        <title>Create Product</title>
+        <title>Create Legit Check Detail</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>
             <>

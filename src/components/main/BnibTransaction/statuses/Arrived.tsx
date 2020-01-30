@@ -1,20 +1,20 @@
 import _ from "lodash";
 import React from "react";
-import { EmpSpan, Div, MyNumber, ContentDiv } from "../components";
-import moment from "moment";
+import { Div, MyNumber, ContentDiv, Trace } from "../components";
 import { Typography, Button, CircularProgress } from "@material-ui/core";
 import {
-  BnibTransactionStatus,
+  EBnibTransactionStatus,
   IBnibTransaction,
-  arriveBnibTransactionByCode
+  arriveBnibTransactionByCode,
+  IAccessLogItem
 } from "src/store/bnib-transaction";
 import ConfirmDialog from "src/components/generic/dialog/ConfirmDialog";
 import { goPromise } from "src/util/helper";
-import DisputeDialog from "../dialogs/DisputeDialog";
+import DisputeDialog from "../dialogs/small-dialogs/DisputeDialog";
 
 interface IProps {
   orderNo: number;
-  accessLogItem: any;
+  accessLogItem: IAccessLogItem;
   transaction: IBnibTransaction;
   onAfterSubmit: () => void;
 }
@@ -57,14 +57,14 @@ export default function(props: IProps) {
         <MyNumber variant="subtitle2">{orderNo}</MyNumber>
         <ContentDiv>
           {Boolean(accessLogItem) ? (
-            <Typography variant="subtitle1">
-              Arrived (by <EmpSpan>{accessLogItem.admin_username}</EmpSpan> at{" "}
-              <EmpSpan>
-                {moment(accessLogItem.time).format("D MMMM YYYY - HH:mm:ss")}
-              </EmpSpan>
-              )
-            </Typography>
-          ) : transaction.status === BnibTransactionStatus.ShippingToDepatu ? (
+            <>
+              <Trace
+                name={accessLogItem.admin_username}
+                time={accessLogItem.time}
+              />
+              <Typography variant="subtitle1">Arrived</Typography>
+            </>
+          ) : transaction.status === EBnibTransactionStatus.ShippingToDepatu ? (
             <div>
               <Typography variant="subtitle1">
                 Has the product arrived ?

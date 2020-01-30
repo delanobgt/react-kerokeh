@@ -15,7 +15,7 @@ import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { renderSwitchField } from "src/redux-form/renderers";
 import { RenderFieldArrayFn } from "src/util/types";
 import { updateLegitCheck } from "src/store/bnib-transaction";
-import { TLegitCheckInitialValues } from "../types";
+import { TLegitCheckInitialValues } from "../../types";
 import MultipleImageInput from "src/components/generic/input/MultipleImageInput";
 
 interface IComponentProps {

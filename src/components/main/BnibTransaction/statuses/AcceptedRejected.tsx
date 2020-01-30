@@ -1,21 +1,21 @@
 import _ from "lodash";
 import React from "react";
-import { EmpSpan, Div, MyNumber, ContentDiv } from "../components";
-import moment from "moment";
+import { Div, MyNumber, ContentDiv, Trace } from "../components";
 import { Typography, Button, CircularProgress } from "@material-ui/core";
 import {
-  BnibTransactionStatus,
+  EBnibTransactionStatus,
   IBnibTransaction,
-  acceptBnibTransactionByCode
+  acceptBnibTransactionByCode,
+  IAccessLogItem
 } from "src/store/bnib-transaction";
 import ConfirmDialog from "src/components/generic/dialog/ConfirmDialog";
 import { goPromise } from "src/util/helper";
-import RejectDialog from "../dialogs/RejectDialog";
+import RejectDialog from "../dialogs/small-dialogs/RejectDialog";
 
 interface IProps {
   orderNo: number;
-  accessLogAcceptedItem: any;
-  accessLogRejectedItem: any;
+  accessLogAcceptedItem: IAccessLogItem;
+  accessLogRejectedItem: IAccessLogItem;
   transaction: IBnibTransaction;
   onAfterSubmit: () => void;
 }
@@ -72,13 +72,12 @@ export default function(props: IProps) {
         <ContentDiv>
           {Boolean(accessLogAcceptedItem) || Boolean(accessLogRejectedItem) ? (
             <div>
+              <Trace
+                name={accessLogItem.admin_username}
+                time={accessLogItem.time}
+              />
               <Typography variant="subtitle1">
-                {accepted ? "Accepted" : "Rejected"} (by{" "}
-                <EmpSpan>{accessLogItem.admin_username}</EmpSpan> at{" "}
-                <EmpSpan>
-                  {moment(accessLogItem.time).format("D MMMM YYYY - HH:mm:ss")}
-                </EmpSpan>
-                )
+                {accepted ? "Accepted" : "Rejected"}
               </Typography>
 
               {!accepted && (
@@ -87,7 +86,7 @@ export default function(props: IProps) {
                 </Typography>
               )}
             </div>
-          ) : transaction.status === BnibTransactionStatus.ArrivedAtDepatu ? (
+          ) : transaction.status === EBnibTransactionStatus.ArrivedAtDepatu ? (
             <div>
               <Typography variant="subtitle1">
                 Is the product correct ?

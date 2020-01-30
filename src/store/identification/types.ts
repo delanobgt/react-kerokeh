@@ -21,6 +21,7 @@ export interface IIdentification {
 
 interface IIdentificationFilter {
   id: string;
+  username: string;
   user_id: string;
   type: string;
   verification_attempted: string;

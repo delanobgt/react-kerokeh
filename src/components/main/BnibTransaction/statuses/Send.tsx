@@ -1,16 +1,16 @@
 import React from "react";
-import { EmpSpan, Div, MyNumber, ContentDiv } from "../components";
-import moment from "moment";
+import { EmpSpan, Div, MyNumber, ContentDiv, Trace } from "../components";
 import { Typography, Button } from "@material-ui/core";
 import {
-  BnibTransactionStatus,
-  IBnibTransaction
+  EBnibTransactionStatus,
+  IBnibTransaction,
+  IAccessLogItem
 } from "src/store/bnib-transaction";
-import SendDialog from "../dialogs/SendDialog";
+import SendDialog from "../dialogs/small-dialogs/SendDialog";
 
 interface IProps {
   orderNo: number;
-  accessLogItem: any;
+  accessLogItem: IAccessLogItem;
   transaction: IBnibTransaction;
   onAfterSubmit: () => void;
 }
@@ -26,13 +26,12 @@ export default function(props: IProps) {
         <ContentDiv>
           {Boolean(accessLogItem) ? (
             <div>
+              <Trace
+                name={accessLogItem.admin_username}
+                time={accessLogItem.time}
+              />
               <Typography variant="subtitle1">
-                Sent to <EmpSpan>Buyer</EmpSpan> (by{" "}
-                <EmpSpan>{accessLogItem.admin_username}</EmpSpan> at{" "}
-                <EmpSpan>
-                  {moment(accessLogItem.time).format("D MMMM YYYY - HH:mm:ss")}
-                </EmpSpan>
-                )
+                Sent to <EmpSpan>Buyer</EmpSpan>
               </Typography>
               <Typography variant="subtitle1">
                 Courier: {transaction.buyer_shipping_provider}
@@ -42,7 +41,7 @@ export default function(props: IProps) {
               </Typography>
             </div>
           ) : transaction.status ===
-            BnibTransactionStatus.LegitCheckAuthentic ? (
+            EBnibTransactionStatus.LegitCheckAuthentic ? (
             <div>
               <Typography variant="subtitle1">Send the product ?</Typography>
 

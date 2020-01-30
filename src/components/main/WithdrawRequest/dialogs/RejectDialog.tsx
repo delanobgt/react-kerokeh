@@ -77,7 +77,7 @@ function RejectDialog(
         fullWidth
         bgClose={!loading}
       >
-        <title>Approve Withdraw Request</title>
+        <title>Reject Withdraw Request</title>
         <section>
           <form onSubmit={handleSubmit(handleSave)}>
             <Field

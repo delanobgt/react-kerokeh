@@ -4,11 +4,11 @@ import styled from "styled-components";
 import { ILegitCheck, publishFinalResult } from "src/store/bnib-transaction";
 import { Paper, MenuItem, Button, Typography } from "@material-ui/core";
 import { goPromise } from "src/util/helper";
-import LegitCheckDetailTable from "./tables/LegitCheckDetail";
+import LegitCheckDetailTable from "../tables/LegitCheckDetail";
 import BasicSelect from "src/components/generic/input/BasicSelect";
 import DetailImageDialog from "src/components/generic/dialog/DetailImageDialog";
-import UpdateLegitCheckImagesDialog from "./dialogs/UpdateLegitCheckImagesDialog";
-import { TLegitCheckInitialValues } from "./types";
+import UpdateLegitCheckImagesDialog from "./small-dialogs/UpdateLegitCheckImagesDialog";
+import { TLegitCheckInitialValues } from "../types";
 
 interface IComponentProps {
   legitCheck: ILegitCheck;
@@ -83,18 +83,20 @@ function LegitCheckModule(props: IComponentProps) {
             />
           ))}
         </div>
-        <Button
-          color="primary"
-          variant="outlined"
-          onClick={() => setUpdateDialogId(legitCheck.id)}
-        >
-          Add/Remove Image
-        </Button>
+        {Boolean(!legitCheck.final_result) && (
+          <Button
+            color="primary"
+            variant="outlined"
+            onClick={() => setUpdateDialogId(legitCheck.id)}
+          >
+            Add/Remove Image
+          </Button>
+        )}
         <br />
         <br />
 
         <div>
-          <LegitCheckDetailTable legitCheckId={legitCheck.id} />
+          <LegitCheckDetailTable legitCheck={legitCheck} />
         </div>
 
         <div>

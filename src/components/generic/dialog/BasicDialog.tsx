@@ -57,16 +57,14 @@ const BasicDialog = (props: IProps) => {
       <Dialog
         open={open}
         onClose={bgClose ? handleCancel : null}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
         {...restProps}
       >
-        <DialogTitle id="alert-dialog-title">
+        <DialogTitle>
           {childProps.title && <div {...childProps.title} />}
         </DialogTitle>
 
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText>
             {childProps.details && <span {...childProps.details} />}
           </DialogContentText>
           {childProps.section && <div {...childProps.section} />}

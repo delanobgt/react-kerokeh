@@ -167,7 +167,10 @@ function DetailDialog(props: IComponentProps) {
     if (!user) return [];
     return [
       { label: "Wallet Id", value: user.wallet.id || "-" },
-      { label: "Amount", value: user.wallet.amount }
+      {
+        label: "Amount",
+        value: Number(user.wallet.amount || 0).toLocaleString("de-DE")
+      }
     ];
   }, [user]);
 

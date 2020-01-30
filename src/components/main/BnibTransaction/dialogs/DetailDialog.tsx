@@ -9,7 +9,7 @@ import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import {
   IBnibTransaction,
   getBnibTransactionByCode,
-  BnibTransactionStatus,
+  EBnibTransactionStatus,
   getLegitCheckByBnibTransactionId,
   ILegitCheck
 } from "src/store/bnib-transaction";
@@ -32,7 +32,8 @@ import {
   getShippingAddressById,
   IShippingAddress
 } from "src/store/user";
-import LegitCheckModule from "../LegitCheckModule";
+import LegitCheckModule from "./LegitCheckModule";
+import Done from "../statuses/Done";
 
 interface IComponentProps {
   transactionCode: string;
@@ -159,7 +160,7 @@ function DetailDialog(props: IComponentProps) {
       },
       {
         label: "Status",
-        value: _.startCase(BnibTransactionStatus[transaction.status])
+        value: _.startCase(EBnibTransactionStatus[transaction.status])
       }
     ];
   }, [transaction]);
@@ -437,21 +438,13 @@ function DetailDialog(props: IComponentProps) {
     ];
   }, [transaction, productBrandEntries, productCategoryEntries]);
 
-  const accessLog: any = React.useMemo(
-    () =>
-      transaction && transaction.access_log
-        ? JSON.parse(transaction.access_log)
-        : "{}",
-    [transaction]
-  );
-
   const timelineComponents = React.useMemo(() => {
     if (!transaction) return null;
 
     const components = [];
     let counter = 1;
 
-    if (transaction.status === BnibTransactionStatus.BuyerExpired) {
+    if (transaction.status === EBnibTransactionStatus.BuyerExpired) {
       components.push(
         <Div key={counter}>
           <MyNumber variant="subtitle2">{counter++}</MyNumber>
@@ -460,27 +453,30 @@ function DetailDialog(props: IComponentProps) {
       );
       return components;
     } else if (
-      Boolean(accessLog["waiting-buyer-payment"] || accessLog["buyer-paid"])
+      Boolean(
+        transaction.accessLog["waiting-buyer-payment"] ||
+          transaction.accessLog["buyer-paid"]
+      )
     ) {
       components.push(
         <WaitingPayment
           key={counter}
           orderNo={counter++}
-          accessLogWaitingItem={accessLog["waiting-buyer-payment"]}
-          accessLogPaidItem={accessLog["buyer-paid"]}
+          accessLogWaitingItem={transaction.accessLog["waiting-buyer-payment"]}
+          accessLogPaidItem={transaction.accessLog["buyer-paid"]}
           transaction={transaction}
         />
       );
     }
 
-    if (transaction.status === BnibTransactionStatus.SellerCancel) {
+    if (transaction.status === EBnibTransactionStatus.SellerCancel) {
       components.push(
         <Div key={counter}>
           <MyNumber variant="subtitle2">{counter++}</MyNumber>
           <ContentDiv>
             Seller Cancelled (
             <EmpSpan>
-              {moment(accessLog["seller-cancel"].time).format(
+              {moment(transaction.accessLog["seller-cancel"].time).format(
                 "D MMMM YYYY - HH:mm:ss"
               )}
             </EmpSpan>
@@ -488,7 +484,7 @@ function DetailDialog(props: IComponentProps) {
         </Div>
       );
       return components;
-    } else if (transaction.status === BnibTransactionStatus.SellerExpired) {
+    } else if (transaction.status === EBnibTransactionStatus.SellerExpired) {
       components.push(
         <Div key={counter}>
           <MyNumber variant="subtitle2">{counter++}</MyNumber>
@@ -498,33 +494,38 @@ function DetailDialog(props: IComponentProps) {
       return components;
     } else if (
       Boolean(
-        accessLog["waiting-seller-input-track"] ||
-          accessLog["seller-input-track"]
+        transaction.accessLog["waiting-seller-input-track"] ||
+          transaction.accessLog["seller-input-track"]
       )
     ) {
       components.push(
         <WaitingTrackingCode
           key={counter}
           orderNo={counter++}
-          accessLogWaitingItem={accessLog["waiting-seller-input-track"]}
-          accessLogInputItem={accessLog["seller-input-track"]}
+          accessLogWaitingItem={
+            transaction.accessLog["waiting-seller-input-track"]
+          }
+          accessLogInputItem={transaction.accessLog["seller-input-track"]}
           transaction={transaction}
         />
       );
     }
 
     if (
-      Boolean(accessLog["disputed"]) ||
-      transaction.status === BnibTransactionStatus.DisputedByDepatu
+      Boolean(transaction.accessLog["disputed"]) ||
+      transaction.status === EBnibTransactionStatus.DisputedByDepatu
     ) {
       components.push(
         <Div key={counter}>
           <MyNumber variant="subtitle2">{counter++}</MyNumber>
           <ContentDiv>
             Disputed (by{" "}
-            <EmpSpan>{accessLog["disputed"].admin_username}</EmpSpan> at{" "}
             <EmpSpan>
-              {moment(accessLog["disputed"].time).format(
+              {transaction.accessLog["disputed"].admin_username}
+            </EmpSpan>{" "}
+            at{" "}
+            <EmpSpan>
+              {moment(transaction.accessLog["disputed"].time).format(
                 "D MMMM YYYY - HH:mm:ss"
               )}
             </EmpSpan>
@@ -534,14 +535,14 @@ function DetailDialog(props: IComponentProps) {
       );
       return components;
     } else if (
-      Boolean(accessLog["arrived"]) ||
-      transaction.status === BnibTransactionStatus.ShippingToDepatu
+      Boolean(transaction.accessLog["arrived"]) ||
+      transaction.status === EBnibTransactionStatus.ShippingToDepatu
     ) {
       components.push(
         <Arrived
           key={counter}
           orderNo={counter++}
-          accessLogItem={accessLog["arrived"]}
+          accessLogItem={transaction.accessLog["arrived"]}
           transaction={transaction}
           onAfterSubmit={() => {
             silentFetch();
@@ -552,16 +553,16 @@ function DetailDialog(props: IComponentProps) {
     }
 
     if (
-      Boolean(accessLog["accepted"]) ||
-      Boolean(accessLog["rejected"]) ||
-      transaction.status === BnibTransactionStatus.ArrivedAtDepatu
+      Boolean(transaction.accessLog["accepted"]) ||
+      Boolean(transaction.accessLog["rejected"]) ||
+      transaction.status === EBnibTransactionStatus.ArrivedAtDepatu
     ) {
       components.push(
         <AcceptedRejected
           key={counter}
           orderNo={counter++}
-          accessLogAcceptedItem={accessLog["accepted"]}
-          accessLogRejectedItem={accessLog["rejected"]}
+          accessLogAcceptedItem={transaction.accessLog["accepted"]}
+          accessLogRejectedItem={transaction.accessLog["rejected"]}
           transaction={transaction}
           onAfterSubmit={() => {
             silentFetch();
@@ -572,16 +573,16 @@ function DetailDialog(props: IComponentProps) {
     }
 
     if (
-      Boolean(accessLog["defect-true"]) ||
-      Boolean(accessLog["defect-false"]) ||
-      transaction.status === BnibTransactionStatus.AcceptedByDepatu
+      Boolean(transaction.accessLog["defect-true"]) ||
+      Boolean(transaction.accessLog["defect-false"]) ||
+      transaction.status === EBnibTransactionStatus.AcceptedByDepatu
     ) {
       components.push(
         <Defect
           key={counter}
           orderNo={counter++}
-          accessLogDefectItem={accessLog["defect-true"]}
-          accessLogNotDefectItem={accessLog["defect-false"]}
+          accessLogDefectItem={transaction.accessLog["defect-true"]}
+          accessLogNotDefectItem={transaction.accessLog["defect-false"]}
           transaction={transaction}
           onAfterSubmit={() => {
             silentFetch();
@@ -592,35 +593,39 @@ function DetailDialog(props: IComponentProps) {
     }
 
     if (
-      Boolean(accessLog["defect-true-accept"]) ||
-      Boolean(accessLog["defect-true-reject"]) ||
-      transaction.status === BnibTransactionStatus.DefectProceedApproval
+      Boolean(transaction.accessLog["defect-true-accept"]) ||
+      Boolean(transaction.accessLog["defect-true-reject"]) ||
+      transaction.status === EBnibTransactionStatus.DefectProceedApproval
     ) {
       components.push(
         <WaitingDefect
           key={counter}
           orderNo={counter++}
-          accessLogAcceptItem={accessLog["defect-true-accept"]}
-          accessLogRejectItem={accessLog["defect-true-reject"]}
+          accessLogAcceptItem={transaction.accessLog["defect-true-accept"]}
+          accessLogRejectItem={transaction.accessLog["defect-true-reject"]}
           transaction={transaction}
         />
       );
     }
 
     if (
-      Boolean(accessLog["legit-check-fake"]) ||
-      Boolean(accessLog["legit-check-indefinable"]) ||
-      Boolean(accessLog["legit-check-authentic"]) ||
-      transaction.status === BnibTransactionStatus.LegitChecking
+      Boolean(transaction.accessLog["legit-check-fake"]) ||
+      Boolean(transaction.accessLog["legit-check-indefinable"]) ||
+      Boolean(transaction.accessLog["legit-check-authentic"]) ||
+      transaction.status === EBnibTransactionStatus.LegitChecking
     ) {
       components.push(
         <LegitCheck
           key={counter}
           orderNo={counter++}
           legitCheck={legitCheck}
-          accessLogFakeItem={accessLog["legit-check-fake"]}
-          accessLogIndefineableItem={accessLog["legit-check-indefinable"]}
-          accessLogAuthenticItem={accessLog["legit-check-authentic"]}
+          accessLogFakeItem={transaction.accessLog["legit-check-fake"]}
+          accessLogIndefineableItem={
+            transaction.accessLog["legit-check-indefinable"]
+          }
+          accessLogAuthenticItem={
+            transaction.accessLog["legit-check-authentic"]
+          }
           transaction={transaction}
           onAfterSubmit={() => {
             silentFetch();
@@ -631,17 +636,17 @@ function DetailDialog(props: IComponentProps) {
     }
 
     if (
-      Boolean(accessLog["refunded"]) ||
-      transaction.status === BnibTransactionStatus.RefundedByDepatu ||
-      transaction.status === BnibTransactionStatus.DefectReject ||
-      transaction.status === BnibTransactionStatus.LegitCheckFake ||
-      transaction.status === BnibTransactionStatus.LegitCheckIndefinable
+      Boolean(transaction.accessLog["refunded"]) ||
+      transaction.status === EBnibTransactionStatus.RefundedByDepatu ||
+      transaction.status === EBnibTransactionStatus.DefectReject ||
+      transaction.status === EBnibTransactionStatus.LegitCheckFake ||
+      transaction.status === EBnibTransactionStatus.LegitCheckIndefinable
     ) {
       components.push(
         <Refund
           key={counter}
           orderNo={counter++}
-          accessLogItem={accessLog["refunded"]}
+          accessLogItem={transaction.accessLog["refunded"]}
           transaction={transaction}
           onAfterSubmit={() => {
             silentFetch();
@@ -652,14 +657,14 @@ function DetailDialog(props: IComponentProps) {
     }
 
     if (
-      Boolean(accessLog["depatu-send"]) ||
-      transaction.status === BnibTransactionStatus.LegitCheckAuthentic
+      Boolean(transaction.accessLog["depatu-send"]) ||
+      transaction.status === EBnibTransactionStatus.LegitCheckAuthentic
     ) {
       components.push(
         <Send
           key={counter}
           orderNo={counter++}
-          accessLogItem={accessLog["depatu-send"]}
+          accessLogItem={transaction.accessLog["depatu-send"]}
           transaction={transaction}
           onAfterSubmit={() => {
             silentFetch();
@@ -669,8 +674,12 @@ function DetailDialog(props: IComponentProps) {
       );
     }
 
+    if (transaction.status === EBnibTransactionStatus.Done) {
+      components.push(<Done key={counter} orderNo={counter++} />);
+    }
+
     return components;
-  }, [accessLog, restartIntervalRun, silentFetch, transaction, legitCheck]);
+  }, [restartIntervalRun, silentFetch, transaction, legitCheck]);
 
   return (
     <>
@@ -748,7 +757,9 @@ function DetailDialog(props: IComponentProps) {
                     <Typography variant="subtitle1">
                       Current Status:{" "}
                       <EmpSpan>
-                        {_.startCase(BnibTransactionStatus[transaction.status])}
+                        {_.startCase(
+                          EBnibTransactionStatus[transaction.status]
+                        )}
                       </EmpSpan>
                     </Typography>
                     <br />
