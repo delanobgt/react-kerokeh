@@ -3,8 +3,8 @@ import { Div, MyNumber, ContentDiv, Trace } from "../components";
 import { Typography, Button } from "@material-ui/core";
 import {
   EBnibTransactionStatus,
-  IBnibTransaction,
-  IAccessLogItem
+  IAccessLogItem,
+  IBnibTransaction
 } from "src/store/bnib-transaction";
 import RefundDialog from "../dialogs/small-dialogs/RefundDialog";
 
