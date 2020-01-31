@@ -66,6 +66,7 @@ export interface IBnibTransaction {
   accessLog: Record<EAccessLogStatus, IAccessLogItem>;
   bid_payment_expired_at: string;
   bnib_buy_order_id: number;
+  bnib_buy_order_invoice_code: string;
   bnib_product_id: number;
   buyer_confirmation: number | boolean;
   buyer_confirmation_expired_at: string;

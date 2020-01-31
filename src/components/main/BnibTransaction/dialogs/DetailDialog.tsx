@@ -138,6 +138,7 @@ function DetailDialog(props: IComponentProps) {
     return [
       { label: "Id", value: transaction.id },
       { label: "Code", value: transaction.code },
+      { label: "Invoice Code", value: transaction.bnib_buy_order_invoice_code },
       {
         label: "Created at",
         value: moment(transaction.created_at).format("D MMMM YYYY")
@@ -675,7 +676,9 @@ function DetailDialog(props: IComponentProps) {
     }
 
     if (transaction.status === EBnibTransactionStatus.Done) {
-      components.push(<Done key={counter} orderNo={counter++} />);
+      components.push(
+        <Done key={counter} orderNo={counter++} transaction={transaction} />
+      );
     }
 
     return components;

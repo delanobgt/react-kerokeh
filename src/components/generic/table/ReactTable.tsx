@@ -189,7 +189,7 @@ function ReactTable({ columns, data, showPagination }: any) {
                           <div style={{ width: "100%" }}>
                             {row.cells.map((cell: any, index: number) => {
                               return (
-                                <Entry>
+                                <Entry key={index}>
                                   <Label>{cell.column.Header}</Label>
                                   <Value>{cell.render("Cell")}</Value>
                                 </Entry>
