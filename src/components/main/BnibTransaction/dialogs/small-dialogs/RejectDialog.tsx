@@ -56,7 +56,7 @@ function RejectDialog(props: IComponentProps) {
         fullWidth
         bgClose={!loading}
       >
-        <title>Reject BNIB Transaction Product</title>
+        <title>Reject</title>
         <section>
           <div>
             <Typography variant="subtitle1">

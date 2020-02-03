@@ -1,6 +1,11 @@
 import _ from "lodash";
 import React from "react";
-import { Button, CircularProgress, Typography } from "@material-ui/core";
+import {
+  Button,
+  CircularProgress,
+  Typography,
+  MenuItem
+} from "@material-ui/core";
 import styled from "styled-components";
 import {
   Field,
@@ -15,7 +20,8 @@ import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { requiredValidator } from "src/redux-form/validators";
 import {
   renderTextField,
-  renderAutoSuggestField
+  renderAutoSuggestField,
+  renderSelectField
 } from "src/redux-form/renderers";
 import {
   IProductBrand,
@@ -42,6 +48,7 @@ interface IComponentProps {
 interface IFormProps {
   name: string;
   slug: string;
+  is_active: boolean | number;
   parent: {
     label: string;
     value: number;
@@ -105,6 +112,7 @@ function UpdateDialog(
       const {
         slug,
         name,
+        is_active,
         parent: { value }
       } = formValues;
       const [errPB] = await goPromise(
@@ -112,6 +120,7 @@ function UpdateDialog(
           id: productBrandId,
           slug,
           name,
+          is_active,
           parent_id: value
         })
       );
@@ -181,6 +190,16 @@ function UpdateDialog(
               validate={[requiredValidator]}
               disabled={loading}
             />
+            <Field
+              name="is_active"
+              label="Is Active"
+              component={renderSelectField}
+              validate={[requiredValidator]}
+              disabled={loading}
+            >
+              <MenuItem value={1}>Active</MenuItem>
+              <MenuItem value={0}>Inactive</MenuItem>
+            </Field>
             <Field
               name="parent"
               label="Parent Brand"

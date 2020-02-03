@@ -1,6 +1,11 @@
 import _ from "lodash";
 import React from "react";
-import { Button, CircularProgress, Typography } from "@material-ui/core";
+import {
+  Button,
+  CircularProgress,
+  Typography,
+  MenuItem
+} from "@material-ui/core";
 import {
   Field,
   reduxForm,
@@ -20,7 +25,8 @@ import {
 } from "src/store/product-brand";
 import {
   renderTextField,
-  renderAutoSuggestField
+  renderAutoSuggestField,
+  renderSelectField
 } from "src/redux-form/renderers";
 
 interface IComponentProps {
@@ -32,6 +38,7 @@ interface IComponentProps {
 interface IFormProps {
   name: string;
   slug: string;
+  is_active: boolean | number;
   parent: {
     label: string;
     value: number;
@@ -77,12 +84,14 @@ function CreateDialog(
       const {
         name,
         slug,
+        is_active,
         parent: { value }
       } = formValues;
       const [err] = await goPromise(
         createProductBrand({
           name,
           slug,
+          is_active,
           parent_id: value
         })
       );
@@ -143,6 +152,16 @@ function CreateDialog(
                 validate={[requiredValidator]}
                 disabled={loading}
               />
+              <Field
+                name="is_active"
+                label="Is Active"
+                component={renderSelectField}
+                validate={[requiredValidator]}
+                disabled={loading}
+              >
+                <MenuItem value={1}>Active</MenuItem>
+                <MenuItem value={0}>Inactive</MenuItem>
+              </Field>
               <Field
                 name="parent"
                 label="Parent Brand"

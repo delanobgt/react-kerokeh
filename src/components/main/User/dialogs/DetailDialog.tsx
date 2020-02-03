@@ -1,6 +1,15 @@
 import _ from "lodash";
 import React from "react";
-import { Button, Typography, CircularProgress, Chip } from "@material-ui/core";
+import {
+  Button,
+  Typography,
+  CircularProgress,
+  Chip,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails
+} from "@material-ui/core";
+import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
 
 import {
   IUser,
@@ -17,6 +26,7 @@ import {
 } from "src/store/identification";
 import { statusLabelDict } from "../../Identification/constants";
 import { MyExpansion, MyDesc } from "src/components/generic/detail-dialog";
+import ShippingAddressesDialog from "./ShippingAddressesDialog";
 
 interface IComponentProps {
   userId: number;
@@ -27,20 +37,25 @@ function DetailDialog(props: IComponentProps) {
   const { userId, dismiss } = props;
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string>("");
-  const [user, setUser] = React.useState<IUser | null>(null);
-  const [referral, setReferral] = React.useState<IUser | null>(null);
-  const [
-    activeShippingAddress,
-    setActiveShippingAddress
-  ] = React.useState<IShippingAddress | null>(null);
+  const [user, setUser] = React.useState<IUser>(null);
+  const [referral, setReferral] = React.useState<IUser>(null);
+  const [shippingAddresses, setShippingAddresses] = React.useState<
+    IShippingAddress[]
+  >([]);
+  const [activeShippingAddress, setActiveShippingAddress] = React.useState<
+    IShippingAddress
+  >(null);
   const [
     activeRefundShippingAddress,
     setActiveRefundShippingAddress
-  ] = React.useState<IShippingAddress | null>(null);
+  ] = React.useState<IShippingAddress>(null);
+  const [identification, setIdentification] = React.useState<IIdentification>(
+    null
+  );
   const [
-    identification,
-    setIdentification
-  ] = React.useState<IIdentification | null>(null);
+    shippingAddressesDialogOpen,
+    setShippingAddressesDialogOpen
+  ] = React.useState<boolean>(false);
 
   // initial fetch
   const fetch = React.useCallback(async () => {
@@ -51,7 +66,7 @@ function DetailDialog(props: IComponentProps) {
       ? [null, null]
       : await goPromise<IUser>(getUserById(user.referrer_id));
     const [errShippingAddresses, shippingAddresses] = await goPromise<
-      IShippingAddress
+      IShippingAddress[]
     >(getShippingAddressesByUserId(user.id));
     const [, identification] = await goPromise<IIdentification>(
       getIdentificationByUserId(user.id)
@@ -65,6 +80,7 @@ function DetailDialog(props: IComponentProps) {
       setUser(user);
       setReferral(referral);
       setIdentification(identification);
+      setShippingAddresses(shippingAddresses);
       if (user.active_shipping_address_id) {
         setActiveShippingAddress(
           (_.find(
@@ -300,7 +316,7 @@ function DetailDialog(props: IComponentProps) {
   }, [identification]);
 
   return (
-    <div>
+    <>
       <BasicDialog
         open={Boolean(userId)}
         dismiss={dismiss}
@@ -361,6 +377,22 @@ function DetailDialog(props: IComponentProps) {
                     entries: identificationEntries
                   }}
                 />
+                <ExpansionPanel>
+                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>
+                      <strong>Shipping Addresses</strong>
+                    </Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => setShippingAddressesDialogOpen(true)}
+                    >
+                      Show
+                    </Button>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
               </div>
             </>
           ) : null}
@@ -371,7 +403,12 @@ function DetailDialog(props: IComponentProps) {
           </div>
         </section>
       </BasicDialog>
-    </div>
+      <ShippingAddressesDialog
+        open={shippingAddressesDialogOpen}
+        shippingAddresses={shippingAddresses}
+        dismiss={() => setShippingAddressesDialogOpen(false)}
+      />
+    </>
   );
 }
 

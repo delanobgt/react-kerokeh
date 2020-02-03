@@ -54,7 +54,6 @@ export const renderSelectField: RenderFieldFn = ({
 }) => (
   <div>
     <div>
-      {Boolean(console.log(custom))}
       <FormControl error={touched && Boolean(error)} style={{ width: "100%" }}>
         <InputLabel>{label}</InputLabel>
         <Select {...input} {...custom}>

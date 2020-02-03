@@ -83,7 +83,7 @@ function DefectDialog(
                   Cancel
                 </Button>
                 <Button type="submit" color="primary" disabled={loading}>
-                  {loading ? <CircularProgress size={24} /> : "Submit"}
+                  {loading ? <CircularProgress size={24} /> : "Upload"}
                 </Button>
               </div>
             </>

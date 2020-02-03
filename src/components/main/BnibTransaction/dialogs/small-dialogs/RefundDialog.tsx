@@ -72,7 +72,7 @@ function RefundDialog(
         fullWidth
         bgClose={!loading}
       >
-        <title>Refund BNIB Transaction Product</title>
+        <title>Refund and Send Back</title>
         <section>
           <form onSubmit={handleSubmit(submit)}>
             <div>
@@ -113,7 +113,11 @@ function RefundDialog(
                 Cancel
               </Button>
               <Button type="submit" color="primary" disabled={loading}>
-                {loading ? <CircularProgress size={24} /> : "Send Back"}
+                {loading ? (
+                  <CircularProgress size={24} />
+                ) : (
+                  "Refund & Send Back"
+                )}
               </Button>
             </div>
           </form>

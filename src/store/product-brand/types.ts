@@ -12,6 +12,7 @@ export interface IProductBrand {
   name: string;
   parent_id: number;
   slug: string;
+  is_active: boolean | number;
 }
 export type PProductBrand = Partial<IProductBrand>;
 

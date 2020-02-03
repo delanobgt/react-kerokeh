@@ -56,7 +56,7 @@ function DisputeDialog(props: IComponentProps) {
         fullWidth
         bgClose={!loading}
       >
-        <title>Dispute BNIB Transaction Product</title>
+        <title>Dispute</title>
         <section>
           <div>
             <Typography variant="subtitle1">

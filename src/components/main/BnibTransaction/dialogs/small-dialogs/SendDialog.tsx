@@ -77,7 +77,7 @@ function SendDialog(
         fullWidth
         bgClose={!loading}
       >
-        <title>Send BNIB Transaction Product</title>
+        <title>Send</title>
         <section>
           <form onSubmit={handleSubmit(submit)}>
             <div>
