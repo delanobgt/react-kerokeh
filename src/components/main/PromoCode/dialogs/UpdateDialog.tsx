@@ -104,7 +104,7 @@ function UpdateDialog(
               <Field
                 name="code"
                 type="text"
-                label="Code"
+                label="Code*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -112,7 +112,7 @@ function UpdateDialog(
               <Field
                 name="percentage"
                 type="text"
-                label="Percentage (0-1)"
+                label="Percentage (0-1)*"
                 component={renderTextField}
                 validate={[requiredValidator, unsignedRealNumberValidator]}
                 disabled={loading}
@@ -120,7 +120,7 @@ function UpdateDialog(
               <Field
                 name="limit"
                 type="text"
-                label="Limit"
+                label="Limit*"
                 component={renderTextField}
                 validate={[requiredValidator, unsignedWholeNumberValidator]}
                 disabled={loading}
@@ -128,7 +128,7 @@ function UpdateDialog(
               <Field
                 name="description"
                 type="text"
-                label="Description"
+                label="Description*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -138,7 +138,7 @@ function UpdateDialog(
               />
               <Field
                 name="product_type"
-                label="Product Type"
+                label="Product Type*"
                 component={renderSelectField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -150,7 +150,7 @@ function UpdateDialog(
               </Field>
               <Field
                 name="active_status"
-                label="Active Status"
+                label="Active Status*"
                 component={renderSelectField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -161,7 +161,7 @@ function UpdateDialog(
               <Field
                 name="expired_at"
                 type="text"
-                label="Expired At"
+                label="Expired At*"
                 component={renderDateField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -176,7 +176,7 @@ function UpdateDialog(
               </div>
               <Field
                 name="image"
-                label="Replace Image"
+                label="Replace Image (1x1)*"
                 component={renderImageField}
                 disabled={loading}
                 accept="image/png"

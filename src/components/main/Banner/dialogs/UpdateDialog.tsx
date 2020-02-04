@@ -99,7 +99,7 @@ function UpdateDialog(
               <Field
                 name="title"
                 type="text"
-                label="Title"
+                label="Title*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -107,14 +107,14 @@ function UpdateDialog(
               <Field
                 name="action_path"
                 type="text"
-                label="Action Path"
+                label="Action Path*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
               />
               <Field
                 name="type"
-                label="Type"
+                label="Type*"
                 component={renderSelectField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -125,7 +125,7 @@ function UpdateDialog(
               </Field>
               <Field
                 name="action"
-                label="Action"
+                label="Action*"
                 component={renderSelectField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -135,7 +135,7 @@ function UpdateDialog(
               </Field>
               <Field
                 name="is_active"
-                label="Is Active"
+                label="Is Active*"
                 component={renderSelectField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -146,7 +146,7 @@ function UpdateDialog(
               <Field
                 name="expired_at"
                 type="text"
-                label="Expired At"
+                label="Expired At*"
                 component={renderDateField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -161,7 +161,7 @@ function UpdateDialog(
               </div>
               <Field
                 name="image"
-                label="Banner Image"
+                label="Banner Image (1x3)*"
                 component={renderImageField}
                 disabled={loading}
                 accept="image/jpg,image/jpeg,image/png"

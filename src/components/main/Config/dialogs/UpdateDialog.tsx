@@ -91,7 +91,7 @@ function UpdateDialog(
             <Field
               name="name"
               type="text"
-              label="Name"
+              label="Name*"
               component={renderTextField}
               validate={[requiredValidator]}
               disabled={true}
@@ -99,7 +99,7 @@ function UpdateDialog(
             <Field
               name="value"
               type="text"
-              label="Value"
+              label="Value*"
               component={renderTextField}
               validate={[requiredValidator, unsignedRealNumberValidator]}
               disabled={loading}

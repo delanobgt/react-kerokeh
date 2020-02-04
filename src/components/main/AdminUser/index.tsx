@@ -164,7 +164,7 @@ function AdminUsers() {
                   refreshDelay={refreshDelay}
                   setCreateDialogOpen={setCreateDialogOpen}
                 />
-                <Table columns={columns} data={adminUsers} />
+                <Table columns={columns} data={adminUsers} showPagination />
               </>
             ) : (
               <Typography variant="subtitle1" color="secondary">

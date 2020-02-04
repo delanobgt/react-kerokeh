@@ -143,7 +143,7 @@ function CreateDialog(
               <Field
                 name="name"
                 type="text"
-                label="Name"
+                label="Name*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -151,14 +151,14 @@ function CreateDialog(
               <Field
                 name="priority"
                 type="text"
-                label="Priority"
+                label="Priority*"
                 component={renderTextField}
                 validate={[requiredValidator, wholeNumberValidator]}
                 disabled={loading}
               />
               <Field
                 name="published"
-                label="Published"
+                label="Published*"
                 component={renderSelectField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -168,7 +168,7 @@ function CreateDialog(
               </Field>
               <Field
                 name="image"
-                label="Special Category List Image"
+                label="Special Category List Image (1x1)*"
                 component={renderImageField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -177,7 +177,7 @@ function CreateDialog(
               />
               <Field
                 name="product_brand_option"
-                label="Product Brand"
+                label="Product Brand*"
                 promiseOptions={productBrandPromiseOptions}
                 component={renderAsyncAutoSuggestField}
                 validate={[requiredValidator]}

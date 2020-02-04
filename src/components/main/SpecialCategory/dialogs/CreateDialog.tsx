@@ -91,7 +91,7 @@ function CreateDialog(
               <Field
                 name="name"
                 type="string"
-                label="Name"
+                label="Name*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -99,14 +99,14 @@ function CreateDialog(
               <Field
                 name="priority"
                 type="text"
-                label="Priority"
+                label="Priority*"
                 component={renderTextField}
                 validate={[requiredValidator, wholeNumberValidator]}
                 disabled={loading}
               />
               <Field
                 name="published"
-                label="Published"
+                label="Published*"
                 component={renderSelectField}
                 validate={[requiredValidator]}
                 disabled={loading}

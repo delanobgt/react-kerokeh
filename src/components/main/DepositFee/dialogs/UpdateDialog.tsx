@@ -91,7 +91,7 @@ function UpdateDialog(
             <Field
               name="fee"
               type="text"
-              label="Fee"
+              label="Fee*"
               component={renderTextField}
               validate={[requiredValidator, unsignedWholeNumberValidator]}
               disabled={loading}
@@ -99,7 +99,7 @@ function UpdateDialog(
             <Field
               name="starting_price"
               type="text"
-              label="Starting Price"
+              label="Starting Price*"
               component={renderTextField}
               validate={[requiredValidator, unsignedWholeNumberValidator]}
               disabled={loading}

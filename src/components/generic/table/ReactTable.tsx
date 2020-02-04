@@ -27,6 +27,12 @@ import {
   Value
 } from "./table-components";
 
+interface IComponentProps {
+  columns: any[];
+  data: any[];
+  showPagination?: boolean;
+}
+
 function fuzzyTextFilterFn(
   rows: any,
   id: number | string,
@@ -80,7 +86,7 @@ const makeBodyTableCell = (cell: any, key: number) => {
 };
 
 // Our table component
-function ReactTable({ columns, data, showPagination }: any) {
+function ReactTable({ columns, data, showPagination }: IComponentProps) {
   const [page, setPage] = React.useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = React.useState<number>(5);
   const defaultColumn = React.useMemo(

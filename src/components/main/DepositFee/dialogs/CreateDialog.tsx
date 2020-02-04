@@ -81,7 +81,7 @@ function CreateDialog(
               <Field
                 name="fee"
                 type="number"
-                label="Fee"
+                label="Fee*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -89,7 +89,7 @@ function CreateDialog(
               <Field
                 name="starting_price"
                 type="number"
-                label="Starting Price"
+                label="Starting Price*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}

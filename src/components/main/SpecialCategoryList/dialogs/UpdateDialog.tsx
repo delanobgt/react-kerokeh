@@ -142,7 +142,7 @@ function UpdateDialog(
             <Field
               name="name"
               type="text"
-              label="Name"
+              label="Name*"
               component={renderTextField}
               validate={[requiredValidator]}
               disabled={loading}
@@ -150,14 +150,14 @@ function UpdateDialog(
             <Field
               name="priority"
               type="text"
-              label="Priority"
+              label="Priority*"
               component={renderTextField}
               validate={[requiredValidator, wholeNumberValidator]}
               disabled={loading}
             />
             <Field
               name="published"
-              label="Published"
+              label="Published*"
               component={renderSelectField}
               validate={[requiredValidator]}
               disabled={loading}
@@ -175,7 +175,7 @@ function UpdateDialog(
             </div>
             <Field
               name="image"
-              label="Replace Image"
+              label="Replace Image (1x1)*"
               component={renderImageField}
               disabled={loading}
               accept="image/png"
@@ -183,7 +183,7 @@ function UpdateDialog(
             />
             <Field
               name="product_brand_option"
-              label="Product Brand"
+              label="Product Brand*"
               promiseOptions={productBrandPromiseOptions}
               component={renderAsyncAutoSuggestField}
               validate={[requiredValidator]}

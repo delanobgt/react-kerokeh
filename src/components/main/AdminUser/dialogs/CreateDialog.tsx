@@ -87,7 +87,7 @@ function CreateDialog(
             <Field
               name="username"
               type="text"
-              label="Username"
+              label="Username*"
               component={renderTextField}
               validate={[requiredValidator]}
               disabled={loading}
@@ -97,7 +97,7 @@ function CreateDialog(
             <Field
               name="password"
               type="password"
-              label="Password"
+              label="Password*"
               component={renderTextField}
               validate={[requiredValidator]}
               disabled={loading}
@@ -106,7 +106,7 @@ function CreateDialog(
             />
             <Field
               name="role_id"
-              label="Role"
+              label="Role*"
               component={renderSelectField}
               validate={[requiredValidator]}
               disabled={loading}

@@ -68,7 +68,7 @@ function WalletMutationsDialog(props: IComponentProps) {
         <title>Shipping Addresses</title>
         <section>
           <div style={{ width: "100%" }}>
-            <Table columns={columns} data={walletMutations} minimized />
+            <Table columns={columns} data={walletMutations} showPagination />
           </div>
           <div style={{ textAlign: "right", marginTop: "1rem" }}>
             <Button onClick={handleClose} color="primary">

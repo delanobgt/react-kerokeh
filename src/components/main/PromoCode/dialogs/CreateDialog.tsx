@@ -100,7 +100,7 @@ function CreateDialog(
               <Field
                 name="code"
                 type="text"
-                label="Code"
+                label="Code*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -108,7 +108,7 @@ function CreateDialog(
               <Field
                 name="percentage"
                 type="text"
-                label="Percentage (0-1)"
+                label="Percentage (0-1)*"
                 component={renderTextField}
                 validate={[requiredValidator, unsignedRealNumberValidator]}
                 disabled={loading}
@@ -116,7 +116,7 @@ function CreateDialog(
               <Field
                 name="limit"
                 type="text"
-                label="Limit"
+                label="Limit*"
                 component={renderTextField}
                 validate={[requiredValidator, unsignedWholeNumberValidator]}
                 disabled={loading}
@@ -124,7 +124,7 @@ function CreateDialog(
               <Field
                 name="description"
                 type="text"
-                label="Description"
+                label="Description*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -134,7 +134,7 @@ function CreateDialog(
               />
               <Field
                 name="product_type"
-                label="Product Type"
+                label="Product Type*"
                 component={renderSelectField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -146,7 +146,7 @@ function CreateDialog(
               </Field>
               <Field
                 name="active_status"
-                label="Active Status"
+                label="Active Status*"
                 component={renderSelectField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -157,14 +157,14 @@ function CreateDialog(
               <Field
                 name="expired_at"
                 type="text"
-                label="Expired At"
+                label="Expired At*"
                 component={renderDateField}
                 validate={[requiredValidator]}
                 disabled={loading}
               />
               <Field
                 name="image"
-                label="Promo Code Image"
+                label="Promo Code Image (1x1)*"
                 component={renderImageField}
                 validate={[requiredValidator]}
                 disabled={loading}
