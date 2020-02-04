@@ -28,6 +28,19 @@ export interface IWithdrawRequest {
 }
 export type PWithdrawRequest = Partial<IWithdrawRequest>;
 
+export interface IWalletMutation {
+  amount: number;
+  balance: number;
+  created_at: string;
+  description: string;
+  id: number;
+  type: string;
+  user_id: number;
+  wallet_id: number;
+}
+export type PWalletMutation = Partial<IWalletMutation>;
+
+
 interface IWithdrawRequestFilter {
   id: string;
   user_id: string;

@@ -12,7 +12,7 @@ interface IComponentProps {
   dismiss: () => void;
 }
 
-function DetailDialog(props: IComponentProps) {
+function ShippingAddressesDialog(props: IComponentProps) {
   const { open, shippingAddresses, dismiss } = props;
 
   const handleClose = React.useCallback(() => {
@@ -105,4 +105,4 @@ function DetailDialog(props: IComponentProps) {
   );
 }
 
-export default DetailDialog;
+export default ShippingAddressesDialog;

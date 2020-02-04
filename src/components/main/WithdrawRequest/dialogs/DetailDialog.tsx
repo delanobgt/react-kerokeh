@@ -17,11 +17,14 @@ import { goPromise } from "src/util/helper";
 import { MyExpansion } from "src/components/generic/detail-dialog";
 import {
   IWithdrawRequest,
-  getWithdrawRequestById
+  getWithdrawRequestById,
+  IWalletMutation,
+  getWalletMutationsByUserId
 } from "src/store/withdraw-request";
 import ApproveDialog from "./ApproveDialog";
 import RejectDialog from "./RejectDialog";
 import { statusLabelDict } from "../constants";
+import WalletMutationsDialog from "./WalletMutationsDialog";
 
 interface IComponentProps {
   withdrawRequestId: number;
@@ -37,6 +40,13 @@ function DetailDialog(props: IComponentProps) {
     IWithdrawRequest
   >(null);
   const [user, setUser] = React.useState<IUser>(null);
+  const [
+    walletMutationsDialogOpen,
+    setWalletMutationsDialogOpen
+  ] = React.useState<boolean>(false);
+  const [walletMutations, setWalletMutations] = React.useState<
+    IWalletMutation[]
+  >([]);
 
   const [approveDialogId, setApproveDialogId] = React.useState<number>(null);
   const [rejectDialogId, setRejectDialogId] = React.useState<number>(null);
@@ -51,14 +61,18 @@ function DetailDialog(props: IComponentProps) {
     const [errUser, user] = await goPromise<IUser>(
       getUserById(withdrawRequest.user_id)
     );
+    const [errWalletMutations, walletMutations] = await goPromise<
+      IWalletMutation[]
+    >(getWalletMutationsByUserId(user.id));
     setLoading(false);
 
-    if (errUser || errWithdrawRequest) {
-      console.log(errUser, errWithdrawRequest);
+    if (errUser || errWithdrawRequest || errWalletMutations) {
+      console.log(errUser, errWithdrawRequest, errWalletMutations);
       setError("error");
     } else {
       setUser(user);
       setWithdrawRequest(withdrawRequest);
+      setWalletMutations(walletMutations);
     }
   }, [withdrawRequestId]);
   React.useEffect(() => {
@@ -214,6 +228,22 @@ function DetailDialog(props: IComponentProps) {
                       </ExpansionPanelDetails>
                     </ExpansionPanel>
                   )}
+                <ExpansionPanel>
+                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>
+                      <strong>Wallet Mutations</strong>
+                    </Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => setWalletMutationsDialogOpen(true)}
+                    >
+                      Show
+                    </Button>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
               </div>
             </>
           ) : null}
@@ -240,6 +270,11 @@ function DetailDialog(props: IComponentProps) {
           dismiss={() => setRejectDialogId(null)}
         />
       )}
+      <WalletMutationsDialog
+        open={walletMutationsDialogOpen}
+        walletMutations={walletMutations}
+        dismiss={() => setWalletMutationsDialogOpen(false)}
+      />
     </>
   );
 }
