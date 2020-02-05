@@ -121,6 +121,7 @@ export default function(props: IProps) {
         title="PLEASE MIND YOUR ACTION !!"
         message="Are you sure the product is CORRECT ?"
         visible={acceptDialogOpen}
+        confirmText="CORRECT"
         dismiss={() => setAcceptDialogOpen(false)}
         yesCallback={confirmDialogYesCallback}
       />

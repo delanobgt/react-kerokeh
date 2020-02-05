@@ -137,6 +137,7 @@ export default function(props: IProps) {
         title="PLEASE MIND YOUR ACTION !!"
         message="Are you sure the product is NOT DEFECTED ?"
         visible={notDefectDialogOpen}
+        confirmText="NOT DEFECTED"
         dismiss={() => setNotDefectDialogOpen(false)}
         yesCallback={confirmDialogNotDefectCallback}
       />

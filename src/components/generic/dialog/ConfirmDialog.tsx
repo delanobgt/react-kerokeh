@@ -5,6 +5,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { TextField } from "@material-ui/core";
 
 interface Props {
   title: string;
@@ -13,9 +14,14 @@ interface Props {
   dismiss: () => any;
   noCallback?: () => any;
   yesCallback?: (dismiss: () => any) => any;
+  confirmText?: string;
 }
 
 class ConfirmDialog extends React.Component<Props, {}> {
+  state = {
+    _confirmText: ""
+  };
+
   handleCancel = () => {
     const { dismiss, noCallback } = this.props;
     if (noCallback) {
@@ -31,30 +37,43 @@ class ConfirmDialog extends React.Component<Props, {}> {
     }
   };
 
+  handleConfirmTextChange = (e: any) => {
+    this.setState({ _confirmText: e.target.value });
+  };
+
   render() {
-    const { title, message, visible } = this.props;
+    const { title, message, visible, confirmText } = this.props;
+    const { _confirmText } = this.state;
 
     return (
       <div>
-        <Dialog
-          open={visible}
-          onClose={this.handleCancel}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {title || "<title>"}
-          </DialogTitle>
+        <Dialog open={visible} onClose={this.handleCancel}>
+          <DialogTitle>{title || "<title>"}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               {message || "<message>"}
             </DialogContentText>
+            {Boolean(confirmText) && (
+              <div>
+                <TextField
+                  label={`Please type "${confirmText}"`}
+                  value={_confirmText}
+                  onChange={this.handleConfirmTextChange}
+                  fullWidth
+                />
+              </div>
+            )}
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleCancel} color="primary">
               Cancel
             </Button>
-            <Button onClick={this.handleOkay} color="primary" autoFocus>
+            <Button
+              onClick={this.handleOkay}
+              color="primary"
+              autoFocus
+              disabled={Boolean(confirmText) && confirmText !== _confirmText}
+            >
               Yeah
             </Button>
           </DialogActions>

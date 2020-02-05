@@ -101,6 +101,7 @@ export default function(props: IProps) {
         title="PLEASE MIND YOUR ACTION !!"
         message="Are you sure the product has ARRIVED ?"
         visible={confirmArrivedDialogOpen}
+        confirmText="ARRIVED"
         dismiss={() => setArrivedConfirmDialogOpen(false)}
         yesCallback={arrivedConfirmDialogYesCallback}
       />

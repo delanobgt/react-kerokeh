@@ -184,6 +184,7 @@ function LegitCheck(props: IComponentProps) {
         title="PLEASE MIND YOUR ACTION !!"
         message={`Are you sure the Legit Check is ${_.upperCase(result)} ?`}
         visible={confirmDialogOpen}
+        confirmText={_.upperCase(result)}
         dismiss={() => setConfirmDialogOpen(false)}
         yesCallback={confirmDialogYesCallback}
       />
