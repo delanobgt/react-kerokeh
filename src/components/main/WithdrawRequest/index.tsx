@@ -145,6 +145,10 @@ function WithdrawRequest() {
         accessor: "id"
       },
       {
+        Header: "Username",
+        accessor: "username"
+      },
+      {
         Header: "Amount",
         accessor: row => "Rp. " + Number(row.amount).toLocaleString("de-DE")
       },

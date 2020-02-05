@@ -17,6 +17,7 @@ export interface ITopUp {
   payment_status: string;
   payment_type: string;
   user_id: number;
+  username: string;
   virtual_account_number: number;
   wallet_mutation_id: number;
 }
@@ -27,6 +28,7 @@ interface ITopUpFilter {
   payment_status: string;
   created_at_start: string;
   created_at_end: string;
+  username: string;
 }
 export type PTopUpFilter = Partial<ITopUpFilter>;
 

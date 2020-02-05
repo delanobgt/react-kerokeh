@@ -148,6 +148,10 @@ function TopUp() {
         accessor: row => row.id
       },
       {
+        Header: "Username",
+        accessor: row => row.username
+      },
+      {
         Header: "Amount",
         accessor: row => Number(row.amount || 0).toLocaleString("de-DE")
       },

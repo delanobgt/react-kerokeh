@@ -23,6 +23,7 @@ export interface IWithdrawRequest {
   rejected_wallet_mutation_id: number;
   status: string;
   user_id: number;
+  username: string;
   wallet_mutation_id: number;
   withdraw_proof_image_url: string;
 }
@@ -32,6 +33,7 @@ interface IWithdrawRequestFilter {
   id: string;
   user_id: string;
   status: string;
+  username: string;
 }
 export type PWithdrawRequestFilter = Partial<IWithdrawRequestFilter>;
 
