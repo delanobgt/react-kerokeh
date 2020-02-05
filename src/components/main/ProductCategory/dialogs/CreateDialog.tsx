@@ -80,7 +80,7 @@ function CreateDialog(
             <Field
               name="name"
               type="text"
-              label="Name"
+              label="Name*"
               component={renderTextField}
               validate={[requiredValidator]}
               disabled={loading}
@@ -88,7 +88,7 @@ function CreateDialog(
             <Field
               name="slug"
               type="text"
-              label="Slug"
+              label="Slug*"
               component={renderTextField}
               validate={[requiredValidator]}
               disabled={loading}

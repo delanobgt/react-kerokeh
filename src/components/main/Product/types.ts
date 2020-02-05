@@ -9,5 +9,6 @@ export type TInitialValues = PProduct & {
     label: string;
     value: number;
   };
-  initial_detail_images?: {image_path: string, deleted: boolean}[];
+  initial_detail_images?: { image_path: string; deleted: boolean }[];
+  showReleaseDate?: boolean;
 };

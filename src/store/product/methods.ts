@@ -7,8 +7,8 @@ export const getProductById = async (id: number): Promise<IProduct> => {
   const response = await celestineApi().get(`${PRIMARY_ROUTE}/${id}`);
   const product: IProduct = response.data;
   product.detail_image_urls = Boolean(product.detail_image_url)
-        ? product.detail_image_url.split(",")
-        : [];
+    ? product.detail_image_url.split(",")
+    : [];
   return product;
 };
 
@@ -28,10 +28,12 @@ export const createProduct = async (
   formData.append("story", product.story);
   formData.append("is_active", String(product.is_active));
   formData.append("gender", String(product.gender));
-  formData.append(
-    "release_date",
-    moment(product.release_date).format("YYYY-MM-DD")
-  );
+  if (product.release_date)
+    formData.append(
+      "release_date",
+      moment(product.release_date).format("YYYY-MM-DD")
+    );
+
   formData.append("product_brand_id", String(product_brand_id));
   formData.append("product_category_id", String(product_category_id));
   formData.append("display_image", display_image);
@@ -41,8 +43,8 @@ export const createProduct = async (
 };
 
 export const updateProduct = async (
-  oldProductBrand: PProduct,
-  newProductBrand: PProduct,
+  oldProduct: PProduct,
+  newProduct: PProduct,
   product_brand_id: number,
   product_category_id: number,
   display_image: any,
@@ -50,21 +52,22 @@ export const updateProduct = async (
   initial_detail_images: { image_path: string; deleted: boolean }[]
 ): Promise<void> => {
   const formData = new FormData();
-  if (oldProductBrand.name !== newProductBrand.name)
-    formData.append("name", newProductBrand.name);
-  if (oldProductBrand.slug !== newProductBrand.slug)
-    formData.append("slug", newProductBrand.slug);
-  if (oldProductBrand.code !== newProductBrand.code)
-    formData.append("code", newProductBrand.code);
-  formData.append("description", newProductBrand.description);
-  formData.append("story", newProductBrand.story);
-  formData.append("is_active", String(newProductBrand.is_active));
-  formData.append("gender", String(newProductBrand.gender));
-  formData.append("color", String(newProductBrand.color));
-  formData.append(
-    "release_date",
-    moment(newProductBrand.release_date).format("YYYY-MM-DD")
-  );
+  if (oldProduct.name !== newProduct.name)
+    formData.append("name", newProduct.name);
+  if (oldProduct.slug !== newProduct.slug)
+    formData.append("slug", newProduct.slug);
+  if (oldProduct.code !== newProduct.code)
+    formData.append("code", newProduct.code);
+  formData.append("description", newProduct.description);
+  formData.append("story", newProduct.story);
+  formData.append("is_active", String(newProduct.is_active));
+  formData.append("gender", String(newProduct.gender));
+  formData.append("color", String(newProduct.color));
+  if (newProduct.release_date)
+    formData.append(
+      "release_date",
+      moment(newProduct.release_date).format("YYYY-MM-DD")
+    );
   formData.append("product_brand_id", String(product_brand_id));
   formData.append("product_category_id", String(product_category_id));
   if (display_image) formData.append("new_display_image", display_image);
@@ -78,9 +81,9 @@ export const updateProduct = async (
     .join(",");
   if (Boolean(deleted_detail_images))
     formData.append("deleted_detail_images", deleted_detail_images);
-  
+
   const response = await celestineApi().patch(
-    `${PRIMARY_ROUTE}/${oldProductBrand.id}`,
+    `${PRIMARY_ROUTE}/${oldProduct.id}`,
     formData
   );
   console.log(response.data);

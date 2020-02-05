@@ -61,7 +61,9 @@ function DetailDialog(props: IComponentProps) {
       { label: "Slug", value: product.slug },
       {
         label: "Release Date",
-        value: moment(product.release_date).format("D MMMM YYYY")
+        value: product.release_date
+          ? moment(product.release_date).format("D MMMM YYYY")
+          : "-"
       },
       { label: "Retail Price", value: product.retail_price || "-" },
       { label: "Slug", value: product.slug },

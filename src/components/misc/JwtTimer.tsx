@@ -42,14 +42,12 @@ const JwtTimer = () => {
       2 / 60,
       1 / 60
     ].forEach(minute => {
-      console.log("before", minute);
       const timeoutDelayMs = expiredTimeLeftMs - minute * 60 * 1000;
       if (timeoutDelayMs > 0) {
         timeouts.push(
           setTimeout(() => {
             const time = minute < 1 ? minute * 60 : minute;
             const unit = minute < 1 ? "seconds" : "minutes";
-            console.log("after", minute);
             snackbar.showMessage(
               `Your session will be expired in ${time} ${unit}`
             );

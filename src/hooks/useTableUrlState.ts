@@ -35,8 +35,8 @@ export default function<Filter, Pagination, SortField>(
     const sorts: ISort<SortField>[] = !parsed.sorts
       ? []
       : (parsed.sorts as string).split(",").map(_sort => {
-        const [field, dir] = _sort.split(" ");
-        return ({
+          const [field, dir] = _sort.split(" ");
+          return ({
             field,
             dir
           } as unknown) as ISort<SortField>;
@@ -65,7 +65,7 @@ export default function<Filter, Pagination, SortField>(
 
   const updatePagination = React.useCallback(
     (_pagination: Pagination) => {
-    const parsed = queryString.parse(location.search);
+      const parsed = queryString.parse(location.search);
       const query = queryString.stringify({
         ...parsed,
         ..._pagination

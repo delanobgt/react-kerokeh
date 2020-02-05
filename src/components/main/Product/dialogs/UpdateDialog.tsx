@@ -4,7 +4,10 @@ import {
   Button,
   CircularProgress,
   Typography,
-  MenuItem
+  MenuItem,
+  FormControlLabel,
+  Checkbox,
+  Collapse
 } from "@material-ui/core";
 import {
   Field,
@@ -82,9 +85,16 @@ function UpdateDialog(
   const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
+  const [showReleaseDate, setShowReleaseDate] = React.useState<boolean>(
+    Boolean(initialValues.showReleaseDate)
+  );
   const [productDetailImages, setProductDetailImages] = React.useState<any[]>(
     []
   );
+
+  React.useEffect(() => {
+    setShowReleaseDate(Boolean(initialValues.showReleaseDate));
+  }, [initialValues.showReleaseDate]);
 
   const renderInitialDetailImages: RenderFieldArrayFn<any> = React.useCallback(
     ({ fields }) => (
@@ -179,6 +189,7 @@ function UpdateDialog(
 
   const handleSave = React.useCallback(
     async (formValues: IFormProps) => {
+      if (!showReleaseDate) formValues.release_date = null;
       setLoading(true);
       const [err] = await goPromise(
         updateProduct(
@@ -204,19 +215,26 @@ function UpdateDialog(
         snackbar.showMessage("Product updated.");
       }
     },
-    [dismiss, restartIntervalRun, snackbar, initialValues, productDetailImages]
+    [
+      dismiss,
+      restartIntervalRun,
+      snackbar,
+      initialValues,
+      productDetailImages,
+      showReleaseDate
+    ]
   );
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   return (
     <div>
       <BasicDialog
         open={Boolean(productId)}
         dismiss={dismiss}
-        maxWidth="xs"
+        maxWidth="sm"
         fullWidth
         bgClose={!loading}
       >
@@ -278,14 +296,27 @@ function UpdateDialog(
                 rows="5"
                 variant="outlined"
               />
-              <Field
-                name="release_date"
-                type="text"
-                label="Release Date"
-                component={renderDateField}
-                validate={[requiredValidator]}
-                disabled={loading}
-              />
+              <div style={{ marginBottom: "0.5rem" }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={showReleaseDate}
+                      onChange={() => setShowReleaseDate(!showReleaseDate)}
+                    />
+                  }
+                  label="Input Release Date"
+                />
+                <Collapse in={showReleaseDate} timeout="auto">
+                  <Field
+                    name="release_date"
+                    type="text"
+                    label="Release Date"
+                    component={renderDateField}
+                    validate={[requiredValidator]}
+                    disabled={loading}
+                  />
+                </Collapse>
+              </div>
               <Field
                 name="product_brand_option"
                 label="Product Brand"
@@ -339,8 +370,8 @@ function UpdateDialog(
                 label="Replace Display Image"
                 component={renderImageField}
                 disabled={loading}
-                accept="image/png"
-                extensions={["png"]}
+                accept="image/png,image/jpg,image/jpeg"
+                extensions={["png", "jpg", "jpeg"]}
               />
               {initialDetailImageFieldArray}
               <MultipleImageInput

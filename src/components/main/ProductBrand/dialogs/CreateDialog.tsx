@@ -1,11 +1,6 @@
 import _ from "lodash";
 import React from "react";
-import {
-  Button,
-  CircularProgress,
-  Typography,
-  MenuItem
-} from "@material-ui/core";
+import { Button, CircularProgress, Typography } from "@material-ui/core";
 import {
   Field,
   reduxForm,
@@ -25,8 +20,7 @@ import {
 } from "src/store/product-brand";
 import {
   renderTextField,
-  renderAutoSuggestField,
-  renderSelectField
+  renderAutoSuggestField
 } from "src/redux-form/renderers";
 
 interface IComponentProps {
@@ -139,7 +133,7 @@ function CreateDialog(
               <Field
                 name="name"
                 type="text"
-                label="Name"
+                label="Name*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -147,24 +141,14 @@ function CreateDialog(
               <Field
                 name="slug"
                 type="text"
-                label="Slug"
+                label="Slug*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
               />
               <Field
-                name="is_active"
-                label="Is Active"
-                component={renderSelectField}
-                validate={[requiredValidator]}
-                disabled={loading}
-              >
-                <MenuItem value={1}>Active</MenuItem>
-                <MenuItem value={0}>Inactive</MenuItem>
-              </Field>
-              <Field
                 name="parent"
-                label="Parent Brand"
+                label="Parent Brand*"
                 options={parentProductBrandOptions}
                 component={renderAutoSuggestField}
                 validate={[requiredValidator]}

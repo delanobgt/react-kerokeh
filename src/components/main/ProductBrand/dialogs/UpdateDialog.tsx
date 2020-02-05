@@ -169,7 +169,7 @@ function UpdateDialog(
             <Field
               name="id"
               type="text"
-              label="Id"
+              label="Id*"
               component={renderTextField}
               validate={[requiredValidator]}
               disabled={true}
@@ -177,7 +177,7 @@ function UpdateDialog(
             <Field
               name="name"
               type="text"
-              label="Name"
+              label="Name*"
               component={renderTextField}
               validate={[requiredValidator]}
               disabled={loading}
@@ -185,14 +185,14 @@ function UpdateDialog(
             <Field
               name="slug"
               type="text"
-              label="Slug"
+              label="Slug*"
               component={renderTextField}
               validate={[requiredValidator]}
               disabled={loading}
             />
             <Field
               name="is_active"
-              label="Is Active"
+              label="Is Active*"
               component={renderSelectField}
               validate={[requiredValidator]}
               disabled={loading}
@@ -202,7 +202,7 @@ function UpdateDialog(
             </Field>
             <Field
               name="parent"
-              label="Parent Brand"
+              label="Parent Brand*"
               options={parentProductBrandOptions}
               component={renderAutoSuggestField}
               validate={[requiredValidator]}

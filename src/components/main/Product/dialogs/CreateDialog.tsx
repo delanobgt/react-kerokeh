@@ -4,7 +4,10 @@ import {
   Button,
   CircularProgress,
   Typography,
-  MenuItem
+  MenuItem,
+  Collapse,
+  FormControlLabel,
+  Checkbox
 } from "@material-ui/core";
 import {
   Field,
@@ -71,6 +74,7 @@ function CreateDialog(
   const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
+  const [showReleaseDate, setShowReleaseDate] = React.useState<boolean>(false);
   const [productDetailImages, setProductDetailImages] = React.useState<any[]>(
     []
   );
@@ -115,6 +119,7 @@ function CreateDialog(
 
   const handleSave = React.useCallback(
     async (formValues: IFormProps) => {
+      if (!showReleaseDate) formValues.release_date = null;
       setLoading(true);
       const [err] = await goPromise(
         createProduct(
@@ -138,19 +143,25 @@ function CreateDialog(
         snackbar.showMessage("Product created.");
       }
     },
-    [dismiss, restartIntervalRun, snackbar, productDetailImages]
+    [
+      dismiss,
+      restartIntervalRun,
+      snackbar,
+      productDetailImages,
+      showReleaseDate
+    ]
   );
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     dismiss();
-  };
+  }, [dismiss]);
 
   return (
     <div>
       <BasicDialog
         open={open}
         dismiss={dismiss}
-        maxWidth="xs"
+        maxWidth="sm"
         fullWidth
         bgClose={!loading}
       >
@@ -161,7 +172,7 @@ function CreateDialog(
               <Field
                 name="name"
                 type="text"
-                label="Name"
+                label="Name*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -169,7 +180,7 @@ function CreateDialog(
               <Field
                 name="slug"
                 type="text"
-                label="Slug"
+                label="Slug*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -177,7 +188,7 @@ function CreateDialog(
               <Field
                 name="code"
                 type="text"
-                label="Code"
+                label="Code*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -185,7 +196,7 @@ function CreateDialog(
               <Field
                 name="color"
                 type="text"
-                label="Color"
+                label="Color*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -193,7 +204,7 @@ function CreateDialog(
               <Field
                 name="description"
                 type="text"
-                label="Description"
+                label="Description*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -204,7 +215,7 @@ function CreateDialog(
               <Field
                 name="story"
                 type="text"
-                label="Story"
+                label="Story*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -212,17 +223,30 @@ function CreateDialog(
                 rows="5"
                 variant="outlined"
               />
-              <Field
-                name="release_date"
-                type="text"
-                label="Release Date"
-                component={renderDateField}
-                validate={[requiredValidator]}
-                disabled={loading}
-              />
+              <div style={{ marginBottom: "0.5rem" }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={showReleaseDate}
+                      onChange={() => setShowReleaseDate(!showReleaseDate)}
+                    />
+                  }
+                  label="Input Release Date"
+                />
+                <Collapse in={showReleaseDate} timeout="auto">
+                  <Field
+                    name="release_date"
+                    type="text"
+                    label="Release Date*"
+                    component={renderDateField}
+                    validate={[requiredValidator]}
+                    disabled={loading}
+                  />
+                </Collapse>
+              </div>
               <Field
                 name="product_brand_option"
-                label="Product Brand"
+                label="Product Brand*"
                 promiseOptions={productBrandPromiseOptions}
                 component={renderAsyncAutoSuggestField}
                 validate={[requiredValidator]}
@@ -230,7 +254,7 @@ function CreateDialog(
               />
               <Field
                 name="product_category_option"
-                label="Product Category"
+                label="Product Category*"
                 promiseOptions={productCategoryPromiseOptions}
                 component={renderAsyncAutoSuggestField}
                 validate={[requiredValidator]}
@@ -238,7 +262,7 @@ function CreateDialog(
               />
               <Field
                 name="is_active"
-                label="Is Active"
+                label="Is Active*"
                 component={renderSelectField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -248,7 +272,7 @@ function CreateDialog(
               </Field>
               <Field
                 name="gender"
-                label="Gender"
+                label="Gender*"
                 component={renderSelectField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -262,15 +286,15 @@ function CreateDialog(
               </Field>
               <Field
                 name="display_image"
-                label="Display Image"
+                label="Display Image*"
                 component={renderImageField}
                 validate={[requiredValidator]}
                 disabled={loading}
-                accept="image/png"
-                extensions={["png"]}
+                accept="image/png,image/jpg,image/jpeg"
+                extensions={["png", "jpg", "jpeg"]}
               />
               <MultipleImageInput
-                label="Product Detail Image"
+                label="Product Detail Image*"
                 files={productDetailImages}
                 onChange={files => setProductDetailImages(files)}
                 accept="image/png,image/jpg,image/jpeg"

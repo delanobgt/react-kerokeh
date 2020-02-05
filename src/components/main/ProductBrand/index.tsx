@@ -165,6 +165,10 @@ function ProductBrand() {
         accessor: "slug"
       },
       {
+        Header: "Is Active",
+        accessor: row => (row.is_active ? "YES" : "NO")
+      },
+      {
         Header: "Parent Brand",
         accessor: row =>
           _.get(productBrandsDictId, `${row.parent_id}.full_name`, "-")

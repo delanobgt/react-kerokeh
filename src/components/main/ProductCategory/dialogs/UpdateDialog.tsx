@@ -73,7 +73,7 @@ function UpdateDialog(
                     <Field
                       name={`${member}.size`}
                       type="text"
-                      label="Size"
+                      label="Size*"
                       component={renderTextField}
                       validate={[requiredValidator]}
                       fullWidth={false}
@@ -170,7 +170,7 @@ function UpdateDialog(
             <Field
               name="id"
               type="text"
-              label="Id"
+              label="Id*"
               component={renderTextField}
               validate={[requiredValidator]}
               disabled={true}
@@ -178,7 +178,7 @@ function UpdateDialog(
             <Field
               name="name"
               type="text"
-              label="Name"
+              label="Name*"
               component={renderTextField}
               validate={[requiredValidator]}
               disabled={loading}
@@ -186,7 +186,7 @@ function UpdateDialog(
             <Field
               name="slug"
               type="text"
-              label="Slug"
+              label="Slug*"
               component={renderTextField}
               validate={[requiredValidator]}
               disabled={loading}

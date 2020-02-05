@@ -237,7 +237,11 @@ function Product() {
       pc => ((pc as unknown) as IProduct).id === updateDialogId
     ) as unknown) as IProduct;
     product.is_active = Number(product.is_active);
-    product.release_date = moment(product.release_date).format("YYYY-MM-DD");
+    const showReleaseDate = Boolean(product.release_date);
+    if (product.release_date)
+      product.release_date = moment(product.release_date).format("YYYY-MM-DD");
+    else product.release_date = moment().format("YYYY-MM-DD");
+
     const initial_detail_images = product.detail_image_urls.map(url => ({
       image_path: url,
       deleted: false
@@ -252,7 +256,8 @@ function Product() {
         label: product.product_category.name,
         value: product.product_category.id
       },
-      initial_detail_images
+      initial_detail_images,
+      showReleaseDate
     });
   }, [products, updateDialogId, setUpdateInitialValues]);
 
