@@ -14,7 +14,7 @@ export interface IWithdrawRequest {
     owner: string;
     used_for_withdraw: number | boolean;
     user_id: number;
-  },
+  };
   created_at: string;
   id: number;
   paid: boolean | number;
@@ -27,19 +27,6 @@ export interface IWithdrawRequest {
   withdraw_proof_image_url: string;
 }
 export type PWithdrawRequest = Partial<IWithdrawRequest>;
-
-export interface IWalletMutation {
-  amount: number;
-  balance: number;
-  created_at: string;
-  description: string;
-  id: number;
-  type: string;
-  user_id: number;
-  wallet_id: number;
-}
-export type PWalletMutation = Partial<IWalletMutation>;
-
 
 interface IWithdrawRequestFilter {
   id: string;
@@ -63,6 +50,37 @@ export type WithdrawRequestSortField =
   | "rejected"
   | "rejected_reason"
   | "status";
+
+export interface IWalletMutation {
+  amount: number;
+  balance: number;
+  created_at: string;
+  description: string;
+  id: number;
+  type: string;
+  user_id: number;
+  wallet_id: number;
+}
+export type PWalletMutation = Partial<IWalletMutation>;
+
+interface IWalletMutationFilter {
+  user_id: string;
+}
+export type PWalletMutationFilter = Partial<IWalletMutationFilter>;
+
+interface IWalletMutationPagination {
+  limit: number;
+  offset: number;
+}
+export type PWalletMutationPagination = Partial<IWalletMutationPagination>;
+
+export type WalletMutationSortField =
+  | "amount"
+  | "balance"
+  | "created_at"
+  | "description"
+  | "id"
+  | "type";
 
 // redux state type
 export interface IWithdrawRequestState {

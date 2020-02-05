@@ -1,6 +1,14 @@
+import _ from "lodash";
 import celestineApi from "src/apis/celestine";
-import { IWithdrawRequest, IWalletMutation } from "./types";
+import {
+  IWithdrawRequest,
+  IWalletMutation,
+  WalletMutationSortField,
+  PWalletMutationFilter,
+  PWalletMutationPagination
+} from "./types";
 import { PRIMARY_ROUTE, SECONDARY_ROUTE } from "./constants";
+import { ISort } from "src/util/types";
 
 export const getWithdrawRequestById = async (
   id: number
@@ -27,10 +35,18 @@ export const rejectWithdrawRequest = async (
 };
 
 export const getWalletMutationsByUserId = async (
-  user_id: number
-): Promise<IWalletMutation[]> => {
-  const response = await celestineApi().get(`${SECONDARY_ROUTE}`, {
-    params: { user_id }
+  user_id: number,
+  filter: PWalletMutationFilter,
+  pagination: PWalletMutationPagination,
+  sorts: ISort<WalletMutationSortField>[]
+): Promise<{ data: IWalletMutation[]; realTotal: number }> => {
+  const sort = _.chain(sorts)
+    .map(sort => `${sort.field}%20${sort.dir}`)
+    .join(",")
+    .value();
+  const params = _.pickBy({ ...pagination, ...filter, user_id }, val => val);
+  const response = await celestineApi().get(`${SECONDARY_ROUTE}?sort=${sort}`, {
+    params
   });
-  return response.data;
+  return { data: response.data.data, realTotal: response.data.meta.total };
 };

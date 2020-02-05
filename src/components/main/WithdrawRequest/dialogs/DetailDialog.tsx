@@ -17,9 +17,7 @@ import { goPromise } from "src/util/helper";
 import { MyExpansion } from "src/components/generic/detail-dialog";
 import {
   IWithdrawRequest,
-  getWithdrawRequestById,
-  IWalletMutation,
-  getWalletMutationsByUserId
+  getWithdrawRequestById
 } from "src/store/withdraw-request";
 import ApproveDialog from "./ApproveDialog";
 import RejectDialog from "./RejectDialog";
@@ -44,9 +42,6 @@ function DetailDialog(props: IComponentProps) {
     walletMutationsDialogOpen,
     setWalletMutationsDialogOpen
   ] = React.useState<boolean>(false);
-  const [walletMutations, setWalletMutations] = React.useState<
-    IWalletMutation[]
-  >([]);
 
   const [approveDialogId, setApproveDialogId] = React.useState<number>(null);
   const [rejectDialogId, setRejectDialogId] = React.useState<number>(null);
@@ -61,18 +56,14 @@ function DetailDialog(props: IComponentProps) {
     const [errUser, user] = await goPromise<IUser>(
       getUserById(withdrawRequest.user_id)
     );
-    const [errWalletMutations, walletMutations] = await goPromise<
-      IWalletMutation[]
-    >(getWalletMutationsByUserId(user.id));
     setLoading(false);
 
-    if (errUser || errWithdrawRequest || errWalletMutations) {
-      console.log(errUser, errWithdrawRequest, errWalletMutations);
+    if (errUser || errWithdrawRequest) {
+      console.log(errUser, errWithdrawRequest);
       setError("error");
     } else {
       setUser(user);
       setWithdrawRequest(withdrawRequest);
-      setWalletMutations(walletMutations);
     }
   }, [withdrawRequestId]);
   React.useEffect(() => {
@@ -270,11 +261,13 @@ function DetailDialog(props: IComponentProps) {
           dismiss={() => setRejectDialogId(null)}
         />
       )}
-      <WalletMutationsDialog
-        open={walletMutationsDialogOpen}
-        walletMutations={walletMutations}
-        dismiss={() => setWalletMutationsDialogOpen(false)}
-      />
+      {Boolean(user) && (
+        <WalletMutationsDialog
+          open={walletMutationsDialogOpen}
+          userId={user.id}
+          dismiss={() => setWalletMutationsDialogOpen(false)}
+        />
+      )}
     </>
   );
 }
