@@ -13,6 +13,7 @@ export enum RoutePath {
   PRODUCT_CATEGORY = "/product_category",
   PRODUCT_REQUEST = "/product_request",
   PROMO_CODE = "/promo_code",
+  REVENUE = "/revenue",
   SPECIAL_CATEGORY = "/special_category",
   SPECIAL_CATEGORY_LIST = "/special_category_list",
   TOP_UP = "/top_up",

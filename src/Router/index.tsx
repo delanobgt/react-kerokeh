@@ -109,6 +109,10 @@ const routes = [
     component: <PromoCode />
   },
   {
+    routePath: RoutePath.REVENUE,
+    component: <div />
+  },
+  {
     routePath: RoutePath.SPECIAL_CATEGORY,
     component: <SpecialCategory />
   },

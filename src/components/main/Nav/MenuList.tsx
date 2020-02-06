@@ -16,6 +16,7 @@ import {
   People as PeopleIcon,
   AttachMoney as AttachMoneyIcon,
   Style as StyleIcon,
+  TrendingUp as TrendingUpIcon,
   MoneyOff as MoneyOffIcon,
   VpnKey as VpnKeyIcon,
   ExitToApp as ExitToAppIcon,
@@ -109,6 +110,17 @@ const menuList: IMenu[] = [
         title: "Identification",
         Icon: PeopleIcon,
         link: RoutePath.IDENTIFICATION
+      }
+    ]
+  },
+  {
+    title: "Statistics",
+    Icon: TrendingUpIcon,
+    subMenus: [
+      {
+        title: "Revenue",
+        Icon: MoneyIcon,
+        link: RoutePath.REVENUE
       }
     ]
   },
