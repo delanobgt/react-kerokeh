@@ -9,6 +9,7 @@ import BasicSelect from "src/components/generic/input/BasicSelect";
 import DetailImageDialog from "src/components/generic/dialog/DetailImageDialog";
 import UpdateLegitCheckImagesDialog from "./small-dialogs/UpdateLegitCheckImagesDialog";
 import { TLegitCheckInitialValues } from "../types";
+import ConfirmDialog from "src/components/generic/dialog/ConfirmDialog";
 
 interface IComponentProps {
   legitCheck: ILegitCheck;
@@ -29,6 +30,10 @@ function LegitCheckModule(props: IComponentProps) {
     string
   >("");
   const [updateDialogId, setUpdateDialogId] = React.useState<number>(null);
+  const [
+    confirmLegitCheckDialogOpen,
+    setConfirmLegitCheckDialogOpen
+  ] = React.useState<boolean>(false);
 
   // set updateInitialValues
   const [updateInitialValues, setUpdateInitialValues] = React.useState<
@@ -45,22 +50,26 @@ function LegitCheckModule(props: IComponentProps) {
     });
   }, [updateDialogId, setUpdateInitialValues, legitCheck]);
 
-  const publish = React.useCallback(async () => {
-    if (!legitCheck) return;
-    setError("");
-    setLoading(true);
-    const [err] = await goPromise<void>(
-      publishFinalResult(legitCheck.id, finalResult)
-    );
-    setLoading(false);
+  const legitCheckConfirmDialogYesCallback = React.useCallback(
+    async dismiss => {
+      if (!legitCheck) return;
+      dismiss();
+      setError("");
+      setLoading(true);
+      const [err] = await goPromise<void>(
+        publishFinalResult(legitCheck.id, finalResult)
+      );
+      setLoading(false);
 
-    if (err) {
-      console.log(err);
-      setError(_.get(err, "response.data.errors", "Something went wrong!"));
-    } else {
-      onAfterSubmit();
-    }
-  }, [onAfterSubmit, legitCheck, finalResult]);
+      if (err) {
+        console.log(err);
+        setError(_.get(err, "response.data.errors", "Something went wrong!"));
+      } else {
+        onAfterSubmit();
+      }
+    },
+    [onAfterSubmit, legitCheck, finalResult]
+  );
 
   return (
     <>
@@ -128,7 +137,7 @@ function LegitCheckModule(props: IComponentProps) {
               <Button
                 variant="outlined"
                 color="primary"
-                onClick={publish}
+                onClick={() => setConfirmLegitCheckDialogOpen(true)}
                 disabled={!finalResult || loading}
               >
                 Publish
@@ -137,6 +146,16 @@ function LegitCheckModule(props: IComponentProps) {
           )}
         </div>
       </MyPaper>
+      <ConfirmDialog
+        title="PLEASE MIND YOUR ACTION !!"
+        message={`Are you sure the Legit Check is ${_.upperCase(
+          finalResult
+        )} ?`}
+        visible={confirmLegitCheckDialogOpen}
+        confirmText={_.upperCase(finalResult)}
+        dismiss={() => setConfirmLegitCheckDialogOpen(false)}
+        yesCallback={legitCheckConfirmDialogYesCallback}
+      />
       {Boolean(detailDialogImageUrl) && (
         <DetailImageDialog
           title="Legit Check Detail Image"
