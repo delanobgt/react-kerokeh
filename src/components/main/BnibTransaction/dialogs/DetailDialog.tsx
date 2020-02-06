@@ -139,6 +139,8 @@ function DetailDialog(props: IComponentProps) {
       { label: "Id", value: transaction.id },
       { label: "Code", value: transaction.code },
       { label: "Invoice Code", value: transaction.bnib_buy_order_invoice_code },
+      { label: "Buyer Username", value: transaction.buyer_username },
+      { label: "Seller Username", value: transaction.seller_username },
       {
         label: "Created at",
         value: moment(transaction.created_at).format("D MMMM YYYY")
