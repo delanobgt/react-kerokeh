@@ -20,6 +20,12 @@ export default function(props: IProps) {
   const { orderNo, accessLogItem, transaction, onAfterSubmit } = props;
   const [sendDialogOpen, setSendDialogOpen] = React.useState<boolean>(false);
 
+  const value = React.useMemo(
+    () =>
+      `${process.env.REACT_APP_BNIB_QR_CODE_BASE_URL}/${transaction.bnib_buy_order_invoice_code}`,
+    [transaction]
+  );
+
   return (
     <>
       <Div>
@@ -29,7 +35,7 @@ export default function(props: IProps) {
             <Typography variant="subtitle1">QR Code</Typography>
             <QRCodeDownload
               filename={transaction.code}
-              value={transaction.bnib_buy_order_invoice_code}
+              value={value}
               size={180}
               level="H"
               includeMargin
