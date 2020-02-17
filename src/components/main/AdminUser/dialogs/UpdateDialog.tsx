@@ -39,7 +39,13 @@ interface IFormProps {
 function UpdateDialog(
   props: IComponentProps & InjectedFormProps<IFormProps, IComponentProps>
 ) {
-  const { userId, dismiss, handleSubmit, restartIntervalRun } = props;
+  const {
+    userId,
+    dismiss,
+    handleSubmit,
+    restartIntervalRun,
+    initialValues
+  } = props;
 
   const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -50,7 +56,7 @@ function UpdateDialog(
       setLoading(true);
       const { username, password, role_id } = formValues;
       const [err] = await goPromise(
-        updateAdminUser(userId, {
+        updateAdminUser(userId, initialValues, {
           username,
           password,
           role_id
@@ -69,7 +75,7 @@ function UpdateDialog(
         snackbar.showMessage("Admin User updated.");
       }
     },
-    [userId, restartIntervalRun, dismiss, snackbar]
+    [userId, restartIntervalRun, dismiss, snackbar, initialValues]
   );
 
   const handleClose = React.useCallback(() => {
