@@ -7,79 +7,84 @@ import { RootState } from "src/store";
 import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import Link from "src/components/generic/Link";
 import { JWToken } from "src/util/types";
-import { useSnackbar } from "material-ui-snackbar-provider";
+import styled from "styled-components";
+
+const TimerPanel = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  left: 50%;
+  top: 0
+  transform: translate(-50%, 0);
+  font-family: Roboto;
+  color: black
+  color: rgba(0, 0, 0, 0.65);
+  background: rgba(255, 255, 255, 0.5);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 0.35em 0.5em;
+  width: 7.5em;
+  z-index: 20;
+`;
 
 const JwtTimer = () => {
   const token = useSelector<RootState, string>(state => state.auth.token);
   const [dialogOpen, setDialogOpen] = React.useState(false);
-  const snackbar = useSnackbar();
+  const [timerMs, setTimerMs] = React.useState<number>(0);
 
   React.useEffect(() => {
     if (!token) return;
     const decoded: JWToken = jwtDecode(token);
+
     const expiredTimeLeftMs = Math.max(
       0,
       decoded.exp * 1000 - moment().valueOf()
     );
-    const timeouts: number[] = [];
-    timeouts.push(
-      setTimeout(() => {
-        setDialogOpen(true);
-      }, expiredTimeLeftMs)
-    );
-    // minutes
-    [
-      5,
-      4,
-      3,
-      2,
-      1,
-      30 / 60,
-      15 / 60,
-      5 / 60,
-      4 / 60,
-      3 / 60,
-      2 / 60,
-      1 / 60
-    ].forEach(minute => {
-      const timeoutDelayMs = expiredTimeLeftMs - minute * 60 * 1000;
-      if (timeoutDelayMs > 0) {
-        timeouts.push(
-          setTimeout(() => {
-            const time = minute < 1 ? minute * 60 : minute;
-            const unit = minute < 1 ? "seconds" : "minutes";
-            snackbar.showMessage(
-              `Your session will be expired in ${time} ${unit}`
-            );
-          }, timeoutDelayMs)
-        );
-      }
-    });
+    const expiredTimeout: number = setTimeout(() => {
+      setDialogOpen(true);
+    }, expiredTimeLeftMs);
+
+    const timerInterval = setInterval(() => {
+      setTimerMs(decoded.exp * 1000 - moment().valueOf());
+    }, 1000);
 
     return () => {
-      for (const timeout of timeouts) {
-        clearTimeout(timeout);
-      }
+      clearTimeout(expiredTimeout);
+      clearInterval(timerInterval);
     };
-  }, [token, snackbar]);
+  }, [token]);
 
   return (
-    <BasicDialog
-      open={dialogOpen}
-      dismiss={() => {}}
-      maxWidth="xs"
-      fullWidth={true}
-    >
-      <title>Your session has expired</title>
-      <details>Please login again to access this admin panel again.</details>
-      <section>
-        <div style={{ textAlign: "right" }}>
-          <Button color="primary" variant="contained">
-            <Link to="/logout">Login</Link>
-          </Button>
-        </div>
-      </section>
-    </BasicDialog>
+    <>
+      <TimerPanel>
+        {String(Math.floor(timerMs / (60 * 60 * 1000))).padStart(2, "0")} :{" "}
+        {String(
+          Math.floor(Math.floor(timerMs % (60 * 60 * 1000)) / (60 * 1000))
+        ).padStart(2, "0")}{" "}
+        :{" "}
+        {String(Math.floor(Math.floor(timerMs % (60 * 1000)) / 1000)).padStart(
+          2,
+          "0"
+        )}
+      </TimerPanel>
+      <BasicDialog
+        open={dialogOpen}
+        dismiss={() => {}}
+        maxWidth="xs"
+        fullWidth={true}
+      >
+        <title>Your session has expired</title>
+        <details>Please login again to access this admin panel again.</details>
+        <section>
+          <div style={{ textAlign: "right" }}>
+            <Button color="primary" variant="contained">
+              <Link to="/logout">Login</Link>
+            </Button>
+          </div>
+        </section>
+      </BasicDialog>
+    </>
   );
 };
 
