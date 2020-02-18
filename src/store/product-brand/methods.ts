@@ -15,10 +15,7 @@ export const getProductBrandById = async (
 export const createProductBrand = async (
   productBrand: PProductBrand
 ): Promise<IProductBrand> => {
-  const response = await celestineApi().post(
-    PRIMARY_ROUTE,
-    _.pick(productBrand, ["name", "slug", "parent_id"])
-  );
+  const response = await celestineApi().post(PRIMARY_ROUTE, productBrand);
   return response.data;
 };
 
@@ -32,7 +29,7 @@ export const updateProductBrand = async (
   );
   const response = await celestineApi().patch(
     `${PRIMARY_ROUTE}/${newProductBrand.id}`,
-    _.pick(diffProductBrand, ["name", "slug", "parent_id"])
+    diffProductBrand
   );
   return response.data;
 };

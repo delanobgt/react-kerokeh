@@ -120,7 +120,7 @@ function UpdateDialog(
           id: productBrandId,
           slug,
           name,
-          is_active,
+          is_active: Boolean(is_active),
           parent_id: value
         })
       );

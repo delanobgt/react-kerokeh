@@ -208,6 +208,7 @@ function ProductBrand() {
       productBrands,
       pc => ((pc as unknown) as IProductBrand).id === updateDialogId
     ) as unknown) as IProductBrand;
+    productBrand.is_active = Number(productBrand.is_active);
     setUpdateInitialValues({
       ...productBrand,
       parent: {

@@ -301,6 +301,7 @@ function UpdateDialog(
                   control={
                     <Checkbox
                       checked={showReleaseDate}
+                      disabled={showReleaseDate}
                       onChange={() => setShowReleaseDate(!showReleaseDate)}
                     />
                   }
