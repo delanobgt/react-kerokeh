@@ -35,6 +35,7 @@ import { JWToken } from "src/util/types";
 import { RoutePath } from "./routes";
 import TopUp from "src/components/main/TopUp";
 import Banner from "src/components/main/Banner";
+import BnibProduct from "src/components/main/BnibProduct";
 import BnibTransaction from "src/components/main/BnibTransaction";
 
 enum EErrorType {
@@ -63,6 +64,14 @@ const routes = [
   {
     routePath: RoutePath.BANNER,
     component: <Banner />
+  },
+  {
+    routePath: RoutePath.BNIB_BUY_ORDER,
+    component: <BnibTransaction />
+  },
+  {
+    routePath: RoutePath.BNIB_PRODUCT,
+    component: <BnibProduct />
   },
   {
     routePath: RoutePath.BNIB_TRANSACTION,

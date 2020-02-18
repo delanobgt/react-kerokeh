@@ -4,13 +4,14 @@ import { adminUserReducer } from "./adminUser";
 import { authReducer } from "./auth";
 import { bannerReducer } from "./banner";
 import { bnibTransactionReducer } from "./bnib-transaction";
+import { bnibProductReducer } from "./bnib-product";
 import { configReducer } from "./config";
 import { depositFeeReducer } from "./deposit-fee";
 import { identificationReducer } from "./identification";
 import { productReducer } from "./product";
 import { productBrandReducer } from "./product-brand";
 import { productCategoryReducer } from "./product-category";
-import { productRequestReducer } from './product-request';
+import { productRequestReducer } from "./product-request";
 import { specialCategoryReducer } from "./special-category";
 import { specialCategoryListReducer } from "./special-category-list";
 import { topUpReducer } from "./top-up";
@@ -25,6 +26,7 @@ export const rootReducer = combineReducers({
   adminUser: adminUserReducer,
   auth: authReducer,
   banner: bannerReducer,
+  bnibProduct: bnibProductReducer,
   bnibTransaction: bnibTransactionReducer,
   depositFee: depositFeeReducer,
   config: configReducer,

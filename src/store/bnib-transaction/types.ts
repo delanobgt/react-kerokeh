@@ -33,25 +33,25 @@ export enum EBnibTransactionStatus {
 
 export enum EAccessLogStatus {
   WaitingSellerInputTrack = "waiting-seller-input-track",
-	WaitingBuyerPayment     = "waiting-buyer-payment",
-	BuyerPaid               = "buyer-paid",
-	SellerInputTrack        = "seller-input-track",
-	Arrived                 = "arrived",
-	Accepted                = "accepted",
-	Rejected                = "rejected",
-	ArrivedAtBuyer          = "arrived-at-buyer",
-	ConfirmationBuyer       = "arrived-at-buyer",
-	DefectTrue              = "defect-true",
-	DefectFalse             = "defect-false",
-	DefectTrueAccept        = "defect-true-accept",
-	DefectTrueReject        = "defect-true-reject",
-	Disputed                = "disputed",
-	LegitCheckFake          = "legit-check-fake",
-	LegitCheckIndefinable   = "legit-check-indefinable",
-	LegitCheckAuthentic     = "legit-check-authentic",
-	Refunded                = "refunded", // send back to seller
-	SellerCancel            = "seller-cancel",
-	DepatuSend              = "depatu-send", // send to buyer
+  WaitingBuyerPayment = "waiting-buyer-payment",
+  BuyerPaid = "buyer-paid",
+  SellerInputTrack = "seller-input-track",
+  Arrived = "arrived",
+  Accepted = "accepted",
+  Rejected = "rejected",
+  ArrivedAtBuyer = "arrived-at-buyer",
+  ConfirmationBuyer = "arrived-at-buyer",
+  DefectTrue = "defect-true",
+  DefectFalse = "defect-false",
+  DefectTrueAccept = "defect-true-accept",
+  DefectTrueReject = "defect-true-reject",
+  Disputed = "disputed",
+  LegitCheckFake = "legit-check-fake",
+  LegitCheckIndefinable = "legit-check-indefinable",
+  LegitCheckAuthentic = "legit-check-authentic",
+  Refunded = "refunded", // send back to seller
+  SellerCancel = "seller-cancel",
+  DepatuSend = "depatu-send" // send to buyer
 }
 
 // entity types
@@ -71,11 +71,11 @@ export interface IBnibTransaction {
   buyer_confirmation: number | boolean;
   buyer_confirmation_expired_at: string;
   buyer_id: number;
-  buyer_username: string;
   buyer_shipping_address_id: number;
   buyer_shipping_cost: number;
   buyer_shipping_provider: string;
   buyer_shipping_tracking_code: string;
+  buyer_username: string;
   code: string;
   created_at: string;
   defected_buyer_approval: boolean | number;
