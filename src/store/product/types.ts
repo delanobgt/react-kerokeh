@@ -43,6 +43,8 @@ interface IProductFilter {
   gender: string;
   color: string;
   is_active: string;
+  release_date_start: string;
+  release_date_end: string;
 }
 export type PProductFilter = Partial<IProductFilter>;
 

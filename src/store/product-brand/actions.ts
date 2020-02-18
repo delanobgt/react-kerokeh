@@ -20,12 +20,9 @@ export const getProductBrands = async (
     .join(",")
     .value();
   const params = _.pickBy({ ...pagination, ...filter }, val => val);
-  const response = await celestineApi().get(
-    `${PRIMARY_ROUTE}?sort=${sort}`,
-    {
-      params
-    }
-  );
+  const response = await celestineApi().get(`${PRIMARY_ROUTE}?sort=${sort}`, {
+    params
+  });
   const productBrands = response.data.data;
   const meta = response.data.meta;
   return {

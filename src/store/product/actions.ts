@@ -20,13 +20,27 @@ export const getProducts = async (
     .map(sort => `${sort.field}%20${sort.dir}`)
     .join(",")
     .value();
-  const params = _.pickBy({ ...pagination, ...filter }, val => val);
+  const release_date = Boolean(
+    filter.release_date_start && filter.release_date_end
+  )
+    ? `${filter.release_date_start},${filter.release_date_end}`
+    : undefined;
+  const params = _.pickBy(
+    {
+      ...pagination,
+      ..._.omit(filter, ["release_date_start", "release_date_end"]),
+      release_date
+    },
+    val => val
+  );
   const response = await celestineApi().get(`${PRIMARY_ROUTE}?sort=${sort}`, {
     params
   });
   const products: IProduct[] = response.data.data;
   for (let product of products) {
-    product.detail_image_urls = Boolean(product.detail_image_url) ? (product.detail_image_url.split(',')) : ([]);
+    product.detail_image_urls = Boolean(product.detail_image_url)
+      ? product.detail_image_url.split(",")
+      : [];
   }
   const meta = response.data.meta;
   return {

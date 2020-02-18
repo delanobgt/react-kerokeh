@@ -57,7 +57,10 @@ function Product() {
     sorts,
     updateSorts
   } = useTableUrlState<PProductFilter, PProductPagination, ProductSortField>(
-    {},
+    {
+      release_date_start: moment.utc(0).format("YYYY-MM-DD"),
+      release_date_end: moment().format("YYYY-MM-DD")
+    },
     { limit: 5, offset: 0 },
     []
   );
@@ -186,6 +189,10 @@ function Product() {
       {
         Header: "Is Active",
         accessor: row => (row.is_active ? "YES" : "NO")
+      },
+      {
+        Header: "Release Date",
+        accessor: row => moment(row.release_date).format("D MMMM YYYY")
       },
       {
         Header: "Image",

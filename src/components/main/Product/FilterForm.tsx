@@ -3,6 +3,8 @@ import { TextField, Typography, MenuItem } from "@material-ui/core";
 import styled from "styled-components";
 import { PProductFilter } from "src/store/product";
 import BasicSelect from "src/components/generic/input/BasicSelect";
+import DatePicker from "src/components/generic/input/DatePicker";
+import moment from "moment";
 
 interface IComponentProps {
   filter: PProductFilter;
@@ -93,6 +95,31 @@ function FilterForm(props: IComponentProps) {
           <MenuItem value="true">Active</MenuItem>
           <MenuItem value="false">Inactive</MenuItem>
         </BasicSelect>
+      </Div>
+
+      <Div>
+        <DatePicker
+          label="Release Date (Start)"
+          onChange={date =>
+            updateFilter({
+              release_date_start: moment(date).format("YYYY-MM-DD")
+            })
+          }
+          value={moment(filter.release_date_start, "YYYY-MM-DD").toDate()}
+          fullWidth
+        />
+      </Div>
+      <Div>
+        <DatePicker
+          label="Release Date (End)"
+          onChange={date =>
+            updateFilter({
+              release_date_end: moment(date).format("YYYY-MM-DD")
+            })
+          }
+          value={moment(filter.release_date_end, "YYYY-MM-DD").toDate()}
+          fullWidth
+        />
       </Div>
     </div>
   );
