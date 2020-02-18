@@ -20,6 +20,7 @@ export interface IProduct {
   gender: number;
   id: number;
   is_active: number | boolean;
+  latest_order_price: number;
   name: string;
   original_display_image_url: string;
   pre_order_highest_bid_price: number;

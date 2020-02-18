@@ -31,13 +31,13 @@ import {
 } from "src/components/generic/table/table-infos";
 import CollapseFilterAndSort from "src/components/generic/CollapseFilterAndSort";
 import {
-  PBnibProductFilter,
-  PBnibProductPagination,
-  BnibProductSortField,
-  IBnibProduct,
-  IBnibProductGetAction,
-  getBnibProducts
-} from "src/store/bnib-product";
+  BnibBuyOrderSortField,
+  PBnibBuyOrderPagination,
+  PBnibBuyOrderFilter,
+  IBnibBuyOrder,
+  IBnibBuyOrderGetAction,
+  getBnibBuyOrders
+} from "src/store/bnib-buy-order";
 
 function BnibProduct() {
   const refreshDelay = 5000;
@@ -57,9 +57,9 @@ function BnibProduct() {
     sorts,
     updateSorts
   } = useTableUrlState<
-    PBnibProductFilter,
-    PBnibProductPagination,
-    BnibProductSortField
+    PBnibBuyOrderFilter,
+    PBnibBuyOrderPagination,
+    BnibBuyOrderSortField
   >(
     {},
     { limit: 5, offset: 0 },
@@ -67,8 +67,8 @@ function BnibProduct() {
   );
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
-  const bnibProducts = useSelector<RootState, IBnibProduct[]>(
-    state => state.bnibProduct.bnibProducts
+  const bnibBuyOrders = useSelector<RootState, IBnibBuyOrder[]>(
+    state => state.bnibBuyOrder.bnibBuyOrders
   );
   const [detailDialogCode, setDetailDialogCode] = React.useState<string>(null);
   const dispatch = useDispatch();
@@ -76,22 +76,22 @@ function BnibProduct() {
   const bnibProductRealTotal = useSelector<RootState, number>(
     state => state.bnibProduct.realTotal
   );
-  const bnibProductSortFields: BnibProductSortField[] = React.useMemo(
+  const bnibProductSortFields: BnibBuyOrderSortField[] = React.useMemo(
     () => [
       "code",
       "created_at",
       "id",
       "price",
       "product_size",
-      "seller_username"
+      "buyer_username"
     ],
     []
   );
 
   // interval fetch
   const autoFetch = React.useCallback(async () => {
-    const [err, res] = await goPromise<IBnibProductGetAction>(
-      getBnibProducts(pagination, filter, sorts)
+    const [err, res] = await goPromise<IBnibBuyOrderGetAction>(
+      getBnibBuyOrders(pagination, filter, sorts)
     );
     if (err) {
       throw err;
@@ -109,8 +109,8 @@ function BnibProduct() {
   const fetch = React.useCallback(async () => {
     setError("");
     setLoading(true);
-    const [err, res] = await goPromise<IBnibProductGetAction>(
-      getBnibProducts({ offset: 0, limit: 5 }, {}, [])
+    const [err, res] = await goPromise<IBnibBuyOrderGetAction>(
+      getBnibBuyOrders({ offset: 0, limit: 5 }, {}, [])
     );
     setLoading(false);
 
@@ -145,7 +145,7 @@ function BnibProduct() {
     },
     [updatePagination]
   );
-  const columns: Column<IBnibProduct>[] = React.useMemo(
+  const columns: Column<IBnibBuyOrder>[] = React.useMemo(
     () => [
       {
         Header: "ID",
@@ -156,8 +156,8 @@ function BnibProduct() {
         accessor: row => row.code
       },
       {
-        Header: "Seller",
-        accessor: row => row.seller_username
+        Header: "Buyer",
+        accessor: row => row.buyer_username
       },
       {
         Header: "Product Name",
@@ -205,13 +205,13 @@ function BnibProduct() {
           <TablePaper elevation={3}>
             <TableInfoWrapper>
               <TableTitle>
-                <Typography variant="h6">BNIB On-Selling Products</Typography>
+                <Typography variant="h6">BNIB Buy Orders</Typography>
                 <TitleIcon
                   style={{ marginLeft: "0.5rem", color: "cornflowerblue" }}
                 />
               </TableTitle>
               <Typography variant="subtitle1">
-                List of all BNIB On-Selling Products.
+                List of all BNIB Buy Orders.
               </Typography>
             </TableInfoWrapper>
             <br />
@@ -229,7 +229,7 @@ function BnibProduct() {
                 </span>
                 .
               </Typography>
-            ) : bnibProducts && _.isArray(bnibProducts) ? (
+            ) : bnibBuyOrders && _.isArray(bnibBuyOrders) ? (
               <>
                 {/* Filter Form */}
                 <CollapseFilterAndSort>
@@ -238,7 +238,7 @@ function BnibProduct() {
                       <FilterForm filter={filter} updateFilter={updateFilter} />
                     </Grid>
                     <Grid item xs={12} md={6} lg={4}>
-                      <SortForm<BnibProductSortField>
+                      <SortForm<BnibBuyOrderSortField>
                         sorts={sorts}
                         sortFields={bnibProductSortFields}
                         updateSorts={updateSorts}
@@ -255,7 +255,7 @@ function BnibProduct() {
                   pageIndex={pagination.offset / pagination.limit}
                   pageSize={Number(pagination.limit)}
                   columns={columns}
-                  data={bnibProducts}
+                  data={bnibBuyOrders}
                   rowCount={bnibProductRealTotal}
                   onPaginationChange={onPaginationChange}
                   disableSorting={true}

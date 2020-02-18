@@ -55,6 +55,11 @@ const menuList: IMenu[] = [
     Icon: ReceiptIcon,
     subMenus: [
       {
+        title: "Buy Orders",
+        Icon: StyleIcon,
+        link: RoutePath.BNIB_BUY_ORDER
+      },
+      {
         title: "On-Selling Products",
         Icon: StyleIcon,
         link: RoutePath.BNIB_PRODUCT

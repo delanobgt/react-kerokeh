@@ -35,6 +35,7 @@ import { JWToken } from "src/util/types";
 import { RoutePath } from "./routes";
 import TopUp from "src/components/main/TopUp";
 import Banner from "src/components/main/Banner";
+import BnibBuyOrder from "src/components/main/BnibBuyOrder";
 import BnibProduct from "src/components/main/BnibProduct";
 import BnibTransaction from "src/components/main/BnibTransaction";
 
@@ -67,7 +68,7 @@ const routes = [
   },
   {
     routePath: RoutePath.BNIB_BUY_ORDER,
-    component: <BnibTransaction />
+    component: <BnibBuyOrder />
   },
   {
     routePath: RoutePath.BNIB_PRODUCT,
