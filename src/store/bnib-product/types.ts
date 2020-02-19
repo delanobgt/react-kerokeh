@@ -7,6 +7,19 @@ export enum EBnibProductActionTypes {
   BNIB_PRODUCT_GET = "@@bnib-product/BNIB_PRODUCT_GET"
 }
 
+export enum EBnibProductStatus {
+  OnBidding,
+  WaitingPaymentFromBuyer,
+  WaitingTrackingCode,
+  Shipping,
+  Expired,
+  Dropped,
+  Refunded,
+  Cancelled,
+  Disputed,
+  Done
+}
+
 // entity types
 export interface IBnibProduct {
   admin_fee: number;

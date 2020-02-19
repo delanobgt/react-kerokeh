@@ -17,13 +17,13 @@ const TimerPanel = styled.div`
   left: 50%;
   top: 0
   transform: translate(-50%, 0);
+  font-size: 0.8rem;
   font-family: Roboto;
-  color: black
   color: rgba(0, 0, 0, 0.65);
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.75);
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
-  padding: 0.35em 0.5em;
+  padding: 0.15em 0.25em;
   width: 7.5em;
   z-index: 20;
 `;

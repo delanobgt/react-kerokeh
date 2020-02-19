@@ -1,18 +1,13 @@
-import _ from "lodash";
 import React from "react";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
 
 import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/dialog/BasicDialog";
-import {
-  IBnibTransaction,
-  getBnibTransactionByCode,
-  EBnibTransactionStatus
-} from "src/store/bnib-transaction";
 import moment from "moment";
 import { MyExpansion } from "src/components/generic/detail-dialog";
 import DetailImageDialog from "src/components/generic/dialog/DetailImageDialog";
 import { IUser, getUserById } from "src/store/user";
+import { IBnibBuyOrder, getBnibBuyOrderByCode } from "src/store/bnib-buy-order";
 
 interface IComponentProps {
   transactionCode: string;
@@ -25,9 +20,8 @@ function DetailDialog(props: IComponentProps) {
 
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string>("");
-  const [transaction, setTransaction] = React.useState<IBnibTransaction>(null);
+  const [buyOrder, setBuyOrder] = React.useState<IBnibBuyOrder>(null);
   const [buyer, setBuyer] = React.useState<IUser>(null);
-  const [seller, setSeller] = React.useState<IUser>(null);
   const [detailDialogImageUrl, setDetailDialogImageUrl] = React.useState<
     string
   >("");
@@ -36,87 +30,52 @@ function DetailDialog(props: IComponentProps) {
   const fetch = React.useCallback(async () => {
     setError("");
     setLoading(true);
-    const [errTransaction, transaction] = await goPromise<IBnibTransaction>(
-      getBnibTransactionByCode(transactionCode)
+    const [errBuyOrder, buyOrder] = await goPromise<IBnibBuyOrder>(
+      getBnibBuyOrderByCode(transactionCode)
     );
     const [errBuyer, buyer] = await goPromise<IUser>(
-      getUserById(transaction.buyer_id)
-    );
-    const [errSeller, seller] = await goPromise<IUser>(
-      getUserById(transaction.seller_id)
+      getUserById(buyOrder.buyer_id)
     );
     setLoading(false);
 
-    if (errTransaction || errBuyer || errSeller) {
-      console.log(errTransaction, errBuyer, errSeller);
+    if (errBuyOrder || errBuyer) {
+      console.log(errBuyOrder, errBuyer);
       setError("Something went wrong!");
     } else {
-      setTransaction(transaction);
+      setBuyOrder(buyOrder);
       setBuyer(buyer);
-      setSeller(seller);
     }
   }, [transactionCode]);
+
+  React.useEffect(() => {
+    fetch();
+  }, [fetch]);
 
   const handleClose = React.useCallback(() => {
     dismiss();
   }, [dismiss]);
 
-  const generalEntries = React.useMemo(() => {
-    if (!transaction) return [];
-    return [
-      { label: "Id", value: transaction.id },
-      { label: "Code", value: transaction.code },
-      { label: "Invoice Code", value: transaction.bnib_buy_order_invoice_code },
-      { label: "Buyer Username", value: transaction.buyer_username },
-      { label: "Seller Username", value: transaction.seller_username },
-      {
-        label: "Created at",
-        value: moment(transaction.created_at).format("D MMMM YYYY")
-      },
-      {
-        label: "Bid Payment Expired At",
-        value: transaction.bid_payment_expired_at
-          ? moment(transaction.bid_payment_expired_at).format("D MMMM YYYY")
-          : "-"
-      },
-      {
-        label: "Buyer Confirmation",
-        value: transaction.buyer_confirmation ? "YES" : "NO"
-      },
-      {
-        label: "Buyer Confirmation Expired At",
-        value: transaction.bid_payment_expired_at
-          ? moment(transaction.bid_payment_expired_at).format("D MMMM YYYY")
-          : "-"
-      },
-      {
-        label: "Status",
-        value: _.startCase(EBnibTransactionStatus[transaction.status])
-      }
-    ];
-  }, [transaction]);
-
   const productBrandEntries = React.useMemo(() => {
-    if (!transaction) return [];
+    if (!buyOrder) return [];
     return [
       {
         label: "Id",
-        value: transaction.product_detail.product_brand.id || "-"
+        value: buyOrder.product_detail.product_brand.id || "-"
       },
       {
         label: "Full Name",
-        value: transaction.product_detail.product_brand.full_name || "-"
+        value: buyOrder.product_detail.product_brand.full_name || "-"
       },
       {
         label: "Name",
-        value: transaction.product_detail.product_brand.name || "-"
+        value: buyOrder.product_detail.product_brand.name || "-"
       },
       {
         label: "Slug",
-        value: transaction.product_detail.product_brand.slug || "-"
+        value: buyOrder.product_detail.product_brand.slug || "-"
       }
     ];
-  }, [transaction]);
+  }, [buyOrder]);
 
   const buyerEntries = React.useMemo(() => {
     if (!buyer) return [];
@@ -146,84 +105,56 @@ function DetailDialog(props: IComponentProps) {
     ];
   }, [buyer]);
 
-  const sellerEntries = React.useMemo(() => {
-    if (!seller) return [];
-    return [
-      { label: "Id", value: seller.id || "-" },
-      { label: "Username", value: seller.username || "-" },
-      { label: "Full Name", value: seller.full_name || "-" },
-      { label: "Email", value: seller.email || "-" },
-      { label: "Gender", value: seller.gender || "-" },
-      {
-        label: "Birthday",
-        value: seller.birthday
-          ? moment(seller.birthday).format("D MMMM YYYY")
-          : "-"
-      },
-      { label: "Referral Code", value: seller.referral_code || "-" },
-      { label: "Verified Email", value: seller.verified_email || "-" },
-      { label: "Country Code", value: seller.country_code || "-" },
-      { label: "Phone", value: seller.phone || "-" },
-      { label: "Verified Phone", value: seller.verified_phone || "-" },
-      {
-        label: "Joined at",
-        value: seller.last_login_at
-          ? moment(seller.created_at).format("D MMMM YYYY")
-          : "-"
-      }
-    ];
-  }, [seller]);
-
   const productCategoryEntries = React.useMemo(() => {
-    if (!transaction) return [];
+    if (!buyOrder) return [];
     return [
       {
         label: "Id",
-        value: transaction.product_detail.product_category.id || "-"
+        value: buyOrder.product_detail.product_category.id || "-"
       },
       {
         label: "Name",
-        value: transaction.product_detail.product_category.name || "-"
+        value: buyOrder.product_detail.product_category.name || "-"
       },
       {
         label: "Slug",
-        value: transaction.product_detail.product_category.slug || "-"
+        value: buyOrder.product_detail.product_category.slug || "-"
       }
     ];
-  }, [transaction]);
+  }, [buyOrder]);
 
   const productDetailEntries = React.useMemo(() => {
-    if (!transaction) return [];
+    if (!buyOrder) return [];
     return [
-      { label: "Id", value: transaction.product_detail.id || "-" },
-      { label: "Code", value: transaction.product_detail.code || "-" },
-      { label: "Name", value: transaction.product_detail.name || "-" },
-      { label: "Color", value: transaction.product_detail.color || "-" },
+      { label: "Id", value: buyOrder.product_detail.id || "-" },
+      { label: "Code", value: buyOrder.product_detail.code || "-" },
+      { label: "Name", value: buyOrder.product_detail.name || "-" },
+      { label: "Color", value: buyOrder.product_detail.color || "-" },
       {
         label: "Description",
-        value: transaction.product_detail.description || "-"
+        value: buyOrder.product_detail.description || "-"
       },
-      { label: "Detail", value: transaction.product_detail.detail || "-" },
-      { label: "Story", value: transaction.product_detail.story || "-" },
-      { label: "Gender", value: transaction.product_detail.gender || "-" },
+      { label: "Detail", value: buyOrder.product_detail.detail || "-" },
+      { label: "Story", value: buyOrder.product_detail.story || "-" },
+      { label: "Gender", value: buyOrder.product_detail.gender || "-" },
       {
         label: "Is Active",
-        value: transaction.product_detail.is_active ? "YES" : "NO"
+        value: buyOrder.product_detail.is_active ? "YES" : "NO"
       },
-      { label: "Slug", value: transaction.product_detail.slug },
+      { label: "Slug", value: buyOrder.product_detail.slug },
       {
         label: "Release Date",
-        value: moment(transaction.product_detail.release_date).format(
+        value: moment(buyOrder.product_detail.release_date).format(
           "D MMMM YYYY"
         )
       },
       {
         label: "Retail Price",
-        value: transaction.product_detail.retail_price || "-"
+        value: buyOrder.product_detail.retail_price || "-"
       },
-      { label: "Slug", value: transaction.product_detail.slug },
-      { label: "Sold Count", value: transaction.product_detail.sold_count },
-      { label: "View Count", value: transaction.product_detail.view_count },
+      { label: "Slug", value: buyOrder.product_detail.slug },
+      { label: "Sold Count", value: buyOrder.product_detail.sold_count },
+      { label: "View Count", value: buyOrder.product_detail.view_count },
       {
         label: "Display Image",
         value: (
@@ -231,10 +162,10 @@ function DetailDialog(props: IComponentProps) {
             <img
               alt=""
               style={{ width: "100%", cursor: "pointer" }}
-              src={transaction.product_detail.display_image_url}
+              src={buyOrder.product_detail.display_image_url}
               onClick={() =>
                 setDetailDialogImageUrl(
-                  transaction.product_detail.display_image_url
+                  buyOrder.product_detail.display_image_url
                 )
               }
             />
@@ -245,7 +176,7 @@ function DetailDialog(props: IComponentProps) {
         label: "Detail Image",
         value: (
           <div style={{ width: "100%" }}>
-            {(transaction.product_detail.detail_image_urls || []).map(url => (
+            {(buyOrder.product_detail.detail_image_urls || []).map(url => (
               <img
                 key={url}
                 alt=""
@@ -283,7 +214,7 @@ function DetailDialog(props: IComponentProps) {
         )
       }
     ];
-  }, [transaction, productBrandEntries, productCategoryEntries]);
+  }, [buyOrder, productBrandEntries, productCategoryEntries]);
 
   return (
     <>
@@ -295,7 +226,7 @@ function DetailDialog(props: IComponentProps) {
           fullWidth
           bgClose={!loading}
         >
-          <title>BNIB Transaction Detail</title>
+          <title>BNIB Buy Order Detail</title>
           <section>
             {loading ? (
               <div style={{ textAlign: "center" }}>
@@ -309,26 +240,13 @@ function DetailDialog(props: IComponentProps) {
                 </span>
                 .
               </Typography>
-            ) : transaction ? (
+            ) : buyOrder ? (
               <>
                 <div style={{ width: "100%" }}>
                   <MyExpansion
                     entry={{
-                      title: "Transaction Info",
-                      entries: generalEntries
-                    }}
-                    defaultExpanded
-                  />
-                  <MyExpansion
-                    entry={{
                       title: "Buyer Info",
                       entries: buyerEntries
-                    }}
-                  />
-                  <MyExpansion
-                    entry={{
-                      title: "Seller Info",
-                      entries: sellerEntries
                     }}
                   />
                   <MyExpansion

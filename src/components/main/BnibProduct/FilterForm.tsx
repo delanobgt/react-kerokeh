@@ -3,8 +3,7 @@ import React from "react";
 import { TextField, Typography, MenuItem } from "@material-ui/core";
 import styled from "styled-components";
 import BasicSelect from "src/components/generic/input/BasicSelect";
-import { PBnibProductFilter } from "src/store/bnib-product";
-import { EBnibTransactionStatus } from "src/store/bnib-transaction";
+import { PBnibProductFilter, EBnibProductStatus } from "src/store/bnib-product";
 
 interface IComponentProps {
   filter: PBnibProductFilter;
@@ -15,7 +14,7 @@ const Div = styled.div`
   margin-bottom: 0.5rem;
 `;
 
-const statuses = Object.keys(EBnibTransactionStatus)
+const statuses = Object.keys(EBnibProductStatus)
   .filter(stat => isNaN(Number(stat)))
   .map(stat => _.startCase(stat));
 

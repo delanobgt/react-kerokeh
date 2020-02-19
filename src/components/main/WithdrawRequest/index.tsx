@@ -13,6 +13,8 @@ import {
 } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
+import useReactRouter from "use-react-router";
+import queryString from "query-string";
 
 import Table, {
   OnPaginationChangeFn
@@ -43,6 +45,14 @@ import CollapseFilterAndSort from "src/components/generic/CollapseFilterAndSort"
 
 function WithdrawRequest() {
   const refreshDelay = 5000;
+
+  const { location } = useReactRouter();
+  const isSearchEmpty = React.useMemo(() => {
+    const parsed = queryString.parse(location.search);
+    return _.size(parsed) === 0;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const {
     filter,
     updateFilter,
@@ -54,7 +64,11 @@ function WithdrawRequest() {
     PWithdrawRequestFilter,
     PWithdrawRequestPagination,
     WithdrawRequestSortField
-  >({}, { limit: 5, offset: 0 }, []);
+  >(
+    {},
+    { limit: 5, offset: 0 },
+    isSearchEmpty ? [{ field: "created_at", dir: "desc" }] : []
+  );
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
   const withdrawRequests = useSelector<RootState, IWithdrawRequest[]>(

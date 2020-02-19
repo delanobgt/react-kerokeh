@@ -1,5 +1,10 @@
 import React from "react";
-import { TextField, Typography } from "@material-ui/core";
+import {
+  TextField,
+  Typography,
+  FormControlLabel,
+  Switch
+} from "@material-ui/core";
 import styled from "styled-components";
 import { PProductBrandFilter } from "src/store/product-brand";
 
@@ -43,6 +48,20 @@ function FilterForm(props: IComponentProps) {
           value={filter.slug || ""}
           onChange={e => updateFilter({ slug: e.target.value })}
           fullWidth
+        />
+      </Div>
+
+      <Div>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={filter.parent_id === "0"}
+              onChange={e =>
+                updateFilter({ parent_id: filter.parent_id === "0" ? "" : "0" })
+              }
+            />
+          }
+          label="Show Parent Brand Only"
         />
       </Div>
     </div>

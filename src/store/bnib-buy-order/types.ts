@@ -7,6 +7,19 @@ export enum EBnibBuyOrderActionTypes {
   BNIB_BUY_ORDER_GET = "@@bnib-buy-order/BNIB_BUY_ORDER_GET"
 }
 
+export enum EBnibBuyOrderStatus {
+  OnSelling,
+  WaitingPaymentFromBuyer,
+  WaitingTrackingCode,
+  Shipping,
+  Expired,
+  Dropped,
+  Refunded,
+  Cancelled,
+  Disputed,
+  Done
+}
+
 // entity types
 export interface IBnibBuyOrder {
   bid_fee: number;

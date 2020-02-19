@@ -77,7 +77,12 @@ function Identifications() {
   >(
     {},
     { limit: 5, offset: 0 },
-    isSearchEmpty ? [{ field: "verification_attempted", dir: "desc" }] : []
+    isSearchEmpty
+      ? [
+          { field: "id", dir: "desc" },
+          { field: "verification_attempted", dir: "desc" }
+        ]
+      : []
   );
 
   const identificationRealTotal = useSelector<RootState, number>(
