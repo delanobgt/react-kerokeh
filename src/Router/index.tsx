@@ -22,6 +22,7 @@ import ProductBrand from "src/components/main/ProductBrand";
 import ProductCategory from "src/components/main/ProductCategory";
 import ProductRequest from "src/components/main/ProductRequest";
 import PromoCode from "src/components/main/PromoCode";
+import Revenue from "src/components/main/Revenue";
 import Identification from "src/components/main/Identification";
 import User from "src/components/main/User";
 import SpecialCategory from "src/components/main/SpecialCategory";
@@ -120,7 +121,7 @@ const routes = [
   },
   {
     routePath: RoutePath.REVENUE,
-    component: <div />
+    component: <Revenue />
   },
   {
     routePath: RoutePath.SPECIAL_CATEGORY,

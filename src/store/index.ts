@@ -19,6 +19,7 @@ import { userReducer } from "./user";
 import { promoCodeReducer } from "./promo-code";
 import { withdrawRequestReducer } from "./withdraw-request";
 import { bnibBuyOrderReducer } from "./bnib-buy-order";
+import { revenueReducer } from "./revenue";
 
 // Whenever an action is dispatched, Redux will update each top-level application state property
 // using the reducer with the matching name. It's important that the names match exactly, and that
@@ -43,6 +44,7 @@ export const rootReducer = combineReducers({
   specialCategoryList: specialCategoryListReducer,
   topUp: topUpReducer,
   user: userReducer,
+  revenue: revenueReducer,
   withdrawRequest: withdrawRequestReducer
 });
 
