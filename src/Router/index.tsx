@@ -16,6 +16,7 @@ import Login from "src/components/main/Auth/Login";
 import Logout from "src/components/main/Auth/Logout";
 import AdminUser from "src/components/main/AdminUser";
 import Config from "src/components/main/Config";
+import Dashboard from "src/components/main/Dashboard";
 import DepositFee from "src/components/main/DepositFee";
 import Product from "src/components/main/Product";
 import ProductBrand from "src/components/main/ProductBrand";
@@ -44,10 +45,6 @@ enum EErrorType {
   FETCH_FAIL,
   SESSION_EXPIRED
 }
-
-const HeadlineText = styled(Typography)`
-  padding: 1.5rem 4.75rem;
-`;
 
 const CenterItAll = styled("div")`
   text-align: center;
@@ -85,7 +82,7 @@ const routes = [
   },
   {
     routePath: RoutePath.DASHBOARD,
-    component: <HeadlineText variant="h6">Dashboard</HeadlineText>
+    component: <Dashboard />
   },
   {
     routePath: RoutePath.DEPOSIT_FEE,
