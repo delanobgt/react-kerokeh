@@ -77,6 +77,8 @@ function UpdateDialog(
   >([]);
 
   const fetch = React.useCallback(async () => {
+    if (initialValues.id === undefined) return;
+
     setError("");
     setLoading(true);
     const [errParent, resParent] = await goPromise<IProductBrandGetAction>(
