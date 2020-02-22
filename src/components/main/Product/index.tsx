@@ -57,10 +57,7 @@ function Product() {
     sorts,
     updateSorts
   } = useTableUrlState<PProductFilter, PProductPagination, ProductSortField>(
-    {
-      release_date_start: moment.utc(0).format("YYYY-MM-DD"),
-      release_date_end: moment().format("YYYY-MM-DD")
-    },
+    {},
     { limit: 5, offset: 0 },
     []
   );
