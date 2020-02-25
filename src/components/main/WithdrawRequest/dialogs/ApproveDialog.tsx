@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React from "react";
 import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { useSnackbar } from "material-ui-snackbar-provider";
@@ -5,6 +6,14 @@ import { useSnackbar } from "material-ui-snackbar-provider";
 import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import { approveWithdrawRequest } from "src/store/withdraw-request";
+import {
+  reduxForm,
+  Field,
+  InjectedFormProps,
+  SubmissionError
+} from "redux-form";
+import { requiredValidator } from "src/redux-form/validators";
+import { renderTextField } from "src/redux-form/renderers";
 
 interface IComponentProps {
   withdrawRequestId: number;
@@ -13,26 +22,47 @@ interface IComponentProps {
   restartIntervalRun: () => void;
 }
 
-function ApproveDialog(props: IComponentProps) {
-  const { withdrawRequestId, restartIntervalRun, fetch, dismiss } = props;
+interface IFormProps {
+  transaction_code: string;
+}
+
+function ApproveDialog(
+  props: IComponentProps & InjectedFormProps<IFormProps, IComponentProps>
+) {
+  const {
+    withdrawRequestId,
+    restartIntervalRun,
+    fetch,
+    dismiss,
+    handleSubmit
+  } = props;
 
   const snackbar = useSnackbar();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
 
-  const handleApprove = React.useCallback(async () => {
-    setLoading(true);
-    const [err] = await goPromise(approveWithdrawRequest(withdrawRequestId));
-    setLoading(false);
-    if (err) {
-      setError("error");
-    } else {
-      fetch();
-      restartIntervalRun();
-      dismiss();
-      snackbar.showMessage("Withdraw Request approved.");
-    }
-  }, [withdrawRequestId, dismiss, restartIntervalRun, fetch, snackbar]);
+  const handleSave = React.useCallback(
+    async (formValues: IFormProps) => {
+      setLoading(true);
+      const [err] = await goPromise(
+        approveWithdrawRequest(withdrawRequestId, formValues.transaction_code)
+      );
+      setLoading(false);
+      if (err) {
+        if (_.has(err, "response.data.errors")) {
+          throw new SubmissionError(err.response.data.errors);
+        } else {
+          setError("error");
+        }
+      } else {
+        fetch();
+        restartIntervalRun();
+        dismiss();
+        snackbar.showMessage("Withdraw Request approved.");
+      }
+    },
+    [dismiss, restartIntervalRun, snackbar, withdrawRequestId, fetch]
+  );
 
   const handleClose = React.useCallback(() => {
     dismiss();
@@ -49,8 +79,15 @@ function ApproveDialog(props: IComponentProps) {
       >
         <title>Approve Withdraw Request</title>
         <section>
-          <form>
-            <Typography variant="subtitle1">Are you sure ?</Typography>
+          <form onSubmit={handleSubmit(handleSave)}>
+            <Field
+              name="transaction_code"
+              type="text"
+              label="Transaction Code"
+              component={renderTextField}
+              validate={[requiredValidator]}
+              disabled={loading}
+            />
             {error && (
               <Typography variant="subtitle1">
                 Something is wrong. Please try again.
@@ -60,11 +97,7 @@ function ApproveDialog(props: IComponentProps) {
               <Button onClick={handleClose} disabled={loading}>
                 Cancel
               </Button>
-              <Button
-                onClick={handleApprove}
-                color="primary"
-                disabled={loading}
-              >
+              <Button type="submit" color="primary" disabled={loading}>
                 {loading ? <CircularProgress size={24} /> : "Approve!"}
               </Button>
             </div>
@@ -75,4 +108,6 @@ function ApproveDialog(props: IComponentProps) {
   );
 }
 
-export default ApproveDialog;
+export default reduxForm<IFormProps, IComponentProps>({
+  form: "approveWithdrawRequestDialogForm"
+})(ApproveDialog);

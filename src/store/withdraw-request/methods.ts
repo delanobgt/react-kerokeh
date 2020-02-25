@@ -18,9 +18,12 @@ export const getWithdrawRequestById = async (
 };
 
 export const approveWithdrawRequest = async (
-  id: number
+  id: number,
+  transaction_code: string
 ): Promise<IWithdrawRequest> => {
-  const response = await celestineApi().post(`${PRIMARY_ROUTE}/${id}/approve`);
+  const response = await celestineApi().post(`${PRIMARY_ROUTE}/${id}/approve`, {
+    transaction_code
+  });
   return response.data;
 };
 
