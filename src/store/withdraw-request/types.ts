@@ -22,6 +22,7 @@ export interface IWithdrawRequest {
   rejected_reason: null | string;
   rejected_wallet_mutation_id: number;
   status: string;
+  transaction_code: string;
   user_id: number;
   username: string;
   wallet_mutation_id: number;

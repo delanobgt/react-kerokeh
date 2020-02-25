@@ -167,6 +167,10 @@ function WithdrawRequest() {
         accessor: row => "Rp. " + Number(row.amount).toLocaleString("de-DE")
       },
       {
+        Header: "Transaction Code",
+        accessor: row => row.transaction_code || "n/a"
+      },
+      {
         Header: "Status",
         accessor: row => row.status,
         Cell: ({ row: { original } }) => (
