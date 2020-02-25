@@ -16,9 +16,8 @@ const Div = styled.div`
 `;
 
 enum EReleaseDateFilterMode {
-  None = "None",
-  DateRange = "Date Range",
-  NoFilter = "No Filter"
+  NoFilter = "No Filter",
+  DateRange = "Date Range"
 }
 
 function FilterForm(props: IComponentProps) {
@@ -35,11 +34,6 @@ function FilterForm(props: IComponentProps) {
           release_date_end: moment().format("YYYY-MM-DD")
         });
       } else if (value === EReleaseDateFilterMode.NoFilter) {
-        updateFilter({
-          release_date_start: null,
-          release_date_end: null
-        });
-      } else if (value === EReleaseDateFilterMode.None) {
         updateFilter({
           release_date_start: undefined,
           release_date_end: undefined
@@ -143,9 +137,6 @@ function FilterForm(props: IComponentProps) {
           <MenuItem value={EReleaseDateFilterMode.NoFilter}>
             {EReleaseDateFilterMode.NoFilter}
           </MenuItem>
-          <MenuItem value={EReleaseDateFilterMode.None}>
-            {EReleaseDateFilterMode.None}
-          </MenuItem>
           <MenuItem value={EReleaseDateFilterMode.DateRange}>
             {EReleaseDateFilterMode.DateRange}
           </MenuItem>
@@ -179,10 +170,6 @@ function FilterForm(props: IComponentProps) {
             />
           </Div>
         </>
-      ) : releaseDateFilterMode === EReleaseDateFilterMode.None ? (
-        <Typography variant="subtitle1">
-          Showing product with no "Release Date"
-        </Typography>
       ) : null}
     </div>
   );
