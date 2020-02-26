@@ -149,7 +149,7 @@ function DetailDialog(props: IComponentProps) {
         label: "Bid Payment Expired At",
         value: transaction.bid_payment_expired_at
           ? moment(transaction.bid_payment_expired_at).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       },
       {
         label: "Buyer Confirmation",
@@ -159,7 +159,7 @@ function DetailDialog(props: IComponentProps) {
         label: "Buyer Confirmation Expired At",
         value: transaction.bid_payment_expired_at
           ? moment(transaction.bid_payment_expired_at).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       },
       {
         label: "Status",
@@ -173,19 +173,19 @@ function DetailDialog(props: IComponentProps) {
     return [
       {
         label: "Id",
-        value: transaction.product_detail.product_brand.id || "-"
+        value: transaction.product_detail.product_brand.id || "n/a"
       },
       {
         label: "Full Name",
-        value: transaction.product_detail.product_brand.full_name || "-"
+        value: transaction.product_detail.product_brand.full_name || "n/a"
       },
       {
         label: "Name",
-        value: transaction.product_detail.product_brand.name || "-"
+        value: transaction.product_detail.product_brand.name || "n/a"
       },
       {
         label: "Slug",
-        value: transaction.product_detail.product_brand.slug || "-"
+        value: transaction.product_detail.product_brand.slug || "n/a"
       }
     ];
   }, [transaction]);
@@ -193,27 +193,27 @@ function DetailDialog(props: IComponentProps) {
   const buyerEntries = React.useMemo(() => {
     if (!buyer) return [];
     return [
-      { label: "Id", value: buyer.id || "-" },
-      { label: "Username", value: buyer.username || "-" },
-      { label: "Full Name", value: buyer.full_name || "-" },
-      { label: "Email", value: buyer.email || "-" },
-      { label: "Gender", value: buyer.gender || "-" },
+      { label: "Id", value: buyer.id || "n/a" },
+      { label: "Username", value: buyer.username || "n/a" },
+      { label: "Full Name", value: buyer.full_name || "n/a" },
+      { label: "Email", value: buyer.email || "n/a" },
+      { label: "Gender", value: buyer.gender || "n/a" },
       {
         label: "Birthday",
         value: buyer.birthday
           ? moment(buyer.birthday).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       },
-      { label: "Referral Code", value: buyer.referral_code || "-" },
-      { label: "Verified Email", value: buyer.verified_email || "-" },
-      { label: "Country Code", value: buyer.country_code || "-" },
-      { label: "Phone", value: buyer.phone || "-" },
-      { label: "Verified Phone", value: buyer.verified_phone || "-" },
+      { label: "Referral Code", value: buyer.referral_code || "n/a" },
+      { label: "Verified Email", value: buyer.verified_email || "n/a" },
+      { label: "Country Code", value: buyer.country_code || "n/a" },
+      { label: "Phone", value: buyer.phone || "n/a" },
+      { label: "Verified Phone", value: buyer.verified_phone || "n/a" },
       {
         label: "Joined at",
         value: buyer.last_login_at
           ? moment(buyer.created_at).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       }
     ];
   }, [buyer]);
@@ -221,27 +221,27 @@ function DetailDialog(props: IComponentProps) {
   const sellerEntries = React.useMemo(() => {
     if (!seller) return [];
     return [
-      { label: "Id", value: seller.id || "-" },
-      { label: "Username", value: seller.username || "-" },
-      { label: "Full Name", value: seller.full_name || "-" },
-      { label: "Email", value: seller.email || "-" },
-      { label: "Gender", value: seller.gender || "-" },
+      { label: "Id", value: seller.id || "n/a" },
+      { label: "Username", value: seller.username || "n/a" },
+      { label: "Full Name", value: seller.full_name || "n/a" },
+      { label: "Email", value: seller.email || "n/a" },
+      { label: "Gender", value: seller.gender || "n/a" },
       {
         label: "Birthday",
         value: seller.birthday
           ? moment(seller.birthday).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       },
-      { label: "Referral Code", value: seller.referral_code || "-" },
-      { label: "Verified Email", value: seller.verified_email || "-" },
-      { label: "Country Code", value: seller.country_code || "-" },
-      { label: "Phone", value: seller.phone || "-" },
-      { label: "Verified Phone", value: seller.verified_phone || "-" },
+      { label: "Referral Code", value: seller.referral_code || "n/a" },
+      { label: "Verified Email", value: seller.verified_email || "n/a" },
+      { label: "Country Code", value: seller.country_code || "n/a" },
+      { label: "Phone", value: seller.phone || "n/a" },
+      { label: "Verified Phone", value: seller.verified_phone || "n/a" },
       {
         label: "Joined at",
         value: seller.last_login_at
           ? moment(seller.created_at).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       }
     ];
   }, [seller]);
@@ -251,39 +251,39 @@ function DetailDialog(props: IComponentProps) {
     return [
       {
         label: "Address",
-        value: transaction.shipping_address.address || "-"
+        value: transaction.shipping_address.address || "n/a"
       },
       {
         label: "City",
-        value: transaction.shipping_address.city || "-"
+        value: transaction.shipping_address.city || "n/a"
       },
       {
         label: "Country",
-        value: transaction.shipping_address.country || "-"
+        value: transaction.shipping_address.country || "n/a"
       },
       {
         label: "Name",
-        value: transaction.shipping_address.name || "-"
+        value: transaction.shipping_address.name || "n/a"
       },
       {
         label: "Phone",
-        value: transaction.shipping_address.phone || "-"
+        value: transaction.shipping_address.phone || "n/a"
       },
       {
         label: "Province",
-        value: transaction.shipping_address.province || "-"
+        value: transaction.shipping_address.province || "n/a"
       },
       {
         label: "Recipient",
-        value: transaction.shipping_address.recipient || "-"
+        value: transaction.shipping_address.recipient || "n/a"
       },
       {
         label: "Zip Code",
-        value: transaction.shipping_address.zip_code || "-"
+        value: transaction.shipping_address.zip_code || "n/a"
       },
       {
         label: "Additional Info",
-        value: transaction.shipping_address.additional_info || "-"
+        value: transaction.shipping_address.additional_info || "n/a"
       }
     ];
   }, [transaction]);
@@ -293,39 +293,39 @@ function DetailDialog(props: IComponentProps) {
     return [
       {
         label: "Address",
-        value: refundShippingAddress.address || "-"
+        value: refundShippingAddress.address || "n/a"
       },
       {
         label: "City",
-        value: refundShippingAddress.city || "-"
+        value: refundShippingAddress.city || "n/a"
       },
       {
         label: "Country",
-        value: refundShippingAddress.country || "-"
+        value: refundShippingAddress.country || "n/a"
       },
       {
         label: "Name",
-        value: refundShippingAddress.name || "-"
+        value: refundShippingAddress.name || "n/a"
       },
       {
         label: "Phone",
-        value: refundShippingAddress.phone || "-"
+        value: refundShippingAddress.phone || "n/a"
       },
       {
         label: "Province",
-        value: refundShippingAddress.province || "-"
+        value: refundShippingAddress.province || "n/a"
       },
       {
         label: "Recipient",
-        value: refundShippingAddress.recipient || "-"
+        value: refundShippingAddress.recipient || "n/a"
       },
       {
         label: "Zip Code",
-        value: refundShippingAddress.zip_code || "-"
+        value: refundShippingAddress.zip_code || "n/a"
       },
       {
         label: "Additional Info",
-        value: refundShippingAddress.additional_info || "-"
+        value: refundShippingAddress.additional_info || "n/a"
       }
     ];
   }, [refundShippingAddress]);
@@ -335,15 +335,15 @@ function DetailDialog(props: IComponentProps) {
     return [
       {
         label: "Id",
-        value: transaction.product_detail.product_category.id || "-"
+        value: transaction.product_detail.product_category.id || "n/a"
       },
       {
         label: "Name",
-        value: transaction.product_detail.product_category.name || "-"
+        value: transaction.product_detail.product_category.name || "n/a"
       },
       {
         label: "Slug",
-        value: transaction.product_detail.product_category.slug || "-"
+        value: transaction.product_detail.product_category.slug || "n/a"
       }
     ];
   }, [transaction]);
@@ -351,17 +351,17 @@ function DetailDialog(props: IComponentProps) {
   const productDetailEntries = React.useMemo(() => {
     if (!transaction) return [];
     return [
-      { label: "Id", value: transaction.product_detail.id || "-" },
-      { label: "Code", value: transaction.product_detail.code || "-" },
-      { label: "Name", value: transaction.product_detail.name || "-" },
-      { label: "Color", value: transaction.product_detail.color || "-" },
+      { label: "Id", value: transaction.product_detail.id || "n/a" },
+      { label: "Code", value: transaction.product_detail.code || "n/a" },
+      { label: "Name", value: transaction.product_detail.name || "n/a" },
+      { label: "Color", value: transaction.product_detail.color || "n/a" },
       {
         label: "Description",
-        value: transaction.product_detail.description || "-"
+        value: transaction.product_detail.description || "n/a"
       },
-      { label: "Detail", value: transaction.product_detail.detail || "-" },
-      { label: "Story", value: transaction.product_detail.story || "-" },
-      { label: "Gender", value: transaction.product_detail.gender || "-" },
+      { label: "Detail", value: transaction.product_detail.detail || "n/a" },
+      { label: "Story", value: transaction.product_detail.story || "n/a" },
+      { label: "Gender", value: transaction.product_detail.gender || "n/a" },
       {
         label: "Is Active",
         value: transaction.product_detail.is_active ? "YES" : "NO"
@@ -375,7 +375,7 @@ function DetailDialog(props: IComponentProps) {
       },
       {
         label: "Retail Price",
-        value: transaction.product_detail.retail_price || "-"
+        value: transaction.product_detail.retail_price || "n/a"
       },
       { label: "Slug", value: transaction.product_detail.slug },
       { label: "Sold Count", value: transaction.product_detail.sold_count },

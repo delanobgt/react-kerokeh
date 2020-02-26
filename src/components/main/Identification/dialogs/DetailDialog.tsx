@@ -91,9 +91,9 @@ function DetailDialog(props: IComponentProps) {
       Number(identification.verification_rejected) * 2 ** 1 +
       Number(identification.verified) * 2 ** 0;
     return [
-      { label: "Id", value: identification.id || "-" },
-      { label: "Number", value: identification.number || "-" },
-      { label: "Type", value: identification.type || "-" },
+      { label: "Id", value: identification.id || "n/a" },
+      { label: "Number", value: identification.number || "n/a" },
+      { label: "Type", value: identification.type || "n/a" },
       {
         label: "Status",
         value: (
@@ -126,17 +126,19 @@ function DetailDialog(props: IComponentProps) {
   const userEntries = React.useMemo(() => {
     if (!user) return [];
     return [
-      { label: "Id", value: user.id || "-" },
-      { label: "Username", value: user.username || "-" },
-      { label: "Full Name", value: user.full_name || "-" },
-      { label: "Email", value: user.email || "-" },
-      { label: "Gender", value: user.gender || "-" },
+      { label: "Id", value: user.id || "n/a" },
+      { label: "Username", value: user.username || "n/a" },
+      { label: "Full Name", value: user.full_name || "n/a" },
+      { label: "Email", value: user.email || "n/a" },
+      { label: "Gender", value: user.gender || "n/a" },
       {
         label: "Birthday",
-        value: user.birthday ? moment(user.birthday).format("D MMMM YYYY") : "-"
+        value: user.birthday
+          ? moment(user.birthday).format("D MMMM YYYY")
+          : "n/a"
       },
-      { label: "Referral Code", value: user.referral_code || "-" },
-      { label: "Verified Email", value: user.verified_email || "-" },
+      { label: "Referral Code", value: user.referral_code || "n/a" },
+      { label: "Verified Email", value: user.verified_email || "n/a" },
       {
         label: "Country Code",
         value: user.country_code ? "+" + user.country_code : "n/a"
@@ -155,7 +157,7 @@ function DetailDialog(props: IComponentProps) {
         label: "Joined at",
         value: user.last_login_at
           ? moment(user.created_at).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       }
     ];
   }, [user]);

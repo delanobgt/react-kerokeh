@@ -49,15 +49,15 @@ function DetailDialog(props: IComponentProps) {
   const bannerEntries = React.useMemo(() => {
     if (!banner) return [];
     return [
-      { label: "Id", value: banner.id || "-" },
-      { label: "Title", value: banner.title || "-" },
-      { label: "Action Type", value: banner.banner_action || "-" },
-      { label: "Banner Type", value: banner.banner_type || "-" },
-      { label: "Action Path", value: banner.action_path || "-" },
+      { label: "Id", value: banner.id || "n/a" },
+      { label: "Title", value: banner.title || "n/a" },
+      { label: "Action Type", value: banner.banner_action || "n/a" },
+      { label: "Banner Type", value: banner.banner_type || "n/a" },
+      { label: "Action Path", value: banner.action_path || "n/a" },
       { label: "View Count", value: banner.view_count },
       { label: "Is Active", value: banner.is_active ? "YES" : "NO" },
-      { label: "Created By", value: banner.created_by || "-" },
-      { label: "Updated By", value: banner.updated_by || "-" },
+      { label: "Created By", value: banner.created_by || "n/a" },
+      { label: "Updated By", value: banner.updated_by || "n/a" },
       {
         label: "Expired At",
         value: moment(banner.expired_at).format("D MMMM YYYY")

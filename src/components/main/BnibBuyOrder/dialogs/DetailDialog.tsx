@@ -60,19 +60,19 @@ function DetailDialog(props: IComponentProps) {
     return [
       {
         label: "Id",
-        value: buyOrder.product_detail.product_brand.id || "-"
+        value: buyOrder.product_detail.product_brand.id || "n/a"
       },
       {
         label: "Full Name",
-        value: buyOrder.product_detail.product_brand.full_name || "-"
+        value: buyOrder.product_detail.product_brand.full_name || "n/a"
       },
       {
         label: "Name",
-        value: buyOrder.product_detail.product_brand.name || "-"
+        value: buyOrder.product_detail.product_brand.name || "n/a"
       },
       {
         label: "Slug",
-        value: buyOrder.product_detail.product_brand.slug || "-"
+        value: buyOrder.product_detail.product_brand.slug || "n/a"
       }
     ];
   }, [buyOrder]);
@@ -80,27 +80,27 @@ function DetailDialog(props: IComponentProps) {
   const buyerEntries = React.useMemo(() => {
     if (!buyer) return [];
     return [
-      { label: "Id", value: buyer.id || "-" },
-      { label: "Username", value: buyer.username || "-" },
-      { label: "Full Name", value: buyer.full_name || "-" },
-      { label: "Email", value: buyer.email || "-" },
-      { label: "Gender", value: buyer.gender || "-" },
+      { label: "Id", value: buyer.id || "n/a" },
+      { label: "Username", value: buyer.username || "n/a" },
+      { label: "Full Name", value: buyer.full_name || "n/a" },
+      { label: "Email", value: buyer.email || "n/a" },
+      { label: "Gender", value: buyer.gender || "n/a" },
       {
         label: "Birthday",
         value: buyer.birthday
           ? moment(buyer.birthday).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       },
-      { label: "Referral Code", value: buyer.referral_code || "-" },
-      { label: "Verified Email", value: buyer.verified_email || "-" },
-      { label: "Country Code", value: buyer.country_code || "-" },
-      { label: "Phone", value: buyer.phone || "-" },
-      { label: "Verified Phone", value: buyer.verified_phone || "-" },
+      { label: "Referral Code", value: buyer.referral_code || "n/a" },
+      { label: "Verified Email", value: buyer.verified_email || "n/a" },
+      { label: "Country Code", value: buyer.country_code || "n/a" },
+      { label: "Phone", value: buyer.phone || "n/a" },
+      { label: "Verified Phone", value: buyer.verified_phone || "n/a" },
       {
         label: "Joined at",
         value: buyer.last_login_at
           ? moment(buyer.created_at).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       }
     ];
   }, [buyer]);
@@ -110,15 +110,15 @@ function DetailDialog(props: IComponentProps) {
     return [
       {
         label: "Id",
-        value: buyOrder.product_detail.product_category.id || "-"
+        value: buyOrder.product_detail.product_category.id || "n/a"
       },
       {
         label: "Name",
-        value: buyOrder.product_detail.product_category.name || "-"
+        value: buyOrder.product_detail.product_category.name || "n/a"
       },
       {
         label: "Slug",
-        value: buyOrder.product_detail.product_category.slug || "-"
+        value: buyOrder.product_detail.product_category.slug || "n/a"
       }
     ];
   }, [buyOrder]);
@@ -126,17 +126,17 @@ function DetailDialog(props: IComponentProps) {
   const productDetailEntries = React.useMemo(() => {
     if (!buyOrder) return [];
     return [
-      { label: "Id", value: buyOrder.product_detail.id || "-" },
-      { label: "Code", value: buyOrder.product_detail.code || "-" },
-      { label: "Name", value: buyOrder.product_detail.name || "-" },
-      { label: "Color", value: buyOrder.product_detail.color || "-" },
+      { label: "Id", value: buyOrder.product_detail.id || "n/a" },
+      { label: "Code", value: buyOrder.product_detail.code || "n/a" },
+      { label: "Name", value: buyOrder.product_detail.name || "n/a" },
+      { label: "Color", value: buyOrder.product_detail.color || "n/a" },
       {
         label: "Description",
-        value: buyOrder.product_detail.description || "-"
+        value: buyOrder.product_detail.description || "n/a"
       },
-      { label: "Detail", value: buyOrder.product_detail.detail || "-" },
-      { label: "Story", value: buyOrder.product_detail.story || "-" },
-      { label: "Gender", value: buyOrder.product_detail.gender || "-" },
+      { label: "Detail", value: buyOrder.product_detail.detail || "n/a" },
+      { label: "Story", value: buyOrder.product_detail.story || "n/a" },
+      { label: "Gender", value: buyOrder.product_detail.gender || "n/a" },
       {
         label: "Is Active",
         value: buyOrder.product_detail.is_active ? "YES" : "NO"
@@ -150,7 +150,7 @@ function DetailDialog(props: IComponentProps) {
       },
       {
         label: "Retail Price",
-        value: buyOrder.product_detail.retail_price || "-"
+        value: buyOrder.product_detail.retail_price || "n/a"
       },
       { label: "Slug", value: buyOrder.product_detail.slug },
       { label: "Sold Count", value: buyOrder.product_detail.sold_count },

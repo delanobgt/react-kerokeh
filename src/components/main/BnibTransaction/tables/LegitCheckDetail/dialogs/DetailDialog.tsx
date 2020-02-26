@@ -49,16 +49,16 @@ function DetailDialog(props: IComponentProps) {
   const legitCheckDetailEntries = React.useMemo(() => {
     if (!legitCheckDetail) return [];
     return [
-      { label: "Id", value: legitCheckDetail.id || "-" },
+      { label: "Id", value: legitCheckDetail.id || "n/a" },
       {
         label: "Checker Initial",
-        value: legitCheckDetail.checker_initial || "-"
+        value: legitCheckDetail.checker_initial || "n/a"
       },
-      { label: "Currency", value: legitCheckDetail.currency || "-" },
-      { label: "Price", value: legitCheckDetail.price || "-" },
-      { label: "Result", value: legitCheckDetail.result || "-" },
-      { label: "Created By", value: legitCheckDetail.created_by || "-" },
-      { label: "Updated By", value: legitCheckDetail.updated_by || "-" }
+      { label: "Currency", value: legitCheckDetail.currency || "n/a" },
+      { label: "Price", value: legitCheckDetail.price || "n/a" },
+      { label: "Result", value: legitCheckDetail.result || "n/a" },
+      { label: "Created By", value: legitCheckDetail.created_by || "n/a" },
+      { label: "Updated By", value: legitCheckDetail.updated_by || "n/a" }
     ];
   }, [legitCheckDetail]);
 

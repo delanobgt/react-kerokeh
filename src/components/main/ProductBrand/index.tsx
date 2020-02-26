@@ -171,7 +171,7 @@ function ProductBrand() {
       {
         Header: "Parent Brand",
         accessor: row =>
-          _.get(productBrandsDictId, `${row.parent_id}.full_name`, "-")
+          _.get(productBrandsDictId, `${row.parent_id}.full_name`, "n/a")
       },
       {
         Header: "Actions",

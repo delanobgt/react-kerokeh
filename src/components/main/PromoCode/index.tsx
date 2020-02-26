@@ -164,7 +164,7 @@ function PromoCode() {
       },
       {
         Header: "Description",
-        accessor: row => row.description || "-"
+        accessor: row => row.description || "n/a"
       },
       {
         Header: "Percentage",

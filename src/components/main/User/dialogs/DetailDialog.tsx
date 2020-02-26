@@ -114,17 +114,19 @@ function DetailDialog(props: IComponentProps) {
   const generalEntries = React.useMemo(() => {
     if (!user) return [];
     return [
-      { label: "Id", value: user.id || "-" },
-      { label: "Username", value: user.username || "-" },
-      { label: "Full Name", value: user.full_name || "-" },
-      { label: "Email", value: user.email || "-" },
-      { label: "Gender", value: user.gender || "-" },
+      { label: "Id", value: user.id || "n/a" },
+      { label: "Username", value: user.username || "n/a" },
+      { label: "Full Name", value: user.full_name || "n/a" },
+      { label: "Email", value: user.email || "n/a" },
+      { label: "Gender", value: user.gender || "n/a" },
       {
         label: "Birthday",
-        value: user.birthday ? moment(user.birthday).format("D MMMM YYYY") : "-"
+        value: user.birthday
+          ? moment(user.birthday).format("D MMMM YYYY")
+          : "n/a"
       },
-      { label: "Referral Code", value: user.referral_code || "-" },
-      { label: "Verified Email", value: user.verified_email || "-" },
+      { label: "Referral Code", value: user.referral_code || "n/a" },
+      { label: "Verified Email", value: user.verified_email || "n/a" },
       {
         label: "Country Code",
         value: user.country_code ? "+" + user.country_code : "n/a"
@@ -143,32 +145,32 @@ function DetailDialog(props: IComponentProps) {
         label: "Joined at",
         value: user.last_login_at
           ? moment(user.created_at).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       }
     ];
   }, [user]);
   const authEntries = React.useMemo(() => {
     if (!user) return [];
     return [
-      { label: "Login Count", value: user.login_count || "-" },
+      { label: "Login Count", value: user.login_count || "n/a" },
       {
         label: "Last Login Device",
-        value: user.last_login_device || "-"
+        value: user.last_login_device || "n/a"
       },
-      { label: "Last Login IP", value: user.last_login_ip || "-" },
+      { label: "Last Login IP", value: user.last_login_ip || "n/a" },
       {
         label: "Last Login At",
         value: user.last_login_at
           ? moment(user.last_login_at).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       },
       {
         label: "Failed Login Count",
-        value: user.failed_login_count || "-"
+        value: user.failed_login_count || "n/a"
       },
       {
         label: "Phone Verification Counter",
-        value: user.phone_verification_counter || "-"
+        value: user.phone_verification_counter || "n/a"
       },
       { label: "Banned", value: user.banned ? "YES" : "NO" },
       { label: "Froze", value: user.froze ? "YES" : "NO" }
@@ -177,13 +179,13 @@ function DetailDialog(props: IComponentProps) {
   const bankEntries = React.useMemo(() => {
     if (!user) return [];
     return [
-      { label: "Bank Id", value: user.bank.id || "-" },
-      { label: "Name", value: user.bank.name || "-" },
+      { label: "Bank Id", value: user.bank.id || "n/a" },
+      { label: "Name", value: user.bank.name || "n/a" },
       {
         label: "Number",
-        value: user.bank.number || "-"
+        value: user.bank.number || "n/a"
       },
-      { label: "Owner", value: user.bank.owner || "-" },
+      { label: "Owner", value: user.bank.owner || "n/a" },
       {
         label: "Used For Withdraw",
         value: user.bank.used_for_withdraw ? "YES" : "NO"
@@ -193,7 +195,7 @@ function DetailDialog(props: IComponentProps) {
   const walletEntries = React.useMemo(() => {
     if (!user) return [];
     return [
-      { label: "Wallet Id", value: user.wallet.id || "-" },
+      { label: "Wallet Id", value: user.wallet.id || "n/a" },
       {
         label: "Amount",
         value: Number(user.wallet.amount || 0).toLocaleString("de-DE")
@@ -210,13 +212,13 @@ function DetailDialog(props: IComponentProps) {
         label: "Store Close Start Date",
         value: user.store_close_start_date
           ? moment(user.store_close_start_date).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       },
       {
         label: "Store Close End Date",
         value: user.store_close_end_date
           ? moment(user.store_close_end_date).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       }
     ];
   }, [user]);
@@ -224,16 +226,16 @@ function DetailDialog(props: IComponentProps) {
   const referralEntries = React.useMemo(() => {
     if (!referral) return [];
     return [
-      { label: "Id", value: referral.id || "-" },
-      { label: "Username", value: referral.username || "-" },
-      { label: "Full Name", value: referral.full_name || "-" },
-      { label: "Email", value: referral.email || "-" },
-      { label: "Gender", value: referral.gender || "-" },
+      { label: "Id", value: referral.id || "n/a" },
+      { label: "Username", value: referral.username || "n/a" },
+      { label: "Full Name", value: referral.full_name || "n/a" },
+      { label: "Email", value: referral.email || "n/a" },
+      { label: "Gender", value: referral.gender || "n/a" },
       {
         label: "Joined at",
         value: referral.last_login_at
           ? moment(referral.created_at).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       }
     ];
   }, [referral]);
@@ -241,22 +243,22 @@ function DetailDialog(props: IComponentProps) {
   const activeShippingAddressEntries = React.useMemo(() => {
     if (!activeShippingAddress) return [];
     return [
-      { label: "Id", value: activeShippingAddress.id || "-" },
-      { label: "Name", value: activeShippingAddress.name || "-" },
-      { label: "Address", value: activeShippingAddress.address || "-" },
-      { label: "Address", value: activeShippingAddress.address || "-" },
-      { label: "City", value: activeShippingAddress.city || "-" },
-      { label: "Country", value: activeShippingAddress.country || "-" },
-      { label: "Province", value: activeShippingAddress.province || "-" },
-      { label: "Recipient", value: activeShippingAddress.recipient || "-" },
-      { label: "Zip Code", value: activeShippingAddress.zip_code || "-" },
+      { label: "Id", value: activeShippingAddress.id || "n/a" },
+      { label: "Name", value: activeShippingAddress.name || "n/a" },
+      { label: "Address", value: activeShippingAddress.address || "n/a" },
+      { label: "Address", value: activeShippingAddress.address || "n/a" },
+      { label: "City", value: activeShippingAddress.city || "n/a" },
+      { label: "Country", value: activeShippingAddress.country || "n/a" },
+      { label: "Province", value: activeShippingAddress.province || "n/a" },
+      { label: "Recipient", value: activeShippingAddress.recipient || "n/a" },
+      { label: "Zip Code", value: activeShippingAddress.zip_code || "n/a" },
       {
         label: "Used for Transaction",
         value: activeShippingAddress.used_for_transaction ? "YES" : "NO"
       },
       {
         label: "Additional Info",
-        value: activeShippingAddress.additional_info || "-"
+        value: activeShippingAddress.additional_info || "n/a"
       }
     ];
   }, [activeShippingAddress]);
@@ -264,25 +266,31 @@ function DetailDialog(props: IComponentProps) {
   const activeRefundShippingAddressEntries = React.useMemo(() => {
     if (!activeRefundShippingAddress) return [];
     return [
-      { label: "Id", value: activeRefundShippingAddress.id || "-" },
-      { label: "Name", value: activeRefundShippingAddress.name || "-" },
-      { label: "Address", value: activeRefundShippingAddress.address || "-" },
-      { label: "Address", value: activeRefundShippingAddress.address || "-" },
-      { label: "City", value: activeRefundShippingAddress.city || "-" },
-      { label: "Country", value: activeRefundShippingAddress.country || "-" },
-      { label: "Province", value: activeRefundShippingAddress.province || "-" },
+      { label: "Id", value: activeRefundShippingAddress.id || "n/a" },
+      { label: "Name", value: activeRefundShippingAddress.name || "n/a" },
+      { label: "Address", value: activeRefundShippingAddress.address || "n/a" },
+      { label: "Address", value: activeRefundShippingAddress.address || "n/a" },
+      { label: "City", value: activeRefundShippingAddress.city || "n/a" },
+      { label: "Country", value: activeRefundShippingAddress.country || "n/a" },
+      {
+        label: "Province",
+        value: activeRefundShippingAddress.province || "n/a"
+      },
       {
         label: "Recipient",
-        value: activeRefundShippingAddress.recipient || "-"
+        value: activeRefundShippingAddress.recipient || "n/a"
       },
-      { label: "Zip Code", value: activeRefundShippingAddress.zip_code || "-" },
+      {
+        label: "Zip Code",
+        value: activeRefundShippingAddress.zip_code || "n/a"
+      },
       {
         label: "Used for Transaction",
         value: activeRefundShippingAddress.used_for_transaction ? "YES" : "NO"
       },
       {
         label: "Additional Info",
-        value: activeRefundShippingAddress.additional_info || "-"
+        value: activeRefundShippingAddress.additional_info || "n/a"
       }
     ];
   }, [activeRefundShippingAddress]);
@@ -294,9 +302,9 @@ function DetailDialog(props: IComponentProps) {
       Number(identification.verification_rejected) * 2 ** 1 +
       Number(identification.verified) * 2 ** 0;
     return [
-      { label: "Id", value: identification.id || "-" },
-      { label: "Number", value: identification.number || "-" },
-      { label: "Type", value: identification.type || "-" },
+      { label: "Id", value: identification.id || "n/a" },
+      { label: "Number", value: identification.number || "n/a" },
+      { label: "Type", value: identification.type || "n/a" },
       {
         label: "Status",
         value: (

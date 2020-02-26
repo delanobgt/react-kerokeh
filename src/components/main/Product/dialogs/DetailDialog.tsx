@@ -49,23 +49,23 @@ function DetailDialog(props: IComponentProps) {
   const productEntries = React.useMemo(() => {
     if (!product) return [];
     return [
-      { label: "Id", value: product.id || "-" },
-      { label: "Code", value: product.code || "-" },
-      { label: "Name", value: product.name || "-" },
-      { label: "Color", value: product.color || "-" },
-      { label: "Description", value: product.description || "-" },
-      { label: "Detail", value: product.detail || "-" },
-      { label: "Story", value: product.story || "-" },
-      { label: "Gender", value: product.gender || "-" },
+      { label: "Id", value: product.id || "n/a" },
+      { label: "Code", value: product.code || "n/a" },
+      { label: "Name", value: product.name || "n/a" },
+      { label: "Color", value: product.color || "n/a" },
+      { label: "Description", value: product.description || "n/a" },
+      { label: "Detail", value: product.detail || "n/a" },
+      { label: "Story", value: product.story || "n/a" },
+      { label: "Gender", value: product.gender || "n/a" },
       { label: "Is Active", value: product.is_active ? "YES" : "NO" },
       { label: "Slug", value: product.slug },
       {
         label: "Release Date",
         value: product.release_date
           ? moment(product.release_date).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       },
-      { label: "Retail Price", value: product.retail_price || "-" },
+      { label: "Retail Price", value: product.retail_price || "n/a" },
       { label: "Slug", value: product.slug },
       { label: "Sold Count", value: product.sold_count },
       { label: "View Count", value: product.view_count },
@@ -130,19 +130,19 @@ function DetailDialog(props: IComponentProps) {
   const productBrandEntries = React.useMemo(() => {
     if (!product) return [];
     return [
-      { label: "Id", value: product.product_brand.id || "-" },
-      { label: "Full Name", value: product.product_brand.full_name || "-" },
-      { label: "Name", value: product.product_brand.name || "-" },
-      { label: "Slug", value: product.product_brand.slug || "-" }
+      { label: "Id", value: product.product_brand.id || "n/a" },
+      { label: "Full Name", value: product.product_brand.full_name || "n/a" },
+      { label: "Name", value: product.product_brand.name || "n/a" },
+      { label: "Slug", value: product.product_brand.slug || "n/a" }
     ];
   }, [product]);
 
   const productCategoryEntries = React.useMemo(() => {
     if (!product) return [];
     return [
-      { label: "Id", value: product.product_category.id || "-" },
-      { label: "Name", value: product.product_category.name || "-" },
-      { label: "Slug", value: product.product_category.slug || "-" }
+      { label: "Id", value: product.product_category.id || "n/a" },
+      { label: "Name", value: product.product_category.name || "n/a" },
+      { label: "Slug", value: product.product_category.slug || "n/a" }
     ];
   }, [product]);
 

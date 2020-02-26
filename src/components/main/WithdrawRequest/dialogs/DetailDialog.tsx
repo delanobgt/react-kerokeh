@@ -77,9 +77,9 @@ function DetailDialog(props: IComponentProps) {
   const withdrawRequestEntries = React.useMemo(() => {
     if (!withdrawRequest) return [];
     const entries = [
-      { label: "Id", value: withdrawRequest.id || "-" },
-      { label: "Amount", value: withdrawRequest.amount || "-" },
-      { label: "Approved by", value: withdrawRequest.approved_by || "-" },
+      { label: "Id", value: withdrawRequest.id || "n/a" },
+      { label: "Amount", value: withdrawRequest.amount || "n/a" },
+      { label: "Approved by", value: withdrawRequest.approved_by || "n/a" },
       {
         label: "Created At",
         value: moment(withdrawRequest.created_at).format("D MMMM YYYY")
@@ -111,10 +111,10 @@ function DetailDialog(props: IComponentProps) {
   const bankEntries = React.useMemo(() => {
     if (!withdrawRequest) return [];
     const entries = [
-      { label: "Id", value: withdrawRequest.bank.id || "-" },
-      { label: "Name", value: withdrawRequest.bank.name || "-" },
-      { label: "Number", value: withdrawRequest.bank.number || "-" },
-      { label: "Owner", value: withdrawRequest.bank.owner || "-" },
+      { label: "Id", value: withdrawRequest.bank.id || "n/a" },
+      { label: "Name", value: withdrawRequest.bank.name || "n/a" },
+      { label: "Number", value: withdrawRequest.bank.number || "n/a" },
+      { label: "Owner", value: withdrawRequest.bank.owner || "n/a" },
       {
         label: "Used for Withdraw",
         value: withdrawRequest.bank.used_for_withdraw ? "YES" : "NO"
@@ -126,25 +126,27 @@ function DetailDialog(props: IComponentProps) {
   const userEntries = React.useMemo(() => {
     if (!user) return [];
     return [
-      { label: "Id", value: user.id || "-" },
-      { label: "Username", value: user.username || "-" },
-      { label: "Full Name", value: user.full_name || "-" },
-      { label: "Email", value: user.email || "-" },
-      { label: "Gender", value: user.gender || "-" },
+      { label: "Id", value: user.id || "n/a" },
+      { label: "Username", value: user.username || "n/a" },
+      { label: "Full Name", value: user.full_name || "n/a" },
+      { label: "Email", value: user.email || "n/a" },
+      { label: "Gender", value: user.gender || "n/a" },
       {
         label: "Birthday",
-        value: user.birthday ? moment(user.birthday).format("D MMMM YYYY") : "-"
+        value: user.birthday
+          ? moment(user.birthday).format("D MMMM YYYY")
+          : "n/a"
       },
-      { label: "Referral Code", value: user.referral_code || "-" },
-      { label: "Verified Email", value: user.verified_email || "-" },
-      { label: "Country Code", value: user.country_code || "-" },
-      { label: "Phone", value: user.phone || "-" },
-      { label: "Verified Phone", value: user.verified_phone || "-" },
+      { label: "Referral Code", value: user.referral_code || "n/a" },
+      { label: "Verified Email", value: user.verified_email || "n/a" },
+      { label: "Country Code", value: user.country_code || "n/a" },
+      { label: "Phone", value: user.phone || "n/a" },
+      { label: "Verified Phone", value: user.verified_phone || "n/a" },
       {
         label: "Joined at",
         value: user.last_login_at
           ? moment(user.created_at).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       }
     ];
   }, [user]);

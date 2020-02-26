@@ -60,19 +60,19 @@ function DetailDialog(props: IComponentProps) {
     return [
       {
         label: "Id",
-        value: bnibProduct.product_detail.product_brand.id || "-"
+        value: bnibProduct.product_detail.product_brand.id || "n/a"
       },
       {
         label: "Full Name",
-        value: bnibProduct.product_detail.product_brand.full_name || "-"
+        value: bnibProduct.product_detail.product_brand.full_name || "n/a"
       },
       {
         label: "Name",
-        value: bnibProduct.product_detail.product_brand.name || "-"
+        value: bnibProduct.product_detail.product_brand.name || "n/a"
       },
       {
         label: "Slug",
-        value: bnibProduct.product_detail.product_brand.slug || "-"
+        value: bnibProduct.product_detail.product_brand.slug || "n/a"
       }
     ];
   }, [bnibProduct]);
@@ -80,27 +80,27 @@ function DetailDialog(props: IComponentProps) {
   const sellerEntries = React.useMemo(() => {
     if (!seller) return [];
     return [
-      { label: "Id", value: seller.id || "-" },
-      { label: "Username", value: seller.username || "-" },
-      { label: "Full Name", value: seller.full_name || "-" },
-      { label: "Email", value: seller.email || "-" },
-      { label: "Gender", value: seller.gender || "-" },
+      { label: "Id", value: seller.id || "n/a" },
+      { label: "Username", value: seller.username || "n/a" },
+      { label: "Full Name", value: seller.full_name || "n/a" },
+      { label: "Email", value: seller.email || "n/a" },
+      { label: "Gender", value: seller.gender || "n/a" },
       {
         label: "Birthday",
         value: seller.birthday
           ? moment(seller.birthday).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       },
-      { label: "Referral Code", value: seller.referral_code || "-" },
-      { label: "Verified Email", value: seller.verified_email || "-" },
-      { label: "Country Code", value: seller.country_code || "-" },
-      { label: "Phone", value: seller.phone || "-" },
-      { label: "Verified Phone", value: seller.verified_phone || "-" },
+      { label: "Referral Code", value: seller.referral_code || "n/a" },
+      { label: "Verified Email", value: seller.verified_email || "n/a" },
+      { label: "Country Code", value: seller.country_code || "n/a" },
+      { label: "Phone", value: seller.phone || "n/a" },
+      { label: "Verified Phone", value: seller.verified_phone || "n/a" },
       {
         label: "Joined at",
         value: seller.last_login_at
           ? moment(seller.created_at).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       }
     ];
   }, [seller]);
@@ -110,15 +110,15 @@ function DetailDialog(props: IComponentProps) {
     return [
       {
         label: "Id",
-        value: bnibProduct.product_detail.product_category.id || "-"
+        value: bnibProduct.product_detail.product_category.id || "n/a"
       },
       {
         label: "Name",
-        value: bnibProduct.product_detail.product_category.name || "-"
+        value: bnibProduct.product_detail.product_category.name || "n/a"
       },
       {
         label: "Slug",
-        value: bnibProduct.product_detail.product_category.slug || "-"
+        value: bnibProduct.product_detail.product_category.slug || "n/a"
       }
     ];
   }, [bnibProduct]);
@@ -126,17 +126,17 @@ function DetailDialog(props: IComponentProps) {
   const productDetailEntries = React.useMemo(() => {
     if (!bnibProduct) return [];
     return [
-      { label: "Id", value: bnibProduct.product_detail.id || "-" },
-      { label: "Code", value: bnibProduct.product_detail.code || "-" },
-      { label: "Name", value: bnibProduct.product_detail.name || "-" },
-      { label: "Color", value: bnibProduct.product_detail.color || "-" },
+      { label: "Id", value: bnibProduct.product_detail.id || "n/a" },
+      { label: "Code", value: bnibProduct.product_detail.code || "n/a" },
+      { label: "Name", value: bnibProduct.product_detail.name || "n/a" },
+      { label: "Color", value: bnibProduct.product_detail.color || "n/a" },
       {
         label: "Description",
-        value: bnibProduct.product_detail.description || "-"
+        value: bnibProduct.product_detail.description || "n/a"
       },
-      { label: "Detail", value: bnibProduct.product_detail.detail || "-" },
-      { label: "Story", value: bnibProduct.product_detail.story || "-" },
-      { label: "Gender", value: bnibProduct.product_detail.gender || "-" },
+      { label: "Detail", value: bnibProduct.product_detail.detail || "n/a" },
+      { label: "Story", value: bnibProduct.product_detail.story || "n/a" },
+      { label: "Gender", value: bnibProduct.product_detail.gender || "n/a" },
       {
         label: "Is Active",
         value: bnibProduct.product_detail.is_active ? "YES" : "NO"
@@ -150,7 +150,7 @@ function DetailDialog(props: IComponentProps) {
       },
       {
         label: "Retail Price",
-        value: bnibProduct.product_detail.retail_price || "-"
+        value: bnibProduct.product_detail.retail_price || "n/a"
       },
       { label: "Slug", value: bnibProduct.product_detail.slug },
       { label: "Sold Count", value: bnibProduct.product_detail.sold_count },

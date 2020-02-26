@@ -73,7 +73,7 @@ function ShippingAddressesDialog(props: IComponentProps) {
       },
       {
         Header: "Additional Info",
-        accessor: row => row.additional_info || "-",
+        accessor: row => row.additional_info || "n/a",
         Filter: null
       }
     ],

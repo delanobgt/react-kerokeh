@@ -50,22 +50,22 @@ function DeleteDialog(props: IComponentProps) {
   const topUpEntries = React.useMemo(() => {
     if (!topUp) return [];
     return [
-      { label: "Id", value: topUp.id || "-" },
-      { label: "Amount", value: topUp.amount || "-" },
-      { label: "Code", value: topUp.code || "-" },
-      { label: "Description", value: topUp.description || "-" },
-      { label: "Fraud Status", value: topUp.fraud_status || "-" },
+      { label: "Id", value: topUp.id || "n/a" },
+      { label: "Amount", value: topUp.amount || "n/a" },
+      { label: "Code", value: topUp.code || "n/a" },
+      { label: "Description", value: topUp.description || "n/a" },
+      { label: "Fraud Status", value: topUp.fraud_status || "n/a" },
       {
         label: "Created At",
         value: moment(topUp.created_at).format("D MMMM YYYY")
       },
-      { label: "Payment Channel", value: topUp.payment_channel || "-" },
-      { label: "Payment Code", value: topUp.payment_code || "-" },
-      { label: "Payment Status", value: topUp.payment_status || "-" },
-      { label: "Payment Type", value: topUp.payment_type || "-" },
+      { label: "Payment Channel", value: topUp.payment_channel || "n/a" },
+      { label: "Payment Code", value: topUp.payment_code || "n/a" },
+      { label: "Payment Status", value: topUp.payment_status || "n/a" },
+      { label: "Payment Type", value: topUp.payment_type || "n/a" },
       {
         label: "VA Number",
-        value: topUp.virtual_account_number || "-"
+        value: topUp.virtual_account_number || "n/a"
       }
     ];
   }, [topUp]);
@@ -73,25 +73,27 @@ function DeleteDialog(props: IComponentProps) {
   const userEntries = React.useMemo(() => {
     if (!user) return [];
     return [
-      { label: "Id", value: user.id || "-" },
-      { label: "Username", value: user.username || "-" },
-      { label: "Full Name", value: user.full_name || "-" },
-      { label: "Email", value: user.email || "-" },
-      { label: "Gender", value: user.gender || "-" },
+      { label: "Id", value: user.id || "n/a" },
+      { label: "Username", value: user.username || "n/a" },
+      { label: "Full Name", value: user.full_name || "n/a" },
+      { label: "Email", value: user.email || "n/a" },
+      { label: "Gender", value: user.gender || "n/a" },
       {
         label: "Birthday",
-        value: user.birthday ? moment(user.birthday).format("D MMMM YYYY") : "-"
+        value: user.birthday
+          ? moment(user.birthday).format("D MMMM YYYY")
+          : "n/a"
       },
-      { label: "Referral Code", value: user.referral_code || "-" },
-      { label: "Verified Email", value: user.verified_email || "-" },
-      { label: "Country Code", value: user.country_code || "-" },
-      { label: "Phone", value: user.phone || "-" },
-      { label: "Verified Phone", value: user.verified_phone || "-" },
+      { label: "Referral Code", value: user.referral_code || "n/a" },
+      { label: "Verified Email", value: user.verified_email || "n/a" },
+      { label: "Country Code", value: user.country_code || "n/a" },
+      { label: "Phone", value: user.phone || "n/a" },
+      { label: "Verified Phone", value: user.verified_phone || "n/a" },
       {
         label: "Joined at",
         value: user.last_login_at
           ? moment(user.created_at).format("D MMMM YYYY")
-          : "-"
+          : "n/a"
       }
     ];
   }, [user]);
