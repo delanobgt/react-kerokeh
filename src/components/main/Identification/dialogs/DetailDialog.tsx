@@ -132,6 +132,26 @@ function DetailDialog(props: IComponentProps) {
       { label: "Email", value: user.email || "-" },
       { label: "Gender", value: user.gender || "-" },
       {
+        label: "Birthday",
+        value: user.birthday ? moment(user.birthday).format("D MMMM YYYY") : "-"
+      },
+      { label: "Referral Code", value: user.referral_code || "-" },
+      { label: "Verified Email", value: user.verified_email || "-" },
+      {
+        label: "Country Code",
+        value: user.country_code ? "+" + user.country_code : "n/a"
+      },
+      {
+        label: "Phone",
+        value: user.phone ? "+" + user.country_code + user.phone : "n/a"
+      },
+      {
+        label: "Verified Phone",
+        value: user.verified_phone
+          ? "+" + user.country_code + user.verified_phone
+          : "n/a"
+      },
+      {
         label: "Joined at",
         value: user.last_login_at
           ? moment(user.created_at).format("D MMMM YYYY")
