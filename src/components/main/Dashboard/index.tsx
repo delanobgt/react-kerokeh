@@ -5,10 +5,16 @@ import celestineApi from "src/apis/celestine";
 import useIntervalRun from "src/hooks/useIntervalRun";
 import styled from "styled-components";
 import { Money as MoneyIcon } from "@material-ui/icons";
+import Link from "src/components/generic/Link";
+import { RoutePath } from "src/Router/routes";
 
 const TitleDiv = styled.div`
   display: flex;
   align-items: center;
+`;
+
+const BlueLink = styled(Link)`
+  color: cornflowerblue;
 `;
 
 interface IFund {
@@ -18,6 +24,11 @@ interface IFund {
 
 interface IDashboardInfo {
   total_user: number;
+}
+
+interface ICounter {
+  identification: number;
+  withdraw_request: number;
 }
 
 async function getFund(): Promise<IFund> {
@@ -30,12 +41,18 @@ async function getDashboardInfo(): Promise<IDashboardInfo> {
   return response.data;
 }
 
+async function getCounter(): Promise<ICounter> {
+  const response = await celestineApi().get(`/admin/statistic/counter`);
+  return response.data;
+}
+
 function Dashboard() {
   const refreshDelay = 5000;
 
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
   const [fund, setFund] = React.useState<IFund>(null);
+  const [counter, setCounter] = React.useState<ICounter>(null);
   const [dashboardInfo, setDashboardInfo] = React.useState<IDashboardInfo>(
     null
   );
@@ -57,16 +74,18 @@ function Dashboard() {
     setError("");
     setLoading(true);
     const [errFund, fund] = await goPromise<IFund>(getFund());
+    const [errCounter, counter] = await goPromise<ICounter>(getCounter());
     const [errDashboardInfo, dashboardInfo] = await goPromise<IDashboardInfo>(
       getDashboardInfo()
     );
     setLoading(false);
 
-    if (errFund || errDashboardInfo) {
-      console.log({ errFund, errDashboardInfo });
+    if (errFund || errDashboardInfo || errCounter) {
+      console.log({ errFund, errDashboardInfo, errCounter });
       setError("error");
     } else {
       setFund(fund);
+      setCounter(counter);
       setDashboardInfo(dashboardInfo);
       setIntervalRunAlive(true);
     }
@@ -93,7 +112,7 @@ function Dashboard() {
               </span>
               .
             </Typography>
-          ) : fund && dashboardInfo ? (
+          ) : fund && dashboardInfo && counter ? (
             <>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={6} md={4} lg={4}>
@@ -101,8 +120,7 @@ function Dashboard() {
                     <Typography variant="h5">General Info</Typography>
                     <br />
                     <Typography variant="subtitle1">
-                      <strong>Total User :</strong>{" "}
-                      {Number(dashboardInfo.total_user).toLocaleString("de-De")}
+                      <strong>Total User :</strong> {dashboardInfo.total_user}
                     </Typography>
                   </Paper>
                 </Grid>
@@ -129,6 +147,31 @@ function Dashboard() {
                       <strong>On Process Fund :</strong> Rp.{" "}
                       {Number(fund.on_process_fund_amount).toLocaleString(
                         "de-DE"
+                      )}
+                    </Typography>
+                  </Paper>
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={4} lg={4}>
+                  <Paper elevation={3} style={{ padding: "1.5rem" }}>
+                    <Typography variant="h5">Things to do!</Typography>
+                    <br />
+                    <Typography variant="subtitle1">
+                      <strong>Identification:</strong> {counter.identification}{" "}
+                      ATTEMPTED{" "}
+                      {counter.identification > 0 && (
+                        <BlueLink to={RoutePath.IDENTIFICATION}>
+                          (visit)
+                        </BlueLink>
+                      )}
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      <strong>Withdraw Request:</strong>{" "}
+                      {counter.withdraw_request} PENDING{" "}
+                      {counter.withdraw_request > 0 && (
+                        <BlueLink to={RoutePath.WITHDRAW_REQUEST}>
+                          (visit)
+                        </BlueLink>
                       )}
                     </Typography>
                   </Paper>
