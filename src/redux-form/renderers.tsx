@@ -28,19 +28,17 @@ export const renderTextField: RenderFieldFn = ({
   ...custom
 }) => {
   return (
-    <>
-      <TextField
-        label={label}
-        placeholder={label}
-        type={type}
-        error={touched && Boolean(error)}
-        helperText={touched && error}
-        fullWidth
-        {...input}
-        {...custom}
-        style={{ marginBottom: "1rem" }}
-      />
-    </>
+    <TextField
+      label={label}
+      placeholder={label}
+      type={type}
+      error={touched && Boolean(error)}
+      helperText={touched && error}
+      fullWidth
+      style={{ marginBottom: "1rem" }}
+      {...input}
+      {...custom}
+    />
   );
 };
 
@@ -52,21 +50,23 @@ export const renderSelectField: RenderFieldFn = ({
   children,
   ...custom
 }) => (
-  <div>
-    <div>
-      <FormControl error={touched && Boolean(error)} style={{ width: "100%" }}>
-        <InputLabel>{label}</InputLabel>
-        <Select {...input} {...custom}>
-          {children}
-        </Select>
-        {touched && Boolean(error) && (
-          <Typography variant="caption">{error}</Typography>
-        )}
-      </FormControl>
-      <br />
-      <br />
-    </div>
-  </div>
+  <>
+    <FormControl
+      error={touched && Boolean(error)}
+      style={{ width: "100%" }}
+      {...custom}
+    >
+      <InputLabel>{label}</InputLabel>
+      <Select {...input} {...custom}>
+        {children}
+      </Select>
+      {touched && Boolean(error) && (
+        <Typography variant="caption">{error}</Typography>
+      )}
+    </FormControl>
+    <br />
+    <br />
+  </>
 );
 
 export const renderDateField: RenderFieldFn = ({

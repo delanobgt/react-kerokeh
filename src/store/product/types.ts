@@ -28,7 +28,7 @@ export interface IProduct {
   product_brand: IProductBrand;
   product_category: IProductCategory;
   release_date: string;
-  retail_price: number | null;
+  retail_price: string;
   slug: string;
   sold_count: number;
   story: string;

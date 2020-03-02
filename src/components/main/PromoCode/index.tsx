@@ -134,7 +134,7 @@ function PromoCode() {
   }, [fetch]);
 
   const dRestartIntervalRun = React.useMemo(
-    () => _.debounce(restartIntervalRun, 600),
+    () => _.debounce(restartIntervalRun, 1000),
     [restartIntervalRun]
   );
 

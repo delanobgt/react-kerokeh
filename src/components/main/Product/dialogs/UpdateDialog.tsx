@@ -20,7 +20,10 @@ import { useSnackbar } from "material-ui-snackbar-provider";
 
 import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/dialog/BasicDialog";
-import { requiredValidator } from "src/redux-form/validators";
+import {
+  requiredValidator,
+  unsignedWholeNumberValidator
+} from "src/redux-form/validators";
 import {
   renderTextField,
   renderSelectField,
@@ -59,6 +62,8 @@ interface IFormProps {
   gender: number;
   color: string;
   release_date: string;
+  retail_price_currency: string;
+  retail_price_value: string;
   display_image: any;
   product_brand_option: {
     label: string;
@@ -334,6 +339,31 @@ function UpdateDialog(
                 validate={[requiredValidator]}
                 disabled={loading}
               />
+
+              <div style={{ display: "flex" }}>
+                <Field
+                  name="retail_price_currency"
+                  label="Currency*"
+                  component={renderSelectField}
+                  validate={[requiredValidator]}
+                  style={{ minWidth: "100px" }}
+                  disabled={loading}
+                >
+                  <MenuItem value="IDR">IDR</MenuItem>
+                  <MenuItem value="USD">USD</MenuItem>
+                </Field>
+                &nbsp;&nbsp;
+                <Field
+                  name="retail_price_value"
+                  type="text"
+                  label="Value*"
+                  component={renderTextField}
+                  validate={[requiredValidator, unsignedWholeNumberValidator]}
+                  style={{ flexGrow: 1 }}
+                  disabled={loading}
+                />
+              </div>
+
               <Field
                 name="is_active"
                 label="Is Active"
