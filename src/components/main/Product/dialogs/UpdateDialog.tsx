@@ -62,8 +62,8 @@ interface IFormProps {
   gender: number;
   color: string;
   release_date: string;
+  retail_price: number;
   retail_price_currency: string;
-  retail_price_value: string;
   display_image: any;
   product_brand_option: {
     label: string;
@@ -250,7 +250,7 @@ function UpdateDialog(
               <Field
                 name="name"
                 type="text"
-                label="Name"
+                label="Name*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -258,7 +258,7 @@ function UpdateDialog(
               <Field
                 name="slug"
                 type="text"
-                label="Slug"
+                label="Slug*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -266,7 +266,7 @@ function UpdateDialog(
               <Field
                 name="code"
                 type="text"
-                label="Code"
+                label="Code*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -274,7 +274,7 @@ function UpdateDialog(
               <Field
                 name="color"
                 type="text"
-                label="Color"
+                label="Color*"
                 component={renderTextField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -284,7 +284,6 @@ function UpdateDialog(
                 type="text"
                 label="Description"
                 component={renderTextField}
-                validate={[requiredValidator]}
                 disabled={loading}
                 multiline
                 rows="3"
@@ -295,7 +294,6 @@ function UpdateDialog(
                 type="text"
                 label="Story"
                 component={renderTextField}
-                validate={[requiredValidator]}
                 disabled={loading}
                 multiline
                 rows="5"
@@ -325,7 +323,7 @@ function UpdateDialog(
               </div>
               <Field
                 name="product_brand_option"
-                label="Product Brand"
+                label="Product Brand*"
                 promiseOptions={productBrandPromiseOptions}
                 component={renderAsyncAutoSuggestField}
                 validate={[requiredValidator]}
@@ -333,40 +331,45 @@ function UpdateDialog(
               />
               <Field
                 name="product_category_option"
-                label="Product Category"
+                label="Product Category*"
                 promiseOptions={productCategoryPromiseOptions}
                 component={renderAsyncAutoSuggestField}
                 validate={[requiredValidator]}
                 disabled={loading}
               />
 
-              <div style={{ display: "flex" }}>
-                <Field
-                  name="retail_price_currency"
-                  label="Currency*"
-                  component={renderSelectField}
-                  validate={[requiredValidator]}
-                  style={{ minWidth: "100px" }}
-                  disabled={loading}
-                >
-                  <MenuItem value="IDR">IDR</MenuItem>
-                  <MenuItem value="USD">USD</MenuItem>
-                </Field>
-                &nbsp;&nbsp;
-                <Field
-                  name="retail_price_value"
-                  type="text"
-                  label="Value*"
-                  component={renderTextField}
-                  validate={[requiredValidator, unsignedWholeNumberValidator]}
-                  style={{ flexGrow: 1 }}
-                  disabled={loading}
-                />
-              </div>
+              <>
+                <Typography variant="subtitle1" color="textSecondary">
+                  Retail Price
+                </Typography>
+                <div style={{ display: "flex" }}>
+                  <Field
+                    name="retail_price_currency"
+                    label="Currency*"
+                    component={renderSelectField}
+                    validate={[requiredValidator]}
+                    style={{ minWidth: "100px" }}
+                    disabled={loading}
+                  >
+                    <MenuItem value="IDR">IDR</MenuItem>
+                    <MenuItem value="USD">USD</MenuItem>
+                  </Field>
+                  &nbsp;&nbsp;
+                  <Field
+                    name="retail_price"
+                    type="text"
+                    label="Value*"
+                    component={renderTextField}
+                    validate={[requiredValidator, unsignedWholeNumberValidator]}
+                    style={{ flexGrow: 1 }}
+                    disabled={loading}
+                  />
+                </div>
+              </>
 
               <Field
                 name="is_active"
-                label="Is Active"
+                label="Is Active*"
                 component={renderSelectField}
                 validate={[requiredValidator]}
                 disabled={loading}
@@ -376,7 +379,7 @@ function UpdateDialog(
               </Field>
               <Field
                 name="gender"
-                label="Gender"
+                label="Gender*"
                 component={renderSelectField}
                 validate={[requiredValidator]}
                 disabled={loading}

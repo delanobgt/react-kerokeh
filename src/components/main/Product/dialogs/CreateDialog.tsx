@@ -58,8 +58,8 @@ interface IFormProps {
   gender: number;
   color: string;
   release_date: string;
+  retail_price: number;
   retail_price_currency: string;
-  retail_price_value: string;
   product_brand_option: {
     label: string;
     value: number;
@@ -124,12 +124,11 @@ function CreateDialog(
 
   const handleSave = React.useCallback(
     async (formValues: IFormProps) => {
-      const { retail_price_currency, retail_price_value } = formValues;
       if (!showReleaseDate) formValues.release_date = null;
       setLoading(true);
       const [err] = await goPromise(
         createProduct(
-          { ...formValues, retail_price: "" },
+          formValues,
           formValues.product_brand_option.value,
           formValues.product_category_option.value,
           formValues.display_image,
@@ -210,9 +209,8 @@ function CreateDialog(
               <Field
                 name="description"
                 type="text"
-                label="Description*"
+                label="Description"
                 component={renderTextField}
-                validate={[requiredValidator]}
                 disabled={loading}
                 multiline
                 rows="3"
@@ -221,9 +219,8 @@ function CreateDialog(
               <Field
                 name="story"
                 type="text"
-                label="Story*"
+                label="Story"
                 component={renderTextField}
-                validate={[requiredValidator]}
                 disabled={loading}
                 multiline
                 rows="5"
@@ -267,29 +264,34 @@ function CreateDialog(
                 disabled={loading}
               />
 
-              <div style={{ display: "flex" }}>
-                <Field
-                  name="retail_price_currency"
-                  label="Currency*"
-                  component={renderSelectField}
-                  validate={[requiredValidator]}
-                  style={{ minWidth: "100px" }}
-                  disabled={loading}
-                >
-                  <MenuItem value="IDR">IDR</MenuItem>
-                  <MenuItem value="USD">USD</MenuItem>
-                </Field>
-                &nbsp;&nbsp;
-                <Field
-                  name="retail_price_value"
-                  type="text"
-                  label="Value*"
-                  component={renderTextField}
-                  validate={[requiredValidator, unsignedWholeNumberValidator]}
-                  style={{ flexGrow: 1 }}
-                  disabled={loading}
-                />
-              </div>
+              <>
+                <Typography variant="subtitle1" color="textSecondary">
+                  Retail Price
+                </Typography>
+                <div style={{ display: "flex" }}>
+                  <Field
+                    name="retail_price_currency"
+                    label="Currency*"
+                    component={renderSelectField}
+                    validate={[requiredValidator]}
+                    style={{ minWidth: "100px" }}
+                    disabled={loading}
+                  >
+                    <MenuItem value="IDR">IDR</MenuItem>
+                    <MenuItem value="USD">USD</MenuItem>
+                  </Field>
+                  &nbsp;&nbsp;
+                  <Field
+                    name="retail_price"
+                    type="text"
+                    label="Value*"
+                    component={renderTextField}
+                    validate={[requiredValidator, unsignedWholeNumberValidator]}
+                    style={{ flexGrow: 1 }}
+                    disabled={loading}
+                  />
+                </div>
+              </>
 
               <Field
                 name="is_active"

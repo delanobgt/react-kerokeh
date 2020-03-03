@@ -28,7 +28,8 @@ export interface IProduct {
   product_brand: IProductBrand;
   product_category: IProductCategory;
   release_date: string;
-  retail_price: string;
+  retail_price: number;
+  retail_price_currency: string;
   slug: string;
   sold_count: number;
   story: string;

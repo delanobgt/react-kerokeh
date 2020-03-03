@@ -65,7 +65,15 @@ function DetailDialog(props: IComponentProps) {
           ? moment(product.release_date).format("D MMMM YYYY")
           : "n/a"
       },
-      { label: "Retail Price", value: product.retail_price || "n/a" },
+      {
+        label: "Retail Price",
+        value:
+          product.retail_price_currency +
+          " " +
+          Number(product.retail_price).toLocaleString(
+            product.retail_price_currency === "IDR" ? "de-DE" : "en-US"
+          )
+      },
       { label: "Slug", value: product.slug },
       { label: "Sold Count", value: product.sold_count },
       { label: "View Count", value: product.view_count },

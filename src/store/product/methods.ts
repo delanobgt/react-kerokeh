@@ -24,8 +24,8 @@ export const createProduct = async (
   formData.append("slug", product.slug);
   formData.append("code", product.code);
   formData.append("color", product.color);
-  formData.append("description", product.description);
-  formData.append("story", product.story);
+  if (product.description) formData.append("description", product.description);
+  if (product.story) formData.append("story", product.story);
   formData.append("is_active", String(product.is_active));
   formData.append("gender", String(product.gender));
   if (product.release_date)
@@ -34,6 +34,10 @@ export const createProduct = async (
       moment(product.release_date).format("YYYY-MM-DD")
     );
 
+  if (product.retail_price)
+    formData.append("retail_price", String(product.retail_price));
+  if (product.retail_price_currency)
+    formData.append("retail_price_currency", product.retail_price_currency);
   formData.append("product_brand_id", String(product_brand_id));
   formData.append("product_category_id", String(product_category_id));
   formData.append("display_image", display_image);
@@ -68,6 +72,8 @@ export const updateProduct = async (
       "release_date",
       moment(newProduct.release_date).format("YYYY-MM-DD")
     );
+  formData.append("retail_price", String(newProduct.retail_price));
+  formData.append("retail_price_currency", newProduct.retail_price_currency);
   formData.append("product_brand_id", String(product_brand_id));
   formData.append("product_category_id", String(product_category_id));
   if (display_image) formData.append("new_display_image", display_image);
@@ -86,7 +92,6 @@ export const updateProduct = async (
     `${PRIMARY_ROUTE}/${oldProduct.id}`,
     formData
   );
-  console.log(response.data);
   return response.data;
 };
 

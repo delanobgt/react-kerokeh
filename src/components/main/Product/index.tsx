@@ -180,16 +180,24 @@ function Product() {
         accessor: row => row.color
       },
       {
-        Header: "Description",
-        accessor: row => row.description || "n/a"
-      },
-      {
         Header: "Is Active",
         accessor: row => (row.is_active ? "YES" : "NO")
       },
       {
         Header: "Release Date",
-        accessor: row => moment(row.release_date).format("D MMMM YYYY")
+        accessor: row =>
+          row.release_date
+            ? moment(row.release_date).format("D MMMM YYYY")
+            : "n/a"
+      },
+      {
+        Header: "Retail Price",
+        accessor: row =>
+          row.retail_price_currency +
+          " " +
+          Number(row.retail_price).toLocaleString(
+            row.retail_price_currency === "IDR" ? "de-DE" : "en-US"
+          )
       },
       {
         Header: "Image",
