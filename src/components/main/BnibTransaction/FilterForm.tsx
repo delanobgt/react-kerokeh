@@ -30,6 +30,15 @@ function FilterForm(props: IComponentProps) {
 
       <Div>
         <TextField
+          label="Id"
+          value={filter.id || ""}
+          onChange={e => updateFilter({ id: e.target.value })}
+          style={{ width: "100%" }}
+        />
+      </Div>
+
+      <Div>
+        <TextField
           label="Code"
           value={filter.code || ""}
           onChange={e => updateFilter({ code: e.target.value })}

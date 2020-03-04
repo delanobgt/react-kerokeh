@@ -130,6 +130,7 @@ export interface ILegitCheckDetail {
 export type PLegitCheckDetail = Partial<ILegitCheckDetail>;
 
 interface IBnibTransactionFilter {
+  id: string;
   code: string;
   status: string;
   buyer_username: string;
