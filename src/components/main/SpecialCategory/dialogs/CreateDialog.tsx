@@ -18,7 +18,7 @@ import { goPromise } from "src/util/helper";
 import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import {
   requiredValidator,
-  wholeNumberValidator
+  nonZeroWholeNumberValidator
 } from "src/redux-form/validators";
 import { renderTextField, renderSelectField } from "src/redux-form/renderers";
 import { createSpecialCategory } from "src/store/special-category";
@@ -101,7 +101,7 @@ function CreateDialog(
                 type="text"
                 label="Priority*"
                 component={renderTextField}
-                validate={[requiredValidator, wholeNumberValidator]}
+                validate={[requiredValidator, nonZeroWholeNumberValidator]}
                 disabled={loading}
               />
               <Field
