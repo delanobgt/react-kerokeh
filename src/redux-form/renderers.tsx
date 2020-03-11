@@ -172,7 +172,6 @@ export const renderAsyncAutoSuggestField: RenderAsyncAutoSuggestFieldFn = ({
           <Typography variant="caption">{error}</Typography>
         )}
         <br />
-        <br />
       </div>
     </div>
   );
@@ -197,5 +196,17 @@ export const renderSwitchField: RenderFieldFn = ({
         <Typography variant="caption">{error}</Typography>
       )}
     </>
+  );
+};
+
+export const renderErrorMessage: RenderFieldFn = ({
+  input,
+  label,
+  type,
+  meta: { touched, error },
+  ...custom
+}) => {
+  return (
+    <>{Boolean(error) && <Typography variant="caption">{error}</Typography>}</>
   );
 };

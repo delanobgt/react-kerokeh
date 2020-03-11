@@ -47,7 +47,6 @@ function UpdateDialog(
 
   const handleSave = React.useCallback(
     async (formValues: IFormProps) => {
-      console.log({ formValues });
       setLoading(true);
       const { fee, starting_price } = formValues;
       const [errPB] = await goPromise(

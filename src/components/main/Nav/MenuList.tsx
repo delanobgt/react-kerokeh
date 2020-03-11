@@ -95,6 +95,11 @@ const menuList: IMenu[] = [
         title: "Product Category",
         Icon: StyleIcon,
         link: RoutePath.PRODUCT_CATEGORY
+      },
+      {
+        title: "Featured Product",
+        Icon: StyleIcon,
+        link: RoutePath.FEATURED_PRODUCT
       }
     ]
   },

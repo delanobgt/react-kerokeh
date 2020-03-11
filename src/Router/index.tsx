@@ -25,6 +25,7 @@ import ProductRequest from "src/components/main/ProductRequest";
 import PromoCode from "src/components/main/PromoCode";
 import Revenue from "src/components/main/Revenue";
 import Identification from "src/components/main/Identification";
+import FeaturedProduct from "src/components/main/FeaturedProduct";
 import User from "src/components/main/User";
 import SpecialCategory from "src/components/main/SpecialCategory";
 import SpecialCategoryList from "src/components/main/SpecialCategoryList";
@@ -87,6 +88,10 @@ const routes = [
   {
     routePath: RoutePath.DEPOSIT_FEE,
     component: <DepositFee />
+  },
+  {
+    routePath: RoutePath.FEATURED_PRODUCT,
+    component: <FeaturedProduct />
   },
   {
     routePath: RoutePath.IDENTIFICATION,
