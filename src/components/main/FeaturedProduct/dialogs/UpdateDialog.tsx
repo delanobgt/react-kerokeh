@@ -69,8 +69,6 @@ function UpdateDialog(
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
 
-  console.log(initialValues);
-
   const productCategoryPromiseOptions = React.useCallback(
     (inputValue: string) =>
       new Promise(async resolve => {
