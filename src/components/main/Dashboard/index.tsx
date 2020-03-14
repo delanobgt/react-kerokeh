@@ -29,6 +29,8 @@ interface IDashboardInfo {
 interface ICounter {
   identification: number;
   withdraw_request: number;
+  on_shipping_to_depatu: number;
+  waiting_for_tracking_code: number;
 }
 
 async function getFund(): Promise<IFund> {
@@ -170,6 +172,29 @@ function Dashboard() {
                       {counter.withdraw_request} PENDING{" "}
                       {counter.withdraw_request > 0 && (
                         <BlueLink to={RoutePath.WITHDRAW_REQUEST}>
+                          (visit)
+                        </BlueLink>
+                      )}
+                    </Typography>
+
+                    <br />
+                    <Typography variant="subtitle1">
+                      <strong>[Transaction]</strong>
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      <strong>On Shipping to Depatu:</strong>{" "}
+                      {counter.on_shipping_to_depatu} TRANSACTION(S){" "}
+                      {counter.on_shipping_to_depatu > 0 && (
+                        <BlueLink to={RoutePath.BNIB_TRANSACTION}>
+                          (visit)
+                        </BlueLink>
+                      )}
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      <strong>Waiting for Tracking Code:</strong>{" "}
+                      {counter.waiting_for_tracking_code} TRANSACTION(S){" "}
+                      {counter.waiting_for_tracking_code > 0 && (
+                        <BlueLink to={RoutePath.BNIB_TRANSACTION}>
                           (visit)
                         </BlueLink>
                       )}
