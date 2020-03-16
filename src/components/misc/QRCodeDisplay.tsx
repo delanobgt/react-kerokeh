@@ -27,14 +27,16 @@ function QRCodeDisplay(props: IComponentProps) {
 
   const handleAddToPrintQueue = React.useCallback(async () => {
     setLoading(true);
-    const [err] = await goPromise(
-      eroshApi().post({
+    const [err] = await goPromise<void>(
+      eroshApi().post("/api/qrcode", {
         value,
         label: filename
       })
     );
     setLoading(false);
+
     if (err) {
+      console.log(err);
       snackbar.showMessage("Something went wrong. Please try again later.");
     } else {
       snackbar.showMessage("Print Job added to queue.");
