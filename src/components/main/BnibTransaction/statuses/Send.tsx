@@ -7,7 +7,7 @@ import {
   IAccessLogItem
 } from "src/store/bnib-transaction";
 import SendDialog from "../dialogs/small-dialogs/SendDialog";
-import QRCodeDownload from "src/components/misc/QRCodeDownload";
+import QRCodeDisplay from "src/components/misc/QRCodeDisplay";
 
 interface IProps {
   orderNo: number;
@@ -33,8 +33,8 @@ export default function(props: IProps) {
         <ContentDiv>
           <div>
             <Typography variant="subtitle1">QR Code</Typography>
-            <QRCodeDownload
-              filename={transaction.code}
+            <QRCodeDisplay
+              filename={`${transaction.buyer_username} - ${transaction.seller_username} - ${transaction.product_detail.name}`}
               value={value}
               size={180}
               level="H"
