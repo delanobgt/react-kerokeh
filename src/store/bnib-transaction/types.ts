@@ -64,10 +64,12 @@ export interface IAccessLogItem {
 export interface IBnibTransaction {
   access_log: string;
   accessLog: Record<EAccessLogStatus, IAccessLogItem>;
+  admin_fee: number;
   bid_payment_expired_at: string;
   bnib_buy_order_id: number;
   bnib_buy_order_invoice_code: string;
   bnib_product_id: number;
+  buy_price: number;
   buyer_confirmation: number | boolean;
   buyer_confirmation_expired_at: string;
   buyer_id: number;
@@ -77,6 +79,7 @@ export interface IBnibTransaction {
   buyer_shipping_tracking_code: string;
   buyer_username: string;
   code: string;
+  commitment_fee: number;
   created_at: string;
   defected_buyer_approval: boolean | number;
   defected_buyer_approval_expired_at: string;
@@ -98,6 +101,7 @@ export interface IBnibTransaction {
   seller_id: number;
   seller_username: string;
   shipping_address: IShippingAddress;
+  shipping_cost: number;
   status: number;
   status_message: string;
   refund_reason: string;

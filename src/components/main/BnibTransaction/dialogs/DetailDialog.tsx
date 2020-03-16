@@ -164,6 +164,24 @@ function DetailDialog(props: IComponentProps) {
       {
         label: "Status",
         value: _.startCase(EBnibTransactionStatus[transaction.status])
+      },
+      {
+        label: "Admin Fee",
+        value: "Rp. " + Number(transaction.admin_fee).toLocaleString("de-DE")
+      },
+      {
+        label: "Buy Price",
+        value: "Rp. " + Number(transaction.buy_price).toLocaleString("de-DE")
+      },
+      {
+        label: "Commitment Fee",
+        value:
+          "Rp. " + Number(transaction.commitment_fee).toLocaleString("de-DE")
+      },
+      {
+        label: "Shipping Cost",
+        value:
+          "Rp. " + Number(transaction.shipping_cost).toLocaleString("de-DE")
       }
     ];
   }, [transaction]);
@@ -375,7 +393,11 @@ function DetailDialog(props: IComponentProps) {
       },
       {
         label: "Retail Price",
-        value: transaction.product_detail.retail_price || "n/a"
+        value:
+          transaction.product_detail.retail_price &&
+          transaction.product_detail.retail_price_currency
+            ? `Rp. ${transaction.product_detail.retail_price} ${transaction.product_detail.retail_price_currency}`
+            : "n/a"
       },
       { label: "Slug", value: transaction.product_detail.slug },
       { label: "Sold Count", value: transaction.product_detail.sold_count },
