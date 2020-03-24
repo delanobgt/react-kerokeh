@@ -25,6 +25,7 @@ import ProductRequest from "src/components/main/ProductRequest";
 import PromoCode from "src/components/main/PromoCode";
 import Revenue from "src/components/main/Revenue";
 import Identification from "src/components/main/Identification";
+import FloatingFund from "src/components/main/FloatingFund";
 import FeaturedProduct from "src/components/main/FeaturedProduct";
 import User from "src/components/main/User";
 import SpecialCategory from "src/components/main/SpecialCategory";
@@ -92,6 +93,10 @@ const routes = [
   {
     routePath: RoutePath.FEATURED_PRODUCT,
     component: <FeaturedProduct />
+  },
+  {
+    routePath: RoutePath.FLOATING_FUND,
+    component: <FloatingFund />
   },
   {
     routePath: RoutePath.IDENTIFICATION,

@@ -8,6 +8,7 @@ export enum RoutePath {
   DASHBOARD = "/dashboard",
   DEPOSIT_FEE = "/deposit_fee",
   FEATURED_PRODUCT = "/featured_product",
+  FLOATING_FUND = "/floating_fund",
   IDENTIFICATION = "/identification",
   LOGOUT = "/logout",
   LOGIN = "/login",

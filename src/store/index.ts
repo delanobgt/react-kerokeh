@@ -21,6 +21,7 @@ import { withdrawRequestReducer } from "./withdraw-request";
 import { bnibBuyOrderReducer } from "./bnib-buy-order";
 import { revenueReducer } from "./revenue";
 import { featuredProductReducer } from "./featured-product";
+import { floatingFundReducer } from "./floating-fund";
 
 // Whenever an action is dispatched, Redux will update each top-level application state property
 // using the reducer with the matching name. It's important that the names match exactly, and that
@@ -35,6 +36,7 @@ export const rootReducer = combineReducers({
   depositFee: depositFeeReducer,
   config: configReducer,
   featuredProduct: featuredProductReducer,
+  floatingFund: floatingFundReducer,
   form: formReducer,
   identification: identificationReducer,
   product: productReducer,

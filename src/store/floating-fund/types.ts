@@ -1,10 +1,10 @@
 // enums
-export enum EUserActionTypes {
-  USER_GET = "@@user/USER_GET"
+export enum EFloatingFundActionTypes {
+  FLOATING_FUND_GET = "@@floating_fund/FLOATING_FUND_GET"
 }
 
 // entity types
-export interface IUser {
+export interface IFloatingFund {
   active_refund_shipping_address_id: number;
   active_shipping_address_id: number;
   bank: {
@@ -47,55 +47,32 @@ export interface IUser {
     user_id: number;
   };
 }
+export type PFloatingFund = Partial<IFloatingFund>;
 
-export interface IShippingAddress {
-  additional_info: string | null;
-  address: string;
-  city: string;
-  country: string;
-  id: number;
-  name: string;
-  phone: string;
-  province: string;
-  recipient: string;
-  used_for_transaction: boolean;
-  user_id: number;
-  zip_code: string;
-}
-
-interface IUserFilter {
+interface IFloatingFundFilter {
   id: string;
   username: string;
-  full_name: string;
-  email: string;
-  store_closed: string;
-  banned: string;
-  froze: string;
-  is_seller: string;
-  created_at_start: string;
-  created_at_end: string;
 }
-export type PUserFilter = Partial<IUserFilter>;
+export type PFloatingFundFilter = Partial<IFloatingFundFilter>;
 
-interface IUserPagination {
+interface IFloatingFundPagination {
   limit: number;
   offset: number;
 }
-export type PUserPagination = Partial<IUserPagination>;
+export type PFloatingFundPagination = Partial<IFloatingFundPagination>;
 
-export type UserSortField = "id" | "username" | "full_name" | "email";
-
+export type FloatingFundSortField = "username";
 // redux state type
-export interface IUserState {
-  users: IUser[];
+export interface IFloatingFundState {
+  floatingFunds: IFloatingFund[];
   realTotal: number;
 }
 
 // action types
-export interface IUserGetAction {
-  type: EUserActionTypes.USER_GET;
-  users: IUser[];
+export interface IFloatingFundGetAction {
+  type: EFloatingFundActionTypes.FLOATING_FUND_GET;
+  floatingFunds: IFloatingFund[];
   realTotal: number;
 }
 
-export type UserActionType = IUserGetAction;
+export type FloatingFundActionType = IFloatingFundGetAction;

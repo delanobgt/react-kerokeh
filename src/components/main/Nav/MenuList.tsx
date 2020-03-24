@@ -142,6 +142,11 @@ const menuList: IMenu[] = [
         title: "Revenue",
         Icon: MoneyIcon,
         link: RoutePath.REVENUE
+      },
+      {
+        title: "Floating Fund",
+        Icon: MoneyIcon,
+        link: RoutePath.FLOATING_FUND
       }
     ]
   },
