@@ -21,10 +21,11 @@ function FilterForm(props: IComponentProps) {
 
       <Div>
         <TextField
-          label="Username"
+          label="Username (waiting for backend)"
           value={filter.username || ""}
           onChange={e => updateFilter({ username: e.target.value })}
           fullWidth
+          disabled
         />
       </Div>
     </div>

@@ -143,7 +143,10 @@ function Dashboard() {
                       <strong>Floating Fund :</strong> Rp.{" "}
                       {Number(fund.floating_fund_amount).toLocaleString(
                         "de-De"
-                      )}
+                      )}{" "}
+                      <BlueLink to={RoutePath.FLOATING_FUND}>
+                        (details)
+                      </BlueLink>
                     </Typography>
                     <Typography variant="subtitle1">
                       <strong>On Process Fund :</strong> Rp.{" "}
