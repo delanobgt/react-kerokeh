@@ -31,6 +31,24 @@ function FilterForm(props: IComponentProps) {
       </Div>
 
       <Div>
+        <TextField
+          label="Buyer Username"
+          value={filter.buyer_username || ""}
+          onChange={e => updateFilter({ buyer_username: e.target.value })}
+          fullWidth
+        />
+      </Div>
+
+      <Div>
+        <TextField
+          label="Seller Username"
+          value={filter.seller_username || ""}
+          onChange={e => updateFilter({ seller_username: e.target.value })}
+          fullWidth
+        />
+      </Div>
+
+      <Div>
         <DatePicker
           label="Created At (Start)"
           onChange={date =>

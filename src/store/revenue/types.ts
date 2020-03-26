@@ -10,10 +10,12 @@ export interface IRevenue {
   bnib_transaction_id: number;
   buyer_id: number;
   buyer_promo_code_id: number;
+  buyer_username: string;
   deposit_share: number;
   id: number;
   seller_id: number;
   seller_promo_code_id: number;
+  seller_username: string;
   shipping_revenue: number;
   total_revenue: number;
   type: number;
@@ -22,6 +24,8 @@ export type PRevenue = Partial<IRevenue>;
 
 interface IRevenueFilter {
   id: string;
+  buyer_username: string;
+  seller_username: string;
   created_at_start: string;
   created_at_end: string;
 }

@@ -31,6 +31,8 @@ import {
   IRevenue
 } from "src/store/revenue";
 
+const TYPE_LOOKUP = ["seller failed", "buyer failed", "transaction success"];
+
 function Revenue() {
   const refreshDelay = 5000;
   const {
@@ -144,27 +146,38 @@ function Revenue() {
       },
       {
         Header: "Type",
-        accessor: row => row.type
+        accessor: row => TYPE_LOOKUP[row.type]
+      },
+      {
+        Header: "Buyer Username",
+        accessor: row => row.buyer_username
+      },
+      {
+        Header: "Seller Username",
+        accessor: row => row.seller_username
       },
       {
         Header: "Bid Share",
-        accessor: row => row.bid_share
+        accessor: row => "Rp. " + Number(row.bid_share).toLocaleString("de-DE")
       },
       {
         Header: "Deposit Share",
-        accessor: row => row.deposit_share
+        accessor: row =>
+          "Rp. " + Number(row.deposit_share).toLocaleString("de-DE")
       },
       {
         Header: "Admin Fee",
-        accessor: row => row.admin_fee
+        accessor: row => "Rp. " + Number(row.admin_fee).toLocaleString("de-DE")
       },
       {
         Header: "Shipping Revenue",
-        accessor: row => row.shipping_revenue
+        accessor: row =>
+          "Rp. " + Number(row.shipping_revenue).toLocaleString("de-DE")
       },
       {
         Header: "Total Revenue",
-        accessor: row => row.total_revenue
+        accessor: row =>
+          "Rp. " + Number(row.total_revenue).toLocaleString("de-DE")
       }
     ],
     []
