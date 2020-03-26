@@ -60,9 +60,9 @@ function Users() {
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
   const users = useSelector<RootState, IUser[]>(state => state.user.users);
-  const [detailDialogUserId, setDetailDialogUserId] = React.useState<
-    number | null
-  >(null);
+  const [detailDialogUserId, setDetailDialogUserId] = React.useState<number>(
+    null
+  );
   const dispatch = useDispatch();
 
   const userRealTotal = useSelector<RootState, number>(
