@@ -8,6 +8,7 @@ export interface IRevenue {
   admin_fee: number;
   bid_share: number;
   bnib_transaction_id: number;
+  bnib_transaction_code: string;
   buyer_id: number;
   buyer_promo_code_id: number;
   buyer_username: string;

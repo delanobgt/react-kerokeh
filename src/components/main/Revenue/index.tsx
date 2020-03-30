@@ -1,6 +1,6 @@
 import _ from "lodash";
 import React from "react";
-import { CircularProgress, Typography, Grid } from "@material-ui/core";
+import { CircularProgress, Typography, Grid, Button } from "@material-ui/core";
 import { Money as TitleIcon } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
@@ -14,6 +14,7 @@ import useIntervalRun from "src/hooks/useIntervalRun";
 import TopAction from "./TopAction";
 import FilterForm from "./FilterForm";
 import SortForm from "../../generic/SortForm";
+import DetailDialog from "src/components/main/BnibTransaction/dialogs/DetailDialog";
 import useTableUrlState from "src/hooks/useTableUrlState";
 import moment from "moment";
 import {
@@ -52,6 +53,7 @@ function Revenue() {
   );
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [detailDialogCode, setDetailDialogCode] = React.useState<string>(null);
   const revenues = useSelector<RootState, IRevenue[]>(
     state => state.revenue.revenues
   );
@@ -178,6 +180,25 @@ function Revenue() {
         Header: "Total Revenue",
         accessor: row =>
           "Rp. " + Number(row.total_revenue).toLocaleString("de-DE")
+      },
+      {
+        Header: "Actions",
+        accessor: "",
+        Cell: ({ row: { original } }) => {
+          return (
+            <div>
+              <Button
+                color="primary"
+                variant="outlined"
+                onClick={() =>
+                  setDetailDialogCode(original.bnib_transaction_code)
+                }
+              >
+                DETAILS
+              </Button>
+            </div>
+          );
+        }
       }
     ],
     []
@@ -251,6 +272,14 @@ function Revenue() {
           </TablePaper>
         </Grid>
       </Grid>
+
+      {Boolean(detailDialogCode) && (
+        <DetailDialog
+          transactionCode={detailDialogCode}
+          restartIntervalRun={intervalRun.restart}
+          dismiss={() => setDetailDialogCode(null)}
+        />
+      )}
     </>
   );
 }

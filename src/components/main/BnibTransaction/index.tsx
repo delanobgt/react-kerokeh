@@ -261,6 +261,7 @@ function BnibTransaction() {
           </TablePaper>
         </Grid>
       </Grid>
+      
       {Boolean(detailDialogCode) && (
         <DetailDialog
           transactionCode={detailDialogCode}

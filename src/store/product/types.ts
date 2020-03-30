@@ -1,4 +1,4 @@
-import { IProductCategory } from "../product-category";
+import { IProductCategory, IProductSize } from "../product-category";
 import { IProductBrand } from "../product-brand";
 
 // enums
@@ -27,6 +27,7 @@ export interface IProduct {
   pre_order_lowest_sell_price: number;
   product_brand: IProductBrand;
   product_category: IProductCategory;
+  product_size: IProductSize;
   release_date: string;
   retail_price: number;
   retail_price_currency: string;

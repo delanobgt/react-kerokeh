@@ -381,6 +381,10 @@ function DetailDialog(props: IComponentProps) {
       { label: "Story", value: transaction.product_detail.story || "n/a" },
       { label: "Gender", value: transaction.product_detail.gender || "n/a" },
       {
+        label: "Size",
+        value: transaction.product_detail.product_size.size || "n/a"
+      },
+      {
         label: "Is Active",
         value: transaction.product_detail.is_active ? "YES" : "NO"
       },
