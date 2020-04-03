@@ -51,7 +51,7 @@ function TopUp() {
     updateSorts
   } = useTableUrlState<PTopUpFilter, PTopUpPagination, TopUpSortField>(
     {
-      created_at_start: moment.utc(0).format("YYYY-MM-DD"),
+      created_at_start: moment("2018-01-01").format("YYYY-MM-DD"),
       created_at_end: moment().format("YYYY-MM-DD")
     },
     { limit: 5, offset: 0 },

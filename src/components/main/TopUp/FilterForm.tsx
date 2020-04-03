@@ -20,7 +20,7 @@ function FilterForm(props: IComponentProps) {
   const { filter, updateFilter } = props;
 
   const paymentStatuses = React.useMemo(
-    () => ["settlement", "pending", "expire", "failed", "cancel"],
+    () => ["initiated", "pending", "failed", "cancel", "expired", "success"],
     []
   );
 
