@@ -1,29 +1,31 @@
 // enums
 export enum EAuthActionTypes {
   SIGN_IN = "@@auth/SIGN_IN",
+  SIGN_UP = "@@auth/SIGN_UP",
   SIGN_OUT = "@@auth/SIGN_OUT",
-  GET_ME = "@@auth/GET_ME"
+  GET_ME = "@@auth/GET_ME",
 }
 
 // entity types
 export interface IAuthUser {
   id: number;
-  role: {
-    id: number;
-    name: string;
-  };
-  username: string;
+  name: string;
+  email: string;
 }
 
 // redux state type
 export interface IAuthState {
-  token: null | string;
-  user?: null | IAuthUser;
+  token: string;
+  user?: IAuthUser;
 }
 
 // action types
 export interface ISignInAction {
   type: EAuthActionTypes.SIGN_IN;
+  authState: IAuthState;
+}
+export interface ISignUpAction {
+  type: EAuthActionTypes.SIGN_UP;
   authState: IAuthState;
 }
 
@@ -36,4 +38,8 @@ export interface IGetMeAction {
   user: IAuthUser;
 }
 
-export type AuthActionType = ISignInAction | ISignOutAction | IGetMeAction;
+export type AuthActionType =
+  | ISignInAction
+  | ISignUpAction
+  | ISignOutAction
+  | IGetMeAction;

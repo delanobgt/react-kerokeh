@@ -5,245 +5,169 @@ import {
   ListItemText,
   ListItem,
   List,
-  Collapse
+  Typography,
+  Button,
+  CircularProgress,
+  ListItemSecondaryAction,
+  IconButton,
 } from "@material-ui/core";
 import {
-  Bookmark as BookmarkIcon,
-  Receipt as ReceiptIcon,
-  Dashboard as DashboardIcon,
-  Image as ImageIcon,
-  SettingsApplications as SettingsApplicationsIcon,
-  People as PeopleIcon,
-  AttachMoney as AttachMoneyIcon,
-  Style as StyleIcon,
-  TrendingUp as TrendingUpIcon,
-  MoneyOff as MoneyOffIcon,
-  VpnKey as VpnKeyIcon,
-  ExitToApp as ExitToAppIcon,
-  ExpandLess as ExpandLessIcon,
-  ExpandMore as ExpandMoreIcon,
-  Money as MoneyIcon,
-  Poll as PollIcon,
-  VerticalAlignBottom as VerticalAlignBottomIcon,
-  VerticalAlignTop as VerticalAlignTopIcon
+  Contactless as ContactlessIcon,
+  Delete as DeleteIcon,
+  Edit as EditIcon,
 } from "@material-ui/icons";
-import useReactRouter from "use-react-router";
-
-import Link from "src/components/generic/Link";
-import { RoutePath } from "src/Router/routes";
+import { useDispatch, useSelector } from "react-redux";
+import { useSnackbar } from "material-ui-snackbar-provider";
+import { goPromise } from "src/util/helper";
+import {
+  getFavorites,
+  IFavoriteGetAction,
+  IFavorite,
+  setPlayingFavorite,
+} from "src/store/favorite";
+import { RootState } from "src/store";
+import DeleteDialog from "./DeleteDialog";
+import UpdateDialog from "./UpdateDialog";
 
 interface IProps {
   setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-interface IMenu {
-  title: string;
-  Icon: (props: any) => JSX.Element;
-  link?: string;
-  subMenus?: IMenu[];
+function formatDuration(duration: number): string {
+  let hh = `${Math.floor(duration / 60)}`;
+  if (hh.length < 2) hh = "0" + hh;
+  let mm = `${duration % 60}`;
+  if (mm.length < 2) hh = "0" + mm;
+  return `${hh}:${mm}`;
 }
 
-const menuList: IMenu[] = [
-  { title: "Dashboard", Icon: DashboardIcon, link: "/dashboard" },
-  {
-    title: "Banner",
-    Icon: ImageIcon,
-    link: RoutePath.BANNER
-  },
-  {
-    title: "BNIB",
-    Icon: ReceiptIcon,
-    subMenus: [
-      {
-        title: "Buy Orders",
-        Icon: StyleIcon,
-        link: RoutePath.BNIB_BUY_ORDER
-      },
-      {
-        title: "On-Selling Products",
-        Icon: StyleIcon,
-        link: RoutePath.BNIB_PRODUCT
-      },
-      {
-        title: "Transaction",
-        Icon: ReceiptIcon,
-        link: RoutePath.BNIB_TRANSACTION
-      }
-    ]
-  },
-  {
-    title: "Config",
-    Icon: SettingsApplicationsIcon,
-    link: RoutePath.CONFIG
-  },
-  {
-    title: "Deposit Fee",
-    Icon: AttachMoneyIcon,
-    link: RoutePath.DEPOSIT_FEE
-  },
-  {
-    title: "Product",
-    Icon: StyleIcon,
-    subMenus: [
-      { title: "Product", Icon: StyleIcon, link: RoutePath.PRODUCT },
-      {
-        title: "Product Brand",
-        Icon: StyleIcon,
-        link: RoutePath.PRODUCT_BRAND
-      },
-      {
-        title: "Product Category",
-        Icon: StyleIcon,
-        link: RoutePath.PRODUCT_CATEGORY
-      },
-      {
-        title: "Featured Product",
-        Icon: StyleIcon,
-        link: RoutePath.FEATURED_PRODUCT
-      }
-    ]
-  },
-  {
-    title: "Promo Code",
-    Icon: MoneyOffIcon,
-    link: RoutePath.PROMO_CODE
-  },
-  {
-    title: "Product Request",
-    Icon: PollIcon,
-    link: RoutePath.PRODUCT_REQUEST
-  },
-  {
-    title: "Special Category",
-    Icon: BookmarkIcon,
-    link: RoutePath.SPECIAL_CATEGORY
-  },
-  {
-    title: "User",
-    Icon: PeopleIcon,
-    subMenus: [
-      {
-        title: "User",
-        Icon: PeopleIcon,
-        link: RoutePath.USER
-      },
-      {
-        title: "Identification",
-        Icon: PeopleIcon,
-        link: RoutePath.IDENTIFICATION
-      }
-    ]
-  },
-  {
-    title: "Statistics",
-    Icon: TrendingUpIcon,
-    subMenus: [
-      {
-        title: "Revenue",
-        Icon: MoneyIcon,
-        link: RoutePath.REVENUE
-      },
-      {
-        title: "Floating Fund",
-        Icon: MoneyIcon,
-        link: RoutePath.FLOATING_FUND
-      }
-    ]
-  },
-  {
-    title: "Wallet",
-    Icon: MoneyIcon,
-    subMenus: [
-      {
-        title: "Withdraw Request",
-        Icon: VerticalAlignTopIcon,
-        link: RoutePath.WITHDRAW_REQUEST
-      },
-      {
-        title: "Top Up",
-        Icon: VerticalAlignBottomIcon,
-        link: RoutePath.TOP_UP
-      }
-    ]
-  },
-  { title: "Admin User", Icon: VpnKeyIcon, link: RoutePath.ADMIN_USER },
-  { title: "Logout", Icon: ExitToAppIcon, link: RoutePath.LOGOUT }
-];
-
 export default function MenuList({ setDrawerOpen }: IProps) {
-  const { location } = useReactRouter();
-  const PADDING_MULTIPLIER = 1.5;
+  const snackbar = useSnackbar();
 
-  const [navState, setNavState] = React.useState<Record<string, boolean>>({});
-  const toggleCollapse = React.useCallback(
-    stateName => {
-      console.log(navState, stateName, Boolean(stateName));
-      const depth = Number(stateName.split("#")[1]);
-      setNavState({
-        ..._.mapValues(navState, (value, key) =>
-          Number(key.split("#")[1]) >= depth ? false : value
-        ),
-        [stateName]: !Boolean(navState[stateName])
-      });
-    },
-    [navState, setNavState]
-  );
-  const renderMenu = React.useCallback(
-    (menu: IMenu, path: string, depth: number) => {
-      const { link, title, Icon, subMenus } = menu;
-      if (link) {
-        return (
-          <Link key={title} to={link}>
-            <ListItem
-              button
-              selected={location.pathname === link}
-              onClick={() => setDrawerOpen(false)}
-              style={{ paddingLeft: `${PADDING_MULTIPLIER * (depth + 1)}em` }}
-            >
-              <ListItemIcon>
-                <Icon />
-              </ListItemIcon>
-              <ListItemText primary={title} />
-            </ListItem>
-          </Link>
-        );
-      } else if (subMenus) {
-        const stateName = `${path}/${title}#${depth}`;
-        return (
-          <div key={title}>
-            <ListItem
-              button
-              onClick={() => toggleCollapse(stateName)}
-              style={{ paddingLeft: `${PADDING_MULTIPLIER * (depth + 1)}em` }}
-            >
-              <ListItemIcon>
-                <Icon />
-              </ListItemIcon>
-              <ListItemText primary={title} />
-              {Boolean(navState[stateName]) ? (
-                <ExpandLessIcon />
-              ) : (
-                <ExpandMoreIcon />
-              )}
-            </ListItem>
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState("");
+  const [updateDialogObject, setUpdateDialogObject] = React.useState<any>(null);
+  const [deleteDialogId, setDeleteDialogId] = React.useState<number>(null);
+  const dispatch = useDispatch();
 
-            <Collapse in={Boolean(navState[stateName])} timeout="auto">
-              <List component="div" disablePadding>
-                {menu.subMenus.map(subMenu =>
-                  renderMenu(subMenu, `${path}/${title}`, depth + 1)
-                )}
-              </List>
-            </Collapse>
-          </div>
-        );
-      }
-    },
-    [location.pathname, navState, setDrawerOpen, toggleCollapse]
+  const fetch = React.useCallback(async () => {
+    setError("");
+    setLoading(true);
+    const [err, res] = await goPromise<IFavoriteGetAction>(getFavorites());
+    console.log(res.favorites);
+
+    setLoading(false);
+    if (err) {
+      console.log({ err });
+      setError("error");
+    } else {
+      dispatch(res);
+    }
+  }, [dispatch]);
+
+  const silentFetch = React.useCallback(async () => {
+    const [err, res] = await goPromise<IFavoriteGetAction>(getFavorites());
+    if (err) {
+      console.log({ err });
+    } else {
+      dispatch(res);
+    }
+  }, [dispatch]);
+
+  const favorites = useSelector<RootState, IFavorite[]>(
+    (state) => state.favorie.favorites
   );
 
-  const navList = React.useMemo(() => {
-    return _.map(menuList, menu => renderMenu(menu, "", 0));
-  }, [renderMenu]);
+  const playingFavorite = useSelector<RootState, IFavorite>(
+    (state) => state.favorie.playingFavorite
+  );
 
-  return <List>{navList}</List>;
+  React.useEffect(() => {
+    fetch();
+  }, [fetch]);
+
+  return loading ? (
+    <div style={{ textAlign: "center" }}>
+      <CircularProgress size={24} /> Loading...
+    </div>
+  ) : error ? (
+    <div>
+      <Typography variant="subtitle1" color="secondary" align="center">
+        Something went wrong.
+      </Typography>
+      <Button onClick={fetch} style={{ color: "lightblue" }}>
+        retry
+      </Button>
+    </div>
+  ) : (
+    <>
+      <List>
+        {favorites.map((fav) => (
+          <ListItem
+            button
+            key={fav.id}
+            onClick={() => {
+              dispatch(setPlayingFavorite(fav));
+              setDrawerOpen(false);
+            }}
+          >
+            <ListItemIcon>
+              <ContactlessIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary={`${fav.song.artist} - ${fav.song.title}`}
+              secondary={`${formatDuration(fav.song.duration)} / ${
+                fav.song.album
+              } / ${fav.song.genre}`}
+            />
+            <ListItemSecondaryAction>
+              <IconButton
+                edge="end"
+                aria-label="edit"
+                onClick={() =>
+                  setUpdateDialogObject({
+                    id: fav.id,
+                    title: fav.song.title,
+                    artist: fav.song.artist,
+                  })
+                }
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() => setDeleteDialogId(fav.id)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+        ))}
+      </List>
+      {Boolean(deleteDialogId) && (
+        <DeleteDialog
+          favoriteId={deleteDialogId}
+          dismiss={() => setDeleteDialogId(null)}
+          restartIntervalRun={() => {
+            silentFetch();
+            if (playingFavorite && deleteDialogId === playingFavorite.id) {
+              dispatch(setPlayingFavorite(null));
+            }
+          }}
+        />
+      )}
+      {Boolean(updateDialogObject) && (
+        <UpdateDialog
+          id={updateDialogObject.id}
+          title={updateDialogObject.title}
+          artist={updateDialogObject.artist}
+          dismiss={() => setUpdateDialogObject(null)}
+          refresh={() => {
+            silentFetch();
+          }}
+        />
+      )}
+    </>
+  );
 }

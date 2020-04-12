@@ -14,15 +14,15 @@ import * as serviceWorker from "./util/serviceWorker";
 
 const store = createStore(rootReducer, {
   auth: {
-    token: localStorage.getItem("auth_token")
-  }
+    token: localStorage.getItem("auth_token"),
+  },
 });
 
 const myTheme = createMuiTheme({
   palette: {
-    primary: { main: "#8cb4ef", light: "#8cb4ef", dark: "#8cb4ef" },
-    secondary: { main: "#d1be18" }
-  }
+    primary: { main: "#FF1493" },
+    secondary: { main: "#000" },
+  },
 });
 
 ReactDOM.render(

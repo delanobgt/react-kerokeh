@@ -1,113 +1,116 @@
-import _ from "lodash";
 import React from "react";
-import { Field, reduxForm, InjectedFormProps } from "redux-form";
-import { useDispatch } from "react-redux";
-import styled from "styled-components";
-import {
-  CircularProgress,
-  Grid,
-  Paper,
-  Button,
-  Typography
-} from "@material-ui/core";
-import { useSnackbar } from "material-ui-snackbar-provider";
+import { Grid, Typography, Button } from "@material-ui/core";
+import VideoPlayer from "react-background-video-player";
+import LoginDialog from "../dialogs/LoginDialog";
+import BgVideo from "src/media/bg.mp4";
+import "../style.css";
+import SignUpDialog from "../dialogs/SignUpDialog";
 
-import { signIn, ISignInAction } from "src/store/auth";
-import { goPromise } from "src/util/helper";
-import { renderTextField } from "src/redux-form/renderers";
-import { requiredValidator } from "src/redux-form/validators";
+const Login = () => {
+  const [windowWidth, setWindowWidth] = React.useState<number>(
+    window.innerWidth
+  );
+  const [windowHeight, setWindowHeight] = React.useState<number>(
+    window.innerHeight
+  );
+  const [loginDialogOpen, setLoginDialogOpen] = React.useState<boolean>(false);
+  const [signUpDialogOpen, setSignUpDialogOpen] = React.useState<boolean>(
+    false
+  );
+  const player = React.useRef();
 
-interface IFormProps {
-  username: string;
-  password: string;
-}
+  const handleResize = React.useCallback(() => {
+    setWindowWidth(window.innerWidth);
+    setWindowHeight(window.innerHeight);
+  }, []);
 
-interface IComponentProps {}
-
-const MyPaper = styled(Paper)`
-  padding: 1.5em;
-`;
-
-const Login = (
-  props: IComponentProps & InjectedFormProps<IFormProps, IComponentProps>
-) => {
-  const { handleSubmit } = props;
-
-  const snackbar = useSnackbar();
-  const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState("");
-  const dispatch = useDispatch();
-
-  const onSubmit = async (credentials: {
-    username: string;
-    password: string;
-  }) => {
-    setLoading(true);
-    const [err, res] = await goPromise<ISignInAction>(signIn(credentials));
-    setLoading(false);
-    if (err) {
-      setError(_.get(err, "response.data.errors", "Check your connection."));
-    } else {
-      dispatch(res);
-      snackbar.showMessage("Logged In successfully.");
-    }
-  };
+  React.useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [handleResize]);
 
   return (
-    <Grid
-      container
-      justify="center"
-      alignItems="center"
-      style={{ width: "100vw", height: "100vh" }}
-    >
-      <Grid item xs={11} sm={8} md={6} lg={4}>
-        <MyPaper elevation={3}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Typography align="center" variant="h4">
-              BUY & SELL
-            </Typography>
-            <Typography align="center" variant="subtitle1">
-              Admin Panel
-            </Typography>
-            <br />
-            <br />
-            <Field
-              name="username"
-              type="text"
-              component={renderTextField}
-              label="Username"
-              validate={[requiredValidator]}
-              disabled={loading}
-            />
-            <Field
-              name="password"
-              type="password"
-              component={renderTextField}
-              label="Password"
-              validate={[requiredValidator]}
-              disabled={loading}
-            />
-            {error && (
-              <Typography variant="subtitle2" style={{ color: "red" }}>
-                {error}
-              </Typography>
-            )}
+    <>
+      <VideoPlayer
+        ref={(p: any) => (player.current = p)}
+        containerWidth={windowWidth}
+        containerHeight={windowHeight}
+        src={[
+          {
+            src: BgVideo,
+            type: "video/mp4",
+          },
+        ]}
+        poster={
+          "https://cdn2.tstatic.net/kaltim/foto/bank/images/comeback-mv-twice-fancy-dirilis-lirik-lagu-dan-terjemahannya-dalam-bahasa-indonesia.jpg"
+        }
+        autoPlay
+        muted
+        loop
+        style={{
+          zIndex: -5,
+        }}
+      />
+      <Grid
+        container
+        justify="center"
+        alignItems="center"
+        style={{ width: "100vw", height: "100vh", zIndex: 2 }}
+      >
+        <Grid item xs={11} sm={11} md={11} lg={11}>
+          <Typography
+            variant="h1"
+            className="kerokeh-title"
+            style={{ letterSpacing: "1.5rem" }}
+          >
+            <strong>KEROKEH</strong>
+          </Typography>
+
+          <br />
+
+          <Typography variant="h6" align="center" style={{ color: "white" }}>
+            Sing off your passion!
+          </Typography>
+
+          <br />
+
+          <div style={{ textAlign: "center" }}>
             <Button
-              type="submit"
-              variant="contained"
               color="primary"
-              disabled={loading}
-              fullWidth
+              variant="outlined"
+              style={{ borderWidth: "2px" }}
+              onClick={() => setLoginDialogOpen(true)}
             >
-              {loading ? <CircularProgress size={24} /> : "LOGIN"}
+              Log In
             </Button>
-          </form>
-        </MyPaper>
+            &nbsp; &nbsp; &nbsp;
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={() => setSignUpDialogOpen(true)}
+            >
+              Sign Up
+            </Button>
+          </div>
+        </Grid>
       </Grid>
-    </Grid>
+
+      {Boolean(loginDialogOpen) && (
+        <LoginDialog
+          open={loginDialogOpen}
+          dismiss={() => setLoginDialogOpen(false)}
+        />
+      )}
+      {Boolean(signUpDialogOpen) && (
+        <SignUpDialog
+          open={signUpDialogOpen}
+          dismiss={() => setSignUpDialogOpen(false)}
+        />
+      )}
+    </>
   );
 };
 
-export default reduxForm<IFormProps, IComponentProps>({
-  form: "loginForm"
-})(Login);
+export default Login;

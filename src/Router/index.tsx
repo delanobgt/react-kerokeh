@@ -5,7 +5,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect
+  Redirect,
 } from "react-router-dom";
 import { Typography, CircularProgress } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,38 +14,18 @@ import styled from "styled-components";
 import Nav from "src/components/main/Nav";
 import Login from "src/components/main/Auth/Login";
 import Logout from "src/components/main/Auth/Logout";
-import AdminUser from "src/components/main/AdminUser";
-import Config from "src/components/main/Config";
-import Dashboard from "src/components/main/Dashboard";
-import DepositFee from "src/components/main/DepositFee";
-import Product from "src/components/main/Product";
-import ProductBrand from "src/components/main/ProductBrand";
-import ProductCategory from "src/components/main/ProductCategory";
-import ProductRequest from "src/components/main/ProductRequest";
-import PromoCode from "src/components/main/PromoCode";
-import Revenue from "src/components/main/Revenue";
-import Identification from "src/components/main/Identification";
-import FloatingFund from "src/components/main/FloatingFund";
-import FeaturedProduct from "src/components/main/FeaturedProduct";
 import User from "src/components/main/User";
-import SpecialCategory from "src/components/main/SpecialCategory";
-import SpecialCategoryList from "src/components/main/SpecialCategoryList";
-import WithdrawRequest from "src/components/main/WithdrawRequest";
 import JwtTimer from "src/components/misc/JwtTimer";
 import { RootState } from "src/store";
 import { getMe, IGetMeAction } from "src/store/auth";
 import { goPromise } from "src/util/helper";
 import { JWToken } from "src/util/types";
 import { RoutePath } from "./routes";
-import TopUp from "src/components/main/TopUp";
-import Banner from "src/components/main/Banner";
-import BnibBuyOrder from "src/components/main/BnibBuyOrder";
-import BnibProduct from "src/components/main/BnibProduct";
-import BnibTransaction from "src/components/main/BnibTransaction";
+import Dashboard from "src/components/main/Dashboard";
 
 enum EErrorType {
   FETCH_FAIL,
-  SESSION_EXPIRED
+  SESSION_EXPIRED,
 }
 
 const CenterItAll = styled("div")`
@@ -59,103 +39,23 @@ const CenterItAll = styled("div")`
 
 const routes = [
   {
-    routePath: RoutePath.ADMIN_USER,
-    component: <AdminUser />
-  },
-  {
-    routePath: RoutePath.BANNER,
-    component: <Banner />
-  },
-  {
-    routePath: RoutePath.BNIB_BUY_ORDER,
-    component: <BnibBuyOrder />
-  },
-  {
-    routePath: RoutePath.BNIB_PRODUCT,
-    component: <BnibProduct />
-  },
-  {
-    routePath: RoutePath.BNIB_TRANSACTION,
-    component: <BnibTransaction />
-  },
-  {
-    routePath: RoutePath.CONFIG,
-    component: <Config />
-  },
-  {
     routePath: RoutePath.DASHBOARD,
-    component: <Dashboard />
-  },
-  {
-    routePath: RoutePath.DEPOSIT_FEE,
-    component: <DepositFee />
-  },
-  {
-    routePath: RoutePath.FEATURED_PRODUCT,
-    component: <FeaturedProduct />
-  },
-  {
-    routePath: RoutePath.FLOATING_FUND,
-    component: <FloatingFund />
-  },
-  {
-    routePath: RoutePath.IDENTIFICATION,
-    component: <Identification />
+    component: <Dashboard />,
   },
   {
     routePath: RoutePath.LOGOUT,
-    component: <Logout />
-  },
-  {
-    routePath: RoutePath.PRODUCT,
-    component: <Product />
-  },
-  {
-    routePath: RoutePath.PRODUCT_BRAND,
-    component: <ProductBrand />
-  },
-  {
-    routePath: RoutePath.PRODUCT_CATEGORY,
-    component: <ProductCategory />
-  },
-  {
-    routePath: RoutePath.PRODUCT_REQUEST,
-    component: <ProductRequest />
-  },
-  {
-    routePath: RoutePath.PROMO_CODE,
-    component: <PromoCode />
-  },
-  {
-    routePath: RoutePath.REVENUE,
-    component: <Revenue />
-  },
-  {
-    routePath: RoutePath.SPECIAL_CATEGORY,
-    component: <SpecialCategory />
-  },
-  {
-    routePath: RoutePath.SPECIAL_CATEGORY_LIST,
-    component: <SpecialCategoryList />
-  },
-  {
-    routePath: RoutePath.TOP_UP,
-    component: <TopUp />
+    component: <Logout />,
   },
   {
     routePath: RoutePath.USER,
-    component: <User />
+    component: <User />,
   },
-  {
-    routePath: RoutePath.WITHDRAW_REQUEST,
-    component: <WithdrawRequest />
-  }
 ];
 
 const AdminRoutes = () => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<EErrorType | null>(null);
-  const token = useSelector<RootState, string>(state => state.auth.token);
+  const token = useSelector<RootState, string>((state) => state.auth.token);
   const dispatch = useDispatch();
 
   const fetch = React.useCallback(async () => {
@@ -223,21 +123,20 @@ const AdminRoutes = () => {
         <JwtTimer />
 
         <Switch>
-          {routes.map(route => (
+          {routes.map((route) => (
             <Route key={route.routePath} path={route.routePath}>
               {route.component}
             </Route>
           ))}
           <Route path="*">{() => <Redirect to={RoutePath.DASHBOARD} />}</Route>
         </Switch>
-        <br />
       </>
     );
   }
 };
 
 const App = () => {
-  const token = useSelector<RootState, string>(state => state.auth.token);
+  const token = useSelector<RootState, string>((state) => state.auth.token);
 
   return (
     <Router>

@@ -3,7 +3,7 @@ import { EAuthActionTypes, IAuthState, AuthActionType } from "./types";
 
 const initialState: IAuthState = {
   token: "",
-  user: null
+  user: null,
 };
 
 const reducer: Reducer<IAuthState, AuthActionType> = (
@@ -11,6 +11,7 @@ const reducer: Reducer<IAuthState, AuthActionType> = (
   action: AuthActionType
 ): IAuthState => {
   switch (action.type) {
+    case EAuthActionTypes.SIGN_UP:
     case EAuthActionTypes.SIGN_IN: {
       const { token, user } = action.authState;
       return { token, user };
@@ -22,7 +23,7 @@ const reducer: Reducer<IAuthState, AuthActionType> = (
       const user = action.user;
       return {
         ...state,
-        user
+        user,
       };
     }
     default: {

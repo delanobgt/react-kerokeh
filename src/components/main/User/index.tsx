@@ -1,20 +1,12 @@
 import _ from "lodash";
 import React from "react";
-import {
-  CircularProgress,
-  Typography,
-  Grid,
-  IconButton
-} from "@material-ui/core";
-import {
-  People as TitleIcon,
-  Details as DetailsIcon
-} from "@material-ui/icons";
+import { CircularProgress, Typography, Grid } from "@material-ui/core";
+import { People as TitleIcon } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Column } from "react-table";
 
 import Table, {
-  OnPaginationChangeFn
+  OnPaginationChangeFn,
 } from "src/components/generic/table/ReactTableSSR";
 import { RootState } from "src/store";
 import { goPromise } from "src/util/helper";
@@ -26,17 +18,16 @@ import {
   PUserPagination,
   PUserFilter,
   getUsers,
-  UserSortField
+  UserSortField,
 } from "src/store/user";
 import FilterForm from "./FilterForm";
 import SortForm from "../../generic/SortForm";
-import DetailDialog from "./dialogs/DetailDialog";
 import useTableUrlState from "src/hooks/useTableUrlState";
 import moment from "moment";
 import {
   TablePaper,
   TableInfoWrapper,
-  TableTitle
+  TableTitle,
 } from "src/components/generic/table/table-infos";
 import CollapseFilterAndSort from "src/components/generic/CollapseFilterAndSort";
 
@@ -48,25 +39,22 @@ function Users() {
     sorts,
     updateFilter,
     updatePagination,
-    updateSorts
+    updateSorts,
   } = useTableUrlState<PUserFilter, PUserPagination, UserSortField>(
     {
       created_at_start: moment.utc(0).format("YYYY-MM-DD"),
-      created_at_end: moment().format("YYYY-MM-DD")
+      created_at_end: moment().format("YYYY-MM-DD"),
     },
     { limit: 5, offset: 0 },
     []
   );
   const [error, setError] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
-  const users = useSelector<RootState, IUser[]>(state => state.user.users);
-  const [detailDialogUserId, setDetailDialogUserId] = React.useState<number>(
-    null
-  );
+  const users = useSelector<RootState, IUser[]>((state) => state.user.users);
   const dispatch = useDispatch();
 
   const userRealTotal = useSelector<RootState, number>(
-    state => state.user.realTotal
+    (state) => state.user.realTotal
   );
   const userSortFields: UserSortField[] = React.useMemo(
     () => ["id", "username", "full_name", "email"],
@@ -87,7 +75,7 @@ function Users() {
   const intervalRun = useIntervalRun(() => autoFetch(), refreshDelay);
   const {
     setAlive: setIntervalRunAlive,
-    restart: restartIntervalRun
+    restart: restartIntervalRun,
   } = intervalRun;
 
   // initial fetch
@@ -124,7 +112,7 @@ function Users() {
     (pageIndex, pageSize) => {
       updatePagination({
         offset: pageIndex * pageSize,
-        limit: pageSize
+        limit: pageSize,
       });
     },
     [updatePagination]
@@ -134,37 +122,31 @@ function Users() {
     () => [
       {
         Header: "User ID",
-        accessor: "id"
+        accessor: "id",
       },
       {
         Header: "Username",
-        accessor: "username"
+        accessor: "username",
       },
       {
         Header: "Full Name",
-        accessor: "full_name"
+        accessor: "full_name",
       },
       {
         Header: "Gender",
-        accessor: "gender"
+        accessor: "gender",
       },
       {
         Header: "Email",
-        accessor: "email"
+        accessor: "email",
       },
       {
         Header: "Actions",
         accessor: "",
         Cell: ({ row: { original } }) => {
-          return (
-            <div>
-              <IconButton onClick={() => setDetailDialogUserId(original.id)}>
-                <DetailsIcon />
-              </IconButton>
-            </div>
-          );
-        }
-      }
+          return <div></div>;
+        },
+      },
     ],
     []
   );
@@ -237,12 +219,6 @@ function Users() {
           </TablePaper>
         </Grid>
       </Grid>
-      {Boolean(detailDialogUserId) && (
-        <DetailDialog
-          userId={detailDialogUserId}
-          dismiss={() => setDetailDialogUserId(null)}
-        />
-      )}
     </>
   );
 }

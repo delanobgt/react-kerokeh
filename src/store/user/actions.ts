@@ -4,9 +4,9 @@ import {
   IUserGetAction,
   PUserFilter,
   PUserPagination,
-  UserSortField
+  UserSortField,
 } from "./types";
-import celestineApi from "src/apis/celestine";
+import kerokehApi from "src/apis/kerokeh";
 import { ISort } from "src/util/types";
 import { PRIMARY_ROUTE } from "./constants";
 
@@ -16,7 +16,7 @@ export const getUsers = async (
   sorts: ISort<UserSortField>[]
 ): Promise<IUserGetAction> => {
   const sort = _.chain(sorts)
-    .map(sort => `${sort.field}%20${sort.dir}`)
+    .map((sort) => `${sort.field}%20${sort.dir}`)
     .join(",")
     .value();
   const created_at = Boolean(filter.created_at_start && filter.created_at_end)
@@ -26,18 +26,18 @@ export const getUsers = async (
     {
       ...pagination,
       ..._.omit(filter, ["created_at_start", "created_at_end"]),
-      created_at
+      created_at,
     },
-    val => val
+    (val) => val
   );
-  const response = await celestineApi().get(`${PRIMARY_ROUTE}?sort=${sort}`, {
-    params
+  const response = await kerokehApi().get(`${PRIMARY_ROUTE}?sort=${sort}`, {
+    params,
   });
   const users = response.data.data;
   const meta = response.data.meta;
   return {
     type: EUserActionTypes.USER_GET,
     users,
-    realTotal: meta.total
+    realTotal: meta.total,
   };
 };

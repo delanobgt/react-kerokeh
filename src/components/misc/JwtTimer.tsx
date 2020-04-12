@@ -7,29 +7,29 @@ import { RootState } from "src/store";
 import BasicDialog from "src/components/generic/dialog/BasicDialog";
 import Link from "src/components/generic/Link";
 import { JWToken } from "src/util/types";
-import styled from "styled-components";
+// import styled from "styled-components";
 
-const TimerPanel = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  left: 50%;
-  top: 0
-  transform: translate(-50%, 0);
-  font-size: 0.8rem;
-  font-family: Roboto;
-  color: rgba(0, 0, 0, 0.65);
-  background: rgba(255, 255, 255, 0.75);
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  padding: 0.15em 0.25em;
-  width: 7.5em;
-  z-index: 20;
-`;
+// const TimerPanel = styled.div`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   position: fixed;
+//   left: 50%;
+//   top: 0
+//   transform: translate(-50%, 0);
+//   font-size: 0.8rem;
+//   font-family: Roboto;
+//   color: rgba(0, 0, 0, 0.65);
+//   background: rgba(255, 255, 255, 0.75);
+//   border-bottom-left-radius: 5px;
+//   border-bottom-right-radius: 5px;
+//   padding: 0.15em 0.25em;
+//   width: 7.5em;
+//   z-index: 20;
+// `;
 
 const JwtTimer = () => {
-  const token = useSelector<RootState, string>(state => state.auth.token);
+  const token = useSelector<RootState, string>((state) => state.auth.token);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [timerMs, setTimerMs] = React.useState<number>(0);
 
@@ -57,7 +57,7 @@ const JwtTimer = () => {
 
   return (
     <>
-      <TimerPanel>
+      {/* <TimerPanel>
         {String(Math.floor(timerMs / (60 * 60 * 1000))).padStart(2, "0")} :{" "}
         {String(
           Math.floor(Math.floor(timerMs % (60 * 60 * 1000)) / (60 * 1000))
@@ -67,7 +67,7 @@ const JwtTimer = () => {
           2,
           "0"
         )}
-      </TimerPanel>
+      </TimerPanel> */}
       <BasicDialog
         open={dialogOpen}
         dismiss={() => {}}

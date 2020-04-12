@@ -36,21 +36,10 @@ interface IComponentProps {
   maxSize?: number;
 }
 
-export default function(props: IComponentProps) {
+export default function (props: IComponentProps) {
   const { label, value, onChange, accept, extensions, maxSize } = props;
 
   const inputRef = React.useRef(null);
-
-  const [objectURL, setObjectURL] = React.useState<string>("");
-  React.useEffect(() => {
-    if (value) {
-      const objectURL = URL.createObjectURL(value);
-      setObjectURL(objectURL);
-      return () => {
-        URL.revokeObjectURL(objectURL);
-      };
-    }
-  }, [value, setObjectURL]);
 
   const [errors, setErrors] = React.useState<string[]>([]);
 
@@ -94,10 +83,7 @@ export default function(props: IComponentProps) {
           {label} ({extensions.join(", ")})
         </Typography>
         <MainDiv>
-          <Button onClick={onClick}>Choose Image</Button>
-          {objectURL && (
-            <img src={objectURL} alt="" style={{ height: "40px" }} />
-          )}
+          <Button onClick={onClick}>Choose File</Button>
         </MainDiv>
         {Boolean(errors.length) && (
           <Typography variant="subtitle2">{errors.join(", ")}</Typography>
