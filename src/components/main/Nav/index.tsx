@@ -75,7 +75,7 @@ export default function PrimarySearchAppBar() {
             </IconButton>
             <Typography
               className={classes.title}
-              variant="h6"
+              variant="h5"
               color="inherit"
               noWrap
             >
@@ -85,7 +85,9 @@ export default function PrimarySearchAppBar() {
             <div className={classes.grow} />
             {user && (
               <Typography variant="subtitle1" color="primary">
-                {user.name} ({user.email})
+                <strong>
+                  {user.name} ({user.email})
+                </strong>
               </Typography>
             )}
             <div>

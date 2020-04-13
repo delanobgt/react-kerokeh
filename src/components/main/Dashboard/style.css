@@ -1,0 +1,27 @@
+canvas {
+  display: block;
+}
+
+canvas:focus {
+  outline: 0;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(51, 51, 51, 0.7);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ff1493;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #ff1493;
+}

@@ -12,6 +12,7 @@ export interface ISong {
   artist: string;
   album: string;
   duration: number;
+  lyrics: string;
   accompaniment_path: string;
   vocals_path: string;
   created_at: string;

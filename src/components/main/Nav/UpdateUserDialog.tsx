@@ -82,7 +82,7 @@ function UpdateUserDialog(props: IComponentProps) {
         fullWidth
         bgClose={!loading}
       >
-        <title>Edit Song</title>
+        <title>Edit Profile</title>
         <section>
           <form onSubmit={handleSave}>
             <>

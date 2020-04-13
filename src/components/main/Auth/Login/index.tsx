@@ -5,6 +5,7 @@ import LoginDialog from "../dialogs/LoginDialog";
 import BgVideo from "src/media/bg.mp4";
 import "../style.css";
 import SignUpDialog from "../dialogs/SignUpDialog";
+import Fade from "react-reveal/Fade";
 
 const Login = () => {
   const [windowWidth, setWindowWidth] = React.useState<number>(
@@ -60,40 +61,49 @@ const Login = () => {
         style={{ width: "100vw", height: "100vh", zIndex: 2 }}
       >
         <Grid item xs={11} sm={11} md={11} lg={11}>
-          <Typography
-            variant="h1"
-            className="kerokeh-title"
-            style={{ letterSpacing: "1.5rem" }}
-          >
-            <strong>KEROKEH</strong>
-          </Typography>
+          <Fade bottom>
+            {" "}
+            <>
+              <Typography
+                variant="h1"
+                className="kerokeh-title"
+                style={{ letterSpacing: "1.5rem" }}
+              >
+                <strong>KEROKEH</strong>
+              </Typography>
 
-          <br />
+              <br />
 
-          <Typography variant="h6" align="center" style={{ color: "white" }}>
-            Sing off your passion!
-          </Typography>
+              <Typography
+                variant="h6"
+                align="center"
+                style={{ color: "white" }}
+              >
+                Sing off your passion!
+              </Typography>
 
-          <br />
+              <br />
 
-          <div style={{ textAlign: "center" }}>
-            <Button
-              color="primary"
-              variant="outlined"
-              style={{ borderWidth: "2px" }}
-              onClick={() => setLoginDialogOpen(true)}
-            >
-              Log In
-            </Button>
-            &nbsp; &nbsp; &nbsp;
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={() => setSignUpDialogOpen(true)}
-            >
-              Sign Up
-            </Button>
-          </div>
+              <div style={{ textAlign: "center" }}>
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  style={{ borderWidth: "2px" }}
+                  onClick={() => setLoginDialogOpen(true)}
+                >
+                  Log In
+                </Button>
+                &nbsp; &nbsp; &nbsp;
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() => setSignUpDialogOpen(true)}
+                >
+                  Sign Up
+                </Button>
+              </div>
+            </>
+          </Fade>
         </Grid>
       </Grid>
 
